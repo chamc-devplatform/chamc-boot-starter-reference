@@ -14,7 +14,7 @@
 
 ### 1.1 关于本文档
 
-开发平台后端框架参考指南最新版本发布地址：[https://jiinyuu.github.io/https://github.com/JiinYuu/chamc-boot-starter-reference.githttps://github.com/JiinYuu/chamc-boot-starter-reference.git/](https://jiinyuu.github.io/chamc-boot-starter-reference/) ，本文档的副本你可以随便下载或分享给他人。
+开发平台后端框架参考指南最新版本发布地址：[https://chamc-devplatform.github.io/chamc-boot-starter-reference/](https://chamc-devplatform.github.io/chamc-boot-starter-reference/) ，本文档的副本你可以随便下载或分享给他人。
 
 ### 1.2 获取帮助
 
