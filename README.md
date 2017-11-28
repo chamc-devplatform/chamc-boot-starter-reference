@@ -57,27 +57,36 @@
 #### <span id="jdk">2.2.1 jdk的安装配置</span>
 
 1. 安装jdk  
-根据安装提示进行安装。
+根据安装提示进行安装。**注意：安装路径不要包含中文、空格、特殊字符** 
 2. 配置环境变量  
   - 新增环境变量JAVA_HOME  
+
     ![](https://i.imgur.com/aiWkuLN.png)
-  - 新增环境变量CLASSPATH  
-    ![](https://i.imgur.com/nekwAN1.png)
+
   - 新增环境变量path(最好将其放在第一位)  
+
     ![](https://i.imgur.com/r64LoEs.png)
+
 3. 在cmd中执行java -version,若出现下图则安装成功  
+
   ![](https://i.imgur.com/k5g3ZUa.png)
 
 #### <span id="maven">2.2.2 maven的安装配置</span>
 
-1. 解压apache-maven-3.5.0-bin.zip到某个目录（例如D盘） **注意：解压路径不要包含中文**  
+1. 解压apache-maven-3.5.0-bin.zip到某个目录（例如D盘） **注意：解压路径不要包含中文、空格、特殊字符**  
 2. 设置环境变量  
   - 新建系统变量  MAVEN_HOME  变量值：D:\apache-maven-3.5.0  
+
     ![](https://i.imgur.com/Puli2eH.png)  
+
   - 编辑系统变量  Path  添加变量值：;%MAVEN_HOME%\bin  
+
     ![](https://i.imgur.com/rJWatOE.png)
-3. 打开命令行，输入 mvn --version，若出现以下情况则配置成功。
+
+3. 打开命令行，输入 mvn --version，若出现以下情况则配置成功。 
+
   ![](https://i.imgur.com/RifuDqe.png)
+
 4. 在maven目录下的conf文件夹的settings.xml中加入：  
   
   - 在`<proxies>`标签中加入代理：  
@@ -107,32 +116,46 @@
 					<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
 				</properties>
 			</profile>
+  
+  - 在`<activeProfiles>`标签中添加：  
 
+	 	`<activeProfile>jdk-1.8</activeProfile>`
+		
 #### <span id="sts">2.2.3 spring tool suite的安装配置</span>
 
 1. STS的安装
 
-  - 解压 spring-tool-suite-3.8.4.RELEASE-e4.6.3-win32-x86_64.zip （**注意：解压路径不要包含中文**）
+  - 解压 spring-tool-suite-3.8.4.RELEASE-e4.6.3-win32-x86_64.zip （**注意：解压路径不要包含中文、空格、特殊字符**）
   - 打开 sts-3.8.4.RELEASE 的 STS.exe ，即可使用  
   
 2. STS的配置
 
   - Maven配置  
   
-	    1. 打开STS，进入windows —》Preferences —》Maven —》Installations。  
-	    2. 点击Add...选择Maven的所在目录。  
-	      ![](https://i.imgur.com/ilpB3Wu.png)
-	    3. 勾选这个Maven，并点击Apply。  
-	      ![](https://i.imgur.com/oMYGNrY.png)
-	    4. 选择User Settings，将设置User Settings为自己的settings.xml，OK。  
-	      ![](https://i.imgur.com/1quxhE5.png)  
+		1. 打开STS，进入windows —》Preferences —》Maven —》Installations。  
+		2. 点击Add...选择Maven的所在目录。  
+ 
+		  ![](https://i.imgur.com/ilpB3Wu.png)  
+
+		3. 勾选这个Maven，并点击Apply。    
+
+		  ![](https://i.imgur.com/oMYGNrY.png)  
+
+		4. 选择User Settings，将设置User Settings为自己的settings.xml，OK。  
+
+		  ![](https://i.imgur.com/1quxhE5.png)  
+
  
   - JDK配置
 
 	  1. 打开STS，进入windows —》Preferences —》Java —》Installed JREs。  
-	    ![](https://i.imgur.com/MZgsUFu.png)
-	  2. 选中jdk，选择Edit...。将jdk改为指向jdk的目录（**而不是jre**），Finish。
+
+	    ![](https://i.imgur.com/MZgsUFu.png)  
+
+	  2. 选中jdk，选择Edit...。将jdk改为指向jdk的目录（**而不是jre**），Finish。 
+
 	    ![](https://i.imgur.com/W8hkZp6.png)
+
 
 ### 2.3 第一个demo
 ### 2.4 关于数据库操作的一些介绍
