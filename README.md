@@ -135,26 +135,26 @@
 		1. 打开STS，进入windows —》Preferences —》Maven —》Installations。  
 		2. 点击Add...选择Maven的所在目录。  
  
-		  ![](https://i.imgur.com/ilpB3Wu.png)  
+![1](https://i.imgur.com/ilpB3Wu.png)  
 
 		3. 勾选这个Maven，并点击Apply。    
 
-		  ![](https://i.imgur.com/oMYGNrY.png)  
+![2](https://i.imgur.com/oMYGNrY.png)  
 
 		4. 选择User Settings，将设置User Settings为自己的settings.xml，OK。  
-
-		  ![](https://i.imgur.com/1quxhE5.png)  
+		
+![3](https://i.imgur.com/1quxhE5.png)  
 
  
   - JDK配置
 
-	  1. 打开STS，进入windows —》Preferences —》Java —》Installed JREs。  
+1. 打开STS，进入windows —》Preferences —》Java —》Installed JREs。  
 
-	    ![](https://i.imgur.com/MZgsUFu.png)  
+![4](https://i.imgur.com/MZgsUFu.png)  
 
-	  2. 选中jdk，选择Edit...。将jdk改为指向jdk的目录（**而不是jre**），Finish。 
+2. 选中jdk，选择Edit...。将jdk改为指向jdk的目录（**而不是jre**），Finish。 
 
-	    ![](https://i.imgur.com/W8hkZp6.png)
+![5](https://i.imgur.com/W8hkZp6.png)
 
 
 ### 2.3 第一个demo
