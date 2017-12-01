@@ -349,11 +349,87 @@
 - 3. demo
 
 ### <span id="swagger">3.2 swagger组件</span>
+
 - 1. 简介
 - 2. 配置
 - 3. demo
 
 ### <span id="bpm">3.3 工作流组件</span>
+
+    - 学习流程引擎的当前情况及设计	2017/11/24	4	2017/11/29
+    - 模块集成模块书写	2017/11/30	2	2017/12/1
+    - 服务模块	2017/12/4	3	2017/12/6
+    - rest接口	2017/12/7	2	2017/12/8
+    - 接口模块	2017/12/11	5	2017/12/15
+
+#### <span id="bpm_1">3.3.1 流程引擎基本信息</spam> ####
+
+- 术语
+
+>  
+
+- 介绍
+
+>流程引擎模块属于开发平台的一个子模块，专门为业务系统提供工作流及业务自动化服务。该模块能够以maven依赖的方式快速引入在建项目中，对于基础的流程发起、待办已办任务查询等操作，直接调用相应的rest接口即可。在提供流程处理基础服务 + 租户、角色等基础管理服务的基础上，项目支持在管理页面设计流程图、在管理后台操作流程。希望通过流程引擎模块，为应用及项目的开发提供支持。
+
+- SDK接口说明
+
+>项目提供通用的`controller`层接口访问，能够最大程度的便捷开发。同时项目还支持开发者以SDK的形式开发，SDK组件封装了流程引擎的各种服务，以方便各个系统的个性化需求。
+
+#### <span id="bpm_2">3.3.2 集成及获取服务</span> #### ####
+
+3.3.2.1 集成方式
+
+流程引擎以jar工具包的形式提供服务，提供以下两种形式的集成：
+
+- maven项目的集成：  
+
+如果能够连接公司私服，直接在pom文件添加依赖即可，可以跳过**Step 1**，否则需要先获取jar包，如下所述。
+
+**Step 1**：在**SVN**获取jar包，下载到本地后，在cmd命令行模式执行如下命令，将jar包安装到本地maven仓库，执行命令时确认路径、文件名及版本信息的正确性。
+
+    mvn install:install-file -Dfile=下载的jar包的路径 -DgroupId=com.chamc.boot -DartifactId=chamc-boot-starter-bpm -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
+
+注：如果cmd命令行提示命令不存在的问题，请检查maven的环境变量设置，或者可以手动将操作路径切换到`{maven-home}/bin`下，再执行maven命令。
+
+**Step 2**：在pom文件的`<dependencies></dependencies>`中添加以下信息
+
+	<dependency>
+		<groupId>com.chamc.boot</groupId>
+		<artifactId>chamc-boot-starter-bpm</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+
+**Step 3**：在工程目录上右键，选择 `Maven` -> `Update Project` -> `OK`，项目自动编译后，如果没有异常，就能够使用流程服务了。
+
+- 非maven项目的集成：
+
+**Step 1**：在**SVN**获取jar包，下载到本地；
+**Step 2**：将jar包添加到项目的build path中，以STS的项目为例：*在项目中添加lib文件夹 -> 把jar包复制到该目录下 -> 鼠标右键jar包 -> Build Path -> add to Bulid Path*， 重新编译项目即可引入流程引擎模块。
+
+#### <span id="bpm_3">3.3.3 流程设计与管理平台</span> ####
+
+#### <span id="bpm_4">3.3.4 流程服务</span> ####
+
+|----|----|----|
+
+#### <span id="bpm_5">3.3.5 SDK接口</span> ####
+
+#### <span id="bpm_6">3.3.6 错误说明</span> ####
+
+|----|----|----|
+|错误码|错误提示|描述|
+|**500**|查询待办发生异常|流程引擎内部错误，可能原因为：1、参数错误，2、流程引擎bug|
+
+#### <span id="bpm_7">3.3.7 同步模块说明</span> ####
+
+
+#### <span id="bpm_8">3.3.8 版本变更历史</span> ####
+
+|----|----|----|
+|SDK版本|发布时间|更新内容描述|
+|0.0.1SNAPSHOT||新建项目|
+
 
 ## <span id="how-to">4 “How-to”指南</span>
 
