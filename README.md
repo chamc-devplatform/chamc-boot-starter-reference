@@ -231,7 +231,10 @@
 		</executions>
 	</plugin>
 
-3） 右键项目选择Maven —》update project...。此时可能还会报错，这是因为没有安装lombok，请执行下一步操作。  
+3） 右键项目，选择Maven —》update project...。此时可能还会报错，这是因为没有安装lombok，请执行下一步操作。  
+
+![](https://i.imgur.com/TRvxJpW.png) 
+
 4） 在maven dependencies中找lombok.jar所在路径，在其路径下找到它并安装。安装成功后，右键项目Maven —》update project...。（安装一次即可）  
 
 ![](https://i.imgur.com/f1vvl29.png)
@@ -264,63 +267,110 @@
 
 ![](https://i.imgur.com/l7fXK7U.png)
 
+5） 打开BaseRestController可见已实现一些接口：如增删改查。
+
+![](https://i.imgur.com/JkvftvX.png)
+
+6） 右键项目，选择Run as —》 Spring boot app，选择Demo1Application，OK.
+
+![](https://i.imgur.com/bsNzUI9.png)
+
+![](https://i.imgur.com/kUYA5N8.png)
+
+启动之后，可能报错
+
+![](https://i.imgur.com/XLMQtiT.png)
+
+session store type使用来存放session的存储方式，目前Spring boot中只支持redis方式。由于本应用暂无需将session放入redis的需求，故这里就可以将session store type设置为none，在application.properties文件中添加`spring.session.store-type=none`，重启应用
+
+![](https://i.imgur.com/nCwwjG3.png)
+
+启动成功...
+
+![](https://i.imgur.com/bE4ij3J.png)
+
+7) 先在数据库t_user表中新增几条数据，使用postman（可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获取，也可直接使用浏览器测试），访问`http://localhost:8080/user`（GET方法）查询所有用户，可见结果如下图
+
+![](https://i.imgur.com/4Y22TFk.png)
+
+同时还有以下接口可以使用：  
+<pre>
+（GET） http://localhost:8080/user  查询所有user  
+（GET） http://localhost:8080/user/{id}  查询单个user 例如：http://localhost:8080/user/1  
+（POST） http://localhost:8080/user  新增user 例如：http：//localhost:8080/user?username=test3&password=123456  
+（PUT） http://localhost:8080/user/{id}  修改user 例如：http://localhost:8080/user/3?username=test3&password=654321  
+（DELETE） http://localhost:8080/user/{id}  删除user 例如：http://localhost:8080/user/3    
+（GET） http://localhost:8080/user 按某一字段查询（需添加@GlobalSearch） 例如：http://localhost:8080/user?search=1
+（GET） http://localhost:8080/user/page 分页查询（可添加@GlobalSearch） 例如：http://localhost:8080/user/page?search=1&page=0&size=10
+</pre>
+
+添加@GlobalSearch：在实体类中，添加需要查询的字段名称，如下图（配置按username查询）
+
+![](https://i.imgur.com/e18H5DT.png)
+
+访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下图
+
+![](https://i.imgur.com/uqrnZCF.png)
+
+8） 新增关联关系，每个user关联一个userdetail，如图所示
+
+![](https://i.imgur.com/Y4XyGTj.png)
+
+cascade表示级联操作，如一起新增、一起修改、一起删除等。新增一个新的user，如下图
+
+![](https://i.imgur.com/As2g0xx.png)
+
+**【其他注意事项】**
+
+- @OneToOne一对一，@ManyToOne多对一，@OneToMany一对多。
+- Cascade是级联操作，比如一起删除，一起新增等。
+- Fetch是抓取策略，即查询时机。
+ - fetchType.EAGER代表立即查询，即查询了Userinfo立马根据Userinfo去查询Userdetail。
+ - fetchType.LAZY代表延迟查询，即先不查询，先拿到Userinfo的数据，没有查询Userdetail的数据，当我们要使用Userdetail的时候再去查询.
+- mappedBy只有OneToOne,OneToMany,ManyToMany上才有mappedBy属性，ManyToOne不存在该属性；
+ - mappedBy标签一定是定义在the owned side(被拥有方的)，他指向the owning side(拥有方)；
+ - 关系的拥有方负责关系的维护，在拥有方建立外键。所以用到@JoinColumn
+ - mappedBy跟JoinColumn/JoinTable总是处于互斥的一方
+
+9） 尝试自己写一个接口，按返回年龄小于X岁的所有用户信息并按倒序排列。  
+
+- 在UserController里添加方法
+
+		@GetMapping("ageLt")
+		public ResponseEntity<List<User>> ageLt(@RequestParam Long age){
+			List<User> users = service.processAgeLtBusiness(age);
+			return ResponseEntity.ok(users);
+		}
+
+- 在UserService里添加方法
+
+		public List<User> processAgeLtBusiness(Long age) {
+			return repository.findByDetailAgeLessThanOrderByDetailAgeDesc(age);
+		}
+
+- 在UserRepository里添加方法
+
+		`List<User> findByDetailAgeLessThanOrderByDetailAgeDesc(Long age);`
+
+
+运行效果如图所示：  
+
+![](https://i.imgur.com/mzGIq5S.png)
+
+**【其他注意事项】**  
+
+- JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
+- 在service里面加对数据库的复杂操作。推荐使用querydsl写数据库语句，querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
+
 ##### <span id="get-web">5. 获取组件</span>
 
-1） 【方法一】配置Maven仓库  
+1） 申请svn库的开发平台项目权限，地址：`https://10.1.8.112/svn/DevelopPlatform`，将chamc-boot-starter-web项目下载到本地。
 
-- 在pom.xml文件中加入远程仓库配置
+![](https://i.imgur.com/pE7WnsV.png)
 
-		<repositories>
-			<repository>
-				<id>Nexus</id>
-				<name>Nexus</name>
-				<url>http://10.1.8.147:8081/nexus/content/groups/public/</url>
-			</repository>
-		</repositories>
+2） 将项目导入工作空间，maven -》 update project...
 
-- 修改setting.xml文件
-
-1.在maven的安装目录下找到settings文件，maven目录\conf\settings.xml。  
-2.在`<mirrors></mirrors>`里加入：  
-
-	<mirror>
-		<id>nexus-200</id>
-		<mirrorOf>*</mirrorOf>
-		<url>http://10.80.38.200:8081/repository/maven-public/</url>
-	</mirror>
-
-3.在`<profiles></profiles>`里加入：  
-
-	<profile>
-		<id>nexus-200</id>
-		<repositories>
-			<repository>
-			<id>central</id>
-			<url>http://central</url>
-			<releases><enabled>true</enabled></releases>
-			<snapshots><enabled>true</enabled></snapshots>
-			</repository>
-		</repositories>
-		<pluginRepositories>
-			<pluginRepository>
-				<id>central</id>
-				<url>http://central</url>
-				<releases><enabled>true</enabled></releases>
-				<snapshots><enabled>true</enabled></snapshots>
-			</pluginRepository>
-		</pluginRepositories>
-	</profile>
-
-4.在`<activeProfiles></activeProfiles>`里加入：（**注意：`<profiles>`里有啥加啥，加的是`<profile>`里的`<id>`**）  
-
-	<activeProfile>jdk-1.8</activeProfile>
-	<activeProfile>nexus-200</activeProfile>
-
-5.将配置的代理注释掉。
-
-![](https://i.imgur.com/LF0UmZR.png)
-
-2） 【方法二】下载jar包到本机的maven仓库
+![](https://i.imgur.com/kudFdb2.png)
 
 ### 2.4 关于数据库操作的一些介绍
 
