@@ -255,7 +255,7 @@
 
 ![](https://i.imgur.com/blvD7uf.png)
 
-3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。右键run as java application  
+<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。右键run as java application  </span>
 
 ![](https://i.imgur.com/16HnSPI.png)
 
@@ -397,9 +397,56 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 ### <span id="web">3.1 web组件</span>
 
 #### 3.1.1 配置多数据源及其使用说明
-- 1. 简介
-- 2. 配置
-- 3. demo
+
+1） 简介
+  
+该组件支持配置多个数据源，即可对多个数据库进行操作，详细使用方法见下。 
+
+2） 配置  
+
+- 在配置文件application.properties中，开启多数据源并配置默认数据源（**注意：如果之前配了数据库，需删除之前配置**），def指默认数据源，当没有指定数据源时，默认使用该数据源。默认数据源必配！
+
+	    chamc.ds.compose.enable=true
+	    chamc.ds.compose.def.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+	    chamc.ds.compose.def.username=root
+	    chamc.ds.compose.def.password=1111
+
+- 配置其他数据源，例如命名为：test，则配置如下
+
+		chamc.ds.compose.data-sources.test.url=jdbc:mysql://localhost:3306/world?characterEncoding=utf8&useSSL=true
+		chamc.ds.compose.data-sources.test.username=root
+		chamc.ds.compose.data-sources.test.password=1111
+
+test由自己定义，可再使用不同的命名继续增加数据源
+
+3） demo
+
+- 使用代码生成工具生成repository和entity，参见[2.3.1 — 4 — 3）](#codegenerate)
+- 当需要使用test数据源时，在其service里的方法上加标签**@TargetDataSource**
+- 例如：写一个接口，当type=0时返回用户信息，否则返回书的信息
+
+在controller中：
+
+![](https://i.imgur.com/TbXZnw3.png)
+
+在service中：
+
+![](https://i.imgur.com/OebEjTv.png)
+
+运行结果如下：
+
+![](https://i.imgur.com/uIDAY6V.png)
+
+![](https://i.imgur.com/r78mqPr.png)
+
+**注意**：  
+1. 当一个controller中需要使用多个数据源的数据，应该在controller中调用多个service方法，而不是在service中调用service  
+2. 使用哪一个数据源进行操作，取决于第一次进入service中指定的数据源  
+3. 不指定数据源时，均使用默认数据源  
+4. 错误示例  
+
+![](https://i.imgur.com/EwzZW9n.png)
+![](https://i.imgur.com/xTjRWWp.png)
 
 #### 3.1.2 配置主从及其使用说明
 - 1. 简介
