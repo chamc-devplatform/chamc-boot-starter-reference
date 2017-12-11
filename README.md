@@ -202,7 +202,7 @@
 
 ![](https://i.imgur.com/D5xYDkh.png)
 
-##### 3. 添加依赖
+#### 2.3.2 添加依赖
 
 1） 打开pom.xml在`<dependencies>`标签中添加开发平台web组件依赖，若没有后端开发平台框架组件请先[获取](#get-web)  
 
@@ -241,7 +241,7 @@
 
 ![](https://i.imgur.com/YGYzCw4.png)
 
-##### 4. 开始编码
+#### 2.3.3 开始编码
 
 1） 在application.properties中添加数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
 
@@ -362,7 +362,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 - JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
 - 在service里面加对数据库的复杂操作。推荐使用querydsl写数据库语句，querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)，示例请见[2.4](#querydsl)
 
-##### <span id="get-web">5. 获取组件</span>
+#### <span id="get-web">2.3.4 获取组件</span>
 
 1） 申请svn库的开发平台项目权限，地址：`https://10.1.8.112/svn/DevelopPlatform`，将chamc-boot-starter-web项目下载到本地。
 
@@ -449,9 +449,47 @@ test由自己定义，可再使用不同的命名继续增加数据源
 ![](https://i.imgur.com/xTjRWWp.png)
 
 #### 3.1.2 配置主从及其使用说明
-- 1. 简介
-- 2. 配置
-- 3. demo
+
+1） 简介
+
+该组件支持配置主从分离，即在主库执行新增操作、从库执行其他操作，详细使用方法见下。
+
+2） 配置
+
+- 在配置文件application.properties中，开启主从分离并配置主库和从库（**注意：如果之前配了数据库，需删除之前配置**）。配置如下所示：
+
+		chamc.ds.rw.enable=true
+		chamc.ds.rw.master.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+		chamc.ds.rw.master.username=root
+		chamc.ds.rw.master.password=1111
+		
+		chamc.ds.rw.slave.url=jdbc:mysql://10.1.8.147:3306/test?characterEncoding=utf8&useSSL=true
+		chamc.ds.rw.slave.username=root
+		chamc.ds.rw.slave.password=1111
+
+3） demo
+
+使用之前的demo进行测试，为了看出效果两个数据库未配主从。目前，主库`t_user`表中有4条数据，从库`t_user`表中有1条数据。
+
+![主库](https://i.imgur.com/PRyT0A7.png)  ![从库](https://i.imgur.com/zfRahVM.png)
+
+- 查询所有用户数据，结果为从库数据，如下图：
+
+![](https://i.imgur.com/cAgMwVo.png)
+
+- 新增一个用户，新增到了主库中，如下图：
+
+![](https://i.imgur.com/Fty0FL6.png)
+![](https://i.imgur.com/QkjCCIe.png)
+
+- 修改id为1的用户，从库被修改，如下图：
+
+![](https://i.imgur.com/X6uk51B.png)
+![](https://i.imgur.com/vnGgnDi.png)
+
+- 删除id为1的用户，`http://localhost:8080/user/1`，从库数据被删除，如下图：
+
+![](https://i.imgur.com/ceOXBYy.png)
 
 #### 3.1.3 配置单点登录及其使用说明
 - 1. 简介
@@ -465,9 +503,61 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 ### <span id="swagger">3.2 swagger组件</span>
 
-- 1. 简介
-- 2. 配置
-- 3. demo
+1. 简介
+  - 本组件集成了Swagger。Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务。总体目标是使客户端和文件系统作为服务器以同样的速度来更新。文件的方法，参数和模型紧密集成到服务器端的代码，允许API来始终保持同步。Swagger 让部署管理和使用功能强大的API从未如此简单。了解更多请到[https://swagger.io/](https://swagger.io/)。  
+  - 关于Swagger UI官方解释是这样的：*The Swagger UI is an open source project to visually render documentation for a Swagger defined API directly from the API’s Swagger specifcation*。Swagger可以将某种固定格式的JSON数据生成可以视图的在线API文档，支持在线测试，可以清楚的观察到IO数据。
+  - 使用本组件可以获得在线API文档，并能在线测试，节省编写接口文档的时间。示例图：
+
+![](https://i.imgur.com/NZ6hqfi.png)
+
+2. 配置
+
+1） 获取swagger组件
+
+同[2.3.4 获取组件](get-web),将chamc-boot-starter-swagger下载到本地，并导入。
+
+2） 添加依赖
+
+在pom.xml中的`<dependencies>`标签中添加依赖
+
+	<dependency>
+		<groupId>com.chamc.boot</groupId>
+		<artifactId>chamc-boot-starter-swagger</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+
+3） 修改配置文件
+
+在application.properties文件中，增加配置，例如：
+
+	chamc.swagger.enable=true
+	chamc.swagger.apis.user.group=User
+	chamc.swagger.apis.user.path=/user/**
+	chamc.swagger.apis.user.title=\u7528\u6237\u63A5\u53E3
+
+- enable=true表示使用swagger组件  
+- user为自定义表示一个group，可添加多个group的配置，命名不可相同
+ - user.group表示这个组的名字
+ - user.path表示这个组映射的路径，可填多个用“,”分隔
+ - user.title表示这个组api文档的标题
+
+3. demo
+
+1） 示例  
+按照以上说明，修改demo-1的配置，启动demo-1，访问`http://localhost:8080/swagger-ui.html`。api文档的标题、介绍已省略。  
+
+![](https://i.imgur.com/vvAY8Ir.png)
+
+除此界面以外，还提供另一版本，访问`http://localhost:8080/swagger-ui-3.html`，将检索框url改为`/v2/api-docs?group=User`，如图：
+
+![](https://i.imgur.com/aJl57Qf.png)
+
+2） 使用
+
+展开各个接口，输入parameter，点击try it out进行请求。
+
+![](https://i.imgur.com/swqW04D.png)
+![](https://i.imgur.com/gOFF6H7.png)
 
 ### <span id="bpm">3.3 工作流组件</span>
 
