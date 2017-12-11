@@ -413,7 +413,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 - 配置其他数据源，例如命名为：test，则配置如下
 
-		chamc.ds.compose.data-sources.test.url=jdbc:mysql://localhost:3306/world?characterEncoding=utf8&useSSL=true
+		chamc.ds.compose.data-sources.test.url=jdbc:mysql://localhost:3306/test2?characterEncoding=utf8&useSSL=true
 		chamc.ds.compose.data-sources.test.username=root
 		chamc.ds.compose.data-sources.test.password=1111
 
