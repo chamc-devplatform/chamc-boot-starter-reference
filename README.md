@@ -332,7 +332,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
  - 关系的拥有方负责关系的维护，在拥有方建立外键。所以用到@JoinColumn
  - mappedBy跟JoinColumn/JoinTable总是处于互斥的一方
 
-9） 尝试自己写一个接口，按返回年龄小于X岁的所有用户信息并按倒序排列。  
+<span id="jpa">9） 尝试自己写一个接口，按返回年龄小于X岁的所有用户信息并按倒序排列。  </span>
 
 - 在UserController里添加方法
 
@@ -350,7 +350,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 - 在UserRepository里添加方法
 
-		`List<User> findByDetailAgeLessThanOrderByDetailAgeDesc(Long age);`
+		List<User> findByDetailAgeLessThanOrderByDetailAgeDesc(Long age);
 
 
 运行效果如图所示：  
@@ -360,7 +360,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 **【其他注意事项】**  
 
 - JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
-- 在service里面加对数据库的复杂操作。推荐使用querydsl写数据库语句，querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
+- 在service里面加对数据库的复杂操作。推荐使用querydsl写数据库语句，querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)，示例请见[2.4](#querydsl)
 
 ##### <span id="get-web">5. 获取组件</span>
 
@@ -372,7 +372,25 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 ![](https://i.imgur.com/kudFdb2.png)
 
-### 2.4 关于数据库操作的一些介绍
+### <span id="querydsl">2.4 关于数据库操作的一些介绍</span>
+
+#### 2.4.1 使用JPA
+
+1） 示例请见，[2.3.1 — 4 — 9）](#jpa)  
+2） JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
+
+#### 2.4.2 使用querydsl
+
+1） 示例：查询年龄小于X岁的用户并按年龄倒序排列
+
+	public List<User> processAgeLtBusinessByQsdl(Long age){
+		AbstractJPAQuery<User, JPAQuery<User>> query = this.repository.createDslQuery();
+		QUser qUser = QUser.user;
+		JPQLQuery<User> jpqlQuery = query.select(qUser).from(qUser).where(qUser.detail.age.lt(age)).orderBy(qUser.detail.age.desc());
+		return jpqlQuery.fetch();
+	}
+
+2） querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
 
 ## <span id="component">3 开发平台后端框架组件</span>
 
