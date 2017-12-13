@@ -571,7 +571,11 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 一些简单使用例子
 
+![](https://i.imgur.com/MxfOmOp.png)
 
+![](https://i.imgur.com/iBxy1th.png)
+
+![](https://i.imgur.com/kHxIOrn.png)
 
 详细请参考：[https://github.com/swagger-api/swagger-core/wiki/Annotations#apimodel](https://github.com/swagger-api/swagger-core/wiki/Annotations#apimodel)、[http://www.cnblogs.com/softidea/p/6251249.html](http://www.cnblogs.com/softidea/p/6251249.html)
 
