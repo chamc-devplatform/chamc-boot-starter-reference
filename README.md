@@ -497,9 +497,47 @@ test由自己定义，可再使用不同的命名继续增加数据源
 - 3. demo
 
 #### 3.1.4 配置日志打印及其使用说明
-- 1. 简介
-- 2. 配置
-- 3. demo
+
+1） 简介  
+
+改组件提供对各层（controller、service、repository）进行日志跟踪，详细使用方法如下。
+
+2） 配置
+
+- 在application.properties文件中开启日志跟踪：
+
+    	chamc.tracelog.enable=true
+
+请求某个接口后，如下：
+
+![](https://i.imgur.com/3L5EIt4.png)
+
+- 同时可以对各层进行配置：
+
+![](https://i.imgur.com/8e6mqVi.png)
+
+其中XXXX代表controller、service、repository：  
+ 
+		chamc.tracelog.XXXX.enable /**是否开启，默认false*/
+		chamc.tracelog.XXXX.showEnter /** 是否打印Enter日志 ，默认true */
+		chamc.tracelog.XXXX.showExit /** 是否打印Exit日志 */
+		chamc.tracelog.XXXX.className /** 日志内容是否包含类名，默认true */
+		chamc.tracelog.XXXX.methodName /** 日志内容是否包含方法名，默认true */
+		chamc.tracelog.XXXX.arguments /** Enter日志内容是否包含参数值，谨慎开启，可能会影响性能 ，默认false */
+		chamc.tracelog.XXXX.argumentTypes /** Enter日志内容是否包含参数类型，默认true*/
+		chamc.tracelog.XXXX.returnValue /** Exit日志内容是否包含返回值，谨慎开启，肯会影响性能 ，默认false */
+		chamc.tracelog.XXXX.invocationTime /** Exit日志是否包含执行时间，单位：ms ，默认true */
+		chamc.tracelog.XXXX.pointcut /** 日志切入点 */
+
+3） demo  
+
+在application.properties配置如图所示：
+
+![](https://i.imgur.com/0Mh31y6.png)
+
+请求一个接口，service的返回值和repository的入参被跟踪打印，如下图：
+
+![](https://i.imgur.com/89GWTy6.png)
 
 ### <span id="swagger">3.2 swagger组件</span>
 
