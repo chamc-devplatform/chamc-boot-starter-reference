@@ -620,7 +620,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 ### <span id="bpm">3.3 工作流组件</span>
 
-#### <span id="bpm_1">3.3.1 流程引擎基本信息</spam>
+#### <span id="bpm_1">3.3.1 流程引擎基本信息</span>
 
 - 术语
 
@@ -886,10 +886,11 @@ test由自己定义，可再使用不同的命名继续增加数据源
 `bpm`模块提供了任务的基本操作服务，直接访问请求即可。在第一个流程中，我们通过这种方式操作任务，例如启动应用后，根据应用部署的ip:port，直接访问{http://ip:port}/bpm/task/agree，就能完成该任务的同意操作。  
 操作和驳回的请求路径及部分参数说明如下所示，完整说明信息请参考[3.3.6 BPM模块基本请求](#bpm_6)。
 
-|----|----|----|
-|请求说明|URL|参数|
-|同意|/bpm/task/agree|operatorId, taskId|
-|驳回上一步|/bpm/task/reject|operatorId, taskId|
+简单示例：
+
+同意审批：访问post请求`{http://ip:port}/bpm/task/agree?` + `operatorId=用户id` + `&taskId=任务id` + `&comment=审批意见`
+
+驳回上一步：访问post请求`{http://ip:port}/bpm/task/reject?` + `operatorId=用户id` + `&taskId=任务id` + `&comment=驳回意见`
 
 4）查看流转明细
 
@@ -996,6 +997,26 @@ b、BpmOperateListener中有`before、after、afterThrowing`三个时间段的�
 |加签|/bpm/task/addSign|Post(Json)|BpmOperateParam|String(0)|
 |指派|/bpm/task/assign|Post(Json)|BpmOperateParam|String(0)|
 
+**<span id="BpmOperateParam">a、BpmOperateParam</span>**
+
+    {
+      "comment": "string",  //审批意见
+      "definitionId": "string", //流程定义id
+      "instanceId": "string",   //流程实例ID
+      "operatorId": "string",   //任务操作人Id（必须）
+      "taskId": "string",       //任务Id
+      "userIds": [              //需要用户信息时添加，比如指派/加签
+        "string"
+      ],
+      "variables": [            //变量
+        {
+          "name": "string",
+          "type": "string",     //变量类型，如string/boolean/integer等
+          "value": "string"
+        }
+      ]
+    }
+
 ##### <span id="bpm_6_3">3）异常说明</span>
 
 当请求处理发生异常时，统一抛出`BpmException`，错误信息内容包含在异常中。
@@ -1072,26 +1093,6 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 - [l、TaskDone](#TaskDone)
 - [m、TaskTodo](#TaskTodo)
 - [n、OperationType（枚举）](#OperationType)
-
-**<span id="BpmOperateParam">a、BpmOperateParam</span>**
-
-    {
-      "comment": "string",  //审批意见
-      "definitionId": "string", //流程定义id
-      "instanceId": "string",   //流程实例ID
-      "operatorId": "string",   //任务操作人Id（必须）
-      "taskId": "string",       //任务Id
-      "userIds": [              //需要用户信息时添加，比如指派/加签
-        "string"
-      ],
-      "variables": [            //变量
-        {
-          "name": "string",
-          "type": "string",     //变量类型，如string/boolean/integer等
-          "value": "string"
-        }
-      ]
-    }
 
 **<span id="Variable">b、Variable</span>**
 
