@@ -672,53 +672,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - Step 1：<span id="bpm_3_1">在管理页面设计流程图（包括流程参与人、操作等的配置）</span>
 
-1）访问并登录**流程引擎后台管理平台**（初始用户名密码：`administrator`+`111111`），登录后主页面及导航栏如图process-1所示，`系统设置`的子菜单可以管理用户、机构和角色等，可以分别点击进行对应的操作。为了方便使用，系统初始已预置初始数据，可查看确认。
-
-![图 process-1：系统设置](https://i.imgur.com/dxw3Jx4.png)
-
-<center>图 process-1：系统设置</center>
-
-2）点击`工作流管理`-`流程创建管理`，如图process-2所示，进入流程设计管理页面，在该页面可以完成流程的新建、发布等。
-
-![图 process-2：流程设计界面](https://i.imgur.com/2iqIYgv.png)
-
-<center>图 process-2：流程设计界面</center>
-
-3）点击新建流程，如图process-3所示，填写流程定义信息（所属租户，流程key等），填写完成后，点击确认保存流程定义信息。再次点击主页面的导航栏`工作流管理`-`流程创建管理`,可以看到列表第一条数据为刚才新建的流程，点击编辑操作，进入流程设计界面，如图process-4所示。
-
-![图 process-3：新建流程](https://i.imgur.com/WoDqP2d.png)
-
-<center>图 process-3：新建流程</center>
-
-![图 process-4：进入流程设计界面](https://i.imgur.com/2xZUH6z.png)
-
-<center>图 process-4：进入流程设计界面</center>
-
-4）设计流程图，在demo示例中设计简单的流程（启动-制单-领导审批-结束）。点击左侧`启动事件`，将`事件`控件拖入页面中间设计区域，如图process-5所示；点击拖入的`事件`，周围显示可以连接的其他控件，点击`分配给特定人的任务`，如图process-6所示，添加一个新的activity；按照同样的步骤，点击刚新建的activity，在周围出现的选项中点击`分配给特定人的任务`，添加第二个activity；同理点击第二个activity，选择红色的圈（一个无触发器的结束任务），添加结束节点。
-
-![图 process-5：拖入启动事件](https://i.imgur.com/5Nn8DQ3.png)
-
-<center>图 process-5：拖入启动事件</center>
-
-![图 process-6：添加activity](https://i.imgur.com/Qlx6Iyv.png)
-
-<center>图 process-6：添加activity</center>
-
-5）配置activity。如图process-7所示，点击后可以在右侧菜单设置activity属性，点击创建的第一个activity，输入id、名称，点击代理后的输入框，选择参与人信息，如图process-8所示，确认后点击任务节点功能，配置对于该activity的功能操作，勾选下一步操作，保存确认后，点击流程设计页面中控件栏上方的保存按钮，并关闭该页面，如图process-9所示。
-
-![图 process-7：修改属性](https://i.imgur.com/Ixi3we6.png)
-
-<center>图 process-7：修改属性</center>
-
-![图 process-8：设置参与人](https://i.imgur.com/3iyabyT.png)
-
-<center>图 process-8：设置参与人</center>
-
-![图 process-9：保存](https://i.imgur.com/91F6Xfp.png)
-
-<center>图 process-9：保存</center>
-
-6）发布流程图，再次点击主页面的导航栏`工作流管理`-`流程创建管理`，找到刚编辑的流程定义的条目并点击发布，提示流程发布成功，即完成了流程的设计与发布过程。
+根据流程管理平台操作指南，设计并发布流程。
 
 - Step 2：<span id="bpm_3_2">在开发项目中引入`bpm`模块</span>
 
@@ -793,7 +747,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 在任务详情页对待办任务进行操作，操作的按钮可以从待办任务的operations中获取，operations为对象数组，Operation返回值对象，包含信息较多：1、返回对应activity可进行的操作、操作名称及url；2、通过isNeedUserId标识该操作是否需要传用户id；3、通过isPlural标识需要用户id的话，是传1个还是多个；4、如果传的用户id（即下一个activity要用的用户id）有限定范围，那么会通过userRange返回给用户。operation对象示例可参考[Operation](#Operation)。
 
-对于前端使用来说，点击按钮时，取值Operation中的url，并按照Operation的要求附加参数，使用示例参考[actionTask](#actionTask)，
+对于前端使用来说，点击按钮时，取值Operation中的url，并按照Operation的要求附加参数并发送请求即可，使用示例参考[actionTask](#actionTask)，
 
 	{
 	  "content": [
@@ -880,17 +834,6 @@ test由自己定义，可再使用不同的命名继续增加数据源
 			}
 		});
 	}
-
-3）处理任务
-
-`bpm`模块提供了任务的基本操作服务，直接访问请求即可。在第一个流程中，我们通过这种方式操作任务，例如启动应用后，根据应用部署的ip:port，直接访问{http://ip:port}/bpm/task/agree，就能完成该任务的同意操作。  
-操作和驳回的请求路径及部分参数说明如下所示，完整说明信息请参考[3.3.6 BPM模块基本请求](#bpm_6)。
-
-简单示例：
-
-同意审批：访问post请求`{http://ip:port}/bpm/task/agree?` + `operatorId=用户id` + `&taskId=任务id` + `&comment=审批意见`
-
-驳回上一步：访问post请求`{http://ip:port}/bpm/task/reject?` + `operatorId=用户id` + `&taskId=任务id` + `&comment=驳回意见`
 
 4）查看流转明细
 
@@ -986,37 +929,6 @@ b、BpmOperateListener中有`before、after、afterThrowing`三个时间段的�
     	}
     }
 
-##### <span id="bpm_6_2">2）基本请求列表</span>
-
-|----|----|----|----|----|
-|描述|请求url|请求类型|入参|出参|
-|同意审批|/bpm/task/agree|Post(Json)|BpmOperateParam|String(0)|
-|驳回到上一步|/bpm/task/reject|Post(Json)|BpmOperateParam|String(0)|
-|驳回到第一步|/bpm/task/rejectToFirst|Post(Json)|BpmOperateParam|String(0)|
-|改派|/bpm/task/delegate|Post(Json)|BpmOperateParam|String(0)|
-|加签|/bpm/task/addSign|Post(Json)|BpmOperateParam|String(0)|
-|指派|/bpm/task/assign|Post(Json)|BpmOperateParam|String(0)|
-
-**<span id="BpmOperateParam">a、BpmOperateParam</span>**
-
-    {
-      "comment": "string",  //审批意见
-      "definitionId": "string", //流程定义id
-      "instanceId": "string",   //流程实例ID
-      "operatorId": "string",   //任务操作人Id（必须）
-      "taskId": "string",       //任务Id
-      "userIds": [              //需要用户信息时添加，比如指派/加签
-        "string"
-      ],
-      "variables": [            //变量
-        {
-          "name": "string",
-          "type": "string",     //变量类型，如string/boolean/integer等
-          "value": "string"
-        }
-      ]
-    }
-
 ##### <span id="bpm_6_3">3）异常说明</span>
 
 当请求处理发生异常时，统一抛出`BpmException`，错误信息内容包含在异常中。
@@ -1093,6 +1005,28 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 - [l、TaskDone](#TaskDone)
 - [m、TaskTodo](#TaskTodo)
 - [n、OperationType（枚举）](#OperationType)
+
+**<span id="BpmOperateParam">a、BpmOperateParam</span>**
+
+在[3.3.6 BPM模块基本请求](#bpm_6)模块提到，集成流程引擎后可以直接使用bpm提供的controller发送请求，也就是查询待办任务时，pcUrl对应的请求。请求的参数对象为`BpmOperateParam`.
+
+    {
+      "comment": "string",  //审批意见
+      "definitionId": "string", //流程定义id
+      "instanceId": "string",   //流程实例ID
+      "operatorId": "string",   //任务操作人Id（必须）
+      "taskId": "string",       //任务Id
+      "userIds": [              //需要用户信息时添加，比如指派/加签
+        "string"
+      ],
+      "variables": [            //变量
+        {
+          "name": "string",
+          "type": "string",     //变量类型，如string/boolean/integer等
+          "value": "string"
+        }
+      ]
+    }
 
 **<span id="Variable">b、Variable</span>**
 
