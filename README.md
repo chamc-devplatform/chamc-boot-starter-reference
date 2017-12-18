@@ -624,7 +624,12 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 术语
 
->  
+> - 流程定义：
+> - 活动（activity）：
+> - 流程实例：
+> - 任务：
+> - BPM：业务流程管理(Business Process Management)
+> - BPM模块：开发平台建设的流程相关子项目模块，项目名“chamc-boot-starter-bpm”
 
 - 介绍
 
@@ -669,29 +674,516 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 步骤概述：
 
-> [在管理页面设计流程图（包括流程参与人、操作等的配置）](#bpm_3)  
-> [在开发项目中引入`bpm`模块](#maven)  
-> [项目中的流程配置](#jdk)  
-> [流程发起及操作](#)
+> [在管理页面设计流程图（包括流程参与人、操作等的配置）](#bpm_3_1)  
+> [在开发项目中引入`starter-bpm`模块](#bpm_3_2)  
+> [项目中的流程配置](#bpm_3_3)  
+> [流程发起及操作](#bpm_3_4)
 
-- Step 1：<span id="bpm_3">在管理页面设计流程图（包括流程参与人、操作等的配置）</span>
+- Step 1：<span id="bpm_3_1">在管理页面设计流程图（包括流程参与人、操作等的配置）</span>
+
+1）访问并登录**流程引擎后台管理平台**（初始用户名密码：`administrator`+`111111`），登录后主页面及导航栏如图process-1所示，`系统设置`的子菜单可以管理用户、机构和角色等，可以分别点击进行对应的操作。为了方便使用，系统初始已预置初始数据，可查看确认。
+
+![图 process-1：系统设置](https://i.imgur.com/dxw3Jx4.png)
+
+<center>图 process-1：系统设置</center>
+
+2）点击`工作流管理`-`流程创建管理`，如图process-2所示，进入流程设计管理页面，在该页面可以完成流程的新建、发布等。
+
+![图 process-2：流程设计界面](https://i.imgur.com/2iqIYgv.png)
+
+<center>图 process-2：流程设计界面</center>
+
+3）点击新建流程，如图process-3所示，填写流程定义信息（所属租户，流程key等），填写完成后，点击确认保存流程定义信息。再次点击主页面的导航栏`工作流管理`-`流程创建管理`,可以看到列表第一条数据为刚才新建的流程，点击编辑操作，进入流程设计界面，如图process-4所示。
+
+![图 process-3：新建流程](https://i.imgur.com/WoDqP2d.png)
+
+<center>图 process-3：新建流程</center>
+
+![图 process-4：进入流程设计界面](https://i.imgur.com/2xZUH6z.png)
+
+<center>图 process-4：进入流程设计界面</center>
+
+4）设计流程图，在demo示例中设计简单的流程（启动-制单-领导审批-结束）。点击左侧`启动事件`，将`事件`控件拖入页面中间设计区域，如图process-5所示；点击拖入的`事件`，周围显示可以连接的其他控件，点击`分配给特定人的任务`，如图process-6所示，添加一个新的activity；按照同样的步骤，点击刚新建的activity，在周围出现的选项中点击`分配给特定人的任务`，添加第二个activity；同理点击第二个activity，选择红色的圈（一个无触发器的结束任务），添加结束节点。
+
+![图 process-5：拖入启动事件](https://i.imgur.com/5Nn8DQ3.png)
+
+<center>图 process-5：拖入启动事件</center>
+
+![图 process-6：添加activity](https://i.imgur.com/Qlx6Iyv.png)
+
+<center>图 process-6：添加activity</center>
+
+5）配置activity。如图process-7所示，点击后可以在右侧菜单设置activity属性，点击创建的第一个activity，输入id、名称，点击代理后的输入框，选择参与人信息，如图process-8所示，确认后点击任务节点功能，配置对于该activity的功能操作，勾选下一步操作，保存确认后，点击流程设计页面中控件栏上方的保存按钮，并关闭该页面，如图process-9所示。
+
+![图 process-7：修改属性](https://i.imgur.com/Ixi3we6.png)
+
+<center>图 process-7：修改属性</center>
+
+![图 process-8：设置参与人](https://i.imgur.com/3iyabyT.png)
+
+<center>图 process-8：设置参与人</center>
+
+![图 process-9：保存](https://i.imgur.com/91F6Xfp.png)
+
+<center>图 process-9：保存</center>
+
+6）发布流程图，再次点击主页面的导航栏`工作流管理`-`流程创建管理`，找到刚编辑的流程定义的条目并点击发布，提示流程发布成功，即完成了流程的设计与发布过程。
+
+- Step 2：<span id="bpm_3_2">在开发项目中引入`bpm`模块</span>
+
+1）参考[3.3.2 集成及获取服务](#bpm_2)，为项目添加bpm模块依赖。
+
+- Step 3：<span id="bpm_3_3">项目中的流程配置</span>
+
+以SpringBoot项目为例：
+
+1）在配置文件（application.properties）中添加如下所示的内容：
+
+    chamc.bpm.type=tansun
+    chamc.bpm.tansun.url=http://localhost:8080/workflow-console #流程引擎服务地址
+    chamc.bpm.tansun.tenant-id=archive  #租户ID，可以在“流程引擎后台管理平台——工作流管理——租户管理”查看
+    chamc.bpm.tansun.default-classify-code=root #流程分配编码
+
+- Step 4：<span id="bpm_3_4">流程发起及操作</span>
+
+1）发起流程
+
+在SpringBoot项目需要的地方注入`com.chamc.boot.bpm.service.IInstanceService`，调用iInstanceService.startBpm(startBpmParam)即可启动流程，示例：
+
+    import org.springframework.beans.factory.annotation.Autowired;
+
+    import com.chamc.boot.bpm.model.process.param.StartBpmParam;
+    import com.chamc.boot.bpm.service.IInstanceService;
+
+    public class InstanceServiceDemo {
+
+    	private @Autowired IInstanceService iInstanceService;
+    
+    	public void startBpm() {
+    		StartBpmParam startBpmParam = new StartBpmParam();
+    		startBpmParam.setProcessKey("process-helloworld");
+    		startBpmParam.setUserId("user1");
+    		startBpmParam.setTitle("测试任务标题");
+    		iInstanceService.startBpm(startBpmParam);
+    	}
+    }
+
+2）查看待办**/**已办任务
+
+注入`com.chamc.boot.bpm.service.ITaskService`，调用iTaskService.queryTodo(userId, pageable)方法查看待办任务列表，根据[流程定义信息](#bpm_3_1)，此时第一个activity配置的参与人应收到一条待办任务。或者通过queryDone接口查看已办任务列表，如下所示：
+
+    import org.springframework.beans.factory.annotation.Autowired;
+    import org.springframework.data.domain.Page;
+    import org.springframework.data.domain.PageRequest;
+    import org.springframework.data.domain.Pageable;
+    
+    import com.chamc.boot.bpm.model.task.TaskDone;
+    import com.chamc.boot.bpm.model.task.TaskTodo;
+    import com.chamc.boot.bpm.service.ITaskService;
+    
+    public class TaskServiceDemo {
+    
+    	private @Autowired ITaskService iTaskService;
+    	
+    	public Page<TaskTodo> queryTaskTodo(String userId) {
+    		Pageable pageable = new PageRequest(0, 20);		//构造pageable对象，查询第1页数据，分页大小为20
+    		Page<TaskTodo> todoPage = iTaskService.queryTodo(userId, pageable);
+    		return todoPage;
+    	}
+    	
+    	public Page<TaskDone> queryTaskDone(String userId) {
+    		Pageable pageable = new PageRequest(0, 20);
+    		Page<TaskDone> donePage = iTaskService.queryDone(userId, pageable);
+    		return donePage;
+    	}
+    }
+
+3）处理任务
+
+`bpm`模块提供了任务的基本操作服务，直接访问请求即可。在第一个流程中，我们通过这种方式操作任务，例如启动应用后，根据应用部署的ip:port，直接访问{http://ip:port}/bpm/task/agree，就能完成该任务的同意操作。  
+操作和驳回的请求路径及部分参数说明如下所示，完整说明信息请参考[3.3.6 BPM模块基本请求](#bpm_6)。
+
+|----|----|----|
+|请求说明|URL|参数|
+|同意|/bpm/task/agree|operatorId, taskId|
+|驳回上一步|/bpm/task/reject|operatorId, taskId|
+
+4）查看流转明细
+
+    private @Autowired IInstanceService iInstanceService;
+
+	public List<ProcessTransferDetail> queryTransferDetail(String instanceId) {
+		List<ProcessTransferDetail> result = iInstanceService.queryTransferDetail(instanceId);
+		return result;
+	}
+
+至此，已经完成了第一个流程demo。包括流程设计、流程发起、待办已办查询、任务处理及查询流转明细等。
 
 #### <span id="bpm_4">3.3.4 流程设计与管理平台</span>
 
-#### <span id="bpm_5">3.3.5 流程服务</span>
+#### <span id="bpm_5">3.3.5 流程服务说明</span>
+
+1）流程服务总述：  
+流程服务模块（BPM模块）以jar包的形式添加到项目系统中，为业务系统提供流程相关的所有服务。在开发的过程中只需要按照[3.3.2 集成及获取服务](#bpm_2)为项目添加流程引擎模块依赖，并在项目配置文件中添加一些简单的信息，即可使用流程引擎服务。
+
+BPM模块能够提供的流程引擎服务包括流程设计、流程发起、待办已办查询、任务处理及查询流转明细，并包括查询activity定义、查询流程变量和查询任务可进行的操作等。同时支持直接以请求的方式调用和SDK接口的形式调用两种方式。开发人员在使用流程服务时，基础使用可以直接调用bpm封装好的请求即可，bpm提供的请求详情可参考[3.3.6 BPM模块基本请求](#bpm_6)，如果需要其他更加丰富的功能，注入相应的service并调用接口即可，接口的入参和出参详情可参考[3.3.7 SDK接口](#bpm_7)。
+
+BPM模块使用前需要在项目的`application.properties`中配置流程信息，分为必须信息和可选信息两种，配置的具体信息可参考[【示例】application中配置流程信息](#properties)
+
+如果流程中涉及到会签的使用场景，可以在设计流程图的时候进行配置，具体可参考[【示例】会签使用场景](#huiqian)
+
+2）<span id="properties">【示例】application中配置流程信息</span>
+
+通过配置信息，能够对指定processKey的流程的key、全局的待办/已办的pcUrl/mobileUrl进行配置，也能够对该key对应的每个activity的属性进行配置，包括操作按钮的名称、是否第一个/最后一个activity以及单个activity的url。
+
+配置项以`chamc.bpm.processes`开头，后跟流程定义别名（只供配置信息用），以下示例中为`zbwsdazl`。
+
+针对流程的属性有`processKey、todo-pc-url、done-pc-url、todo-mobile-url、done-mobile-url`，url会在查询任务详情/任务列表时返回。配置流程属性时以`chamc.bpm.processes.流程别名.`开头
+
+针对流程中单个activity的属性有`todo-pc-url、done-pc-url、todo-mobile-url、done-mobile-url、first、last`，其中first、last为boolean型。在配置activity属性时，以`chamc.bpm.processes.流程别名.activity的Id.`开头，activityId可以在流程设计（画流程图）的时候设置。
+
+    chamc.bpm.type=tansun   #流程引擎类型
+    chamc.bpm.tansun.url=http://10.1.1.177:8081/workflow-console    #流程引擎服务url
+    chamc.bpm.tansun.tenant-id=archive  #租户id
+    chamc.bpm.tansun.default-classify-code=root #流程分类
+    
+    chamc.bpm.processes.zbwsdazl.process-key=zbwsdazl_process   #以zbwsdazl为标识配置processKey为zbwsdazl_process的流程
+    chamc.bpm.processes.zbwsdazl.activities.gdys.operations.agree.text=同意审批     #zbwsdazl流程中id为gdys的activity的同意按钮的名称自定义 【注：每个activity的每个按钮的名称都可以自定义，按钮类型列表参考3.3.7.x【示例】按钮列表】
+    chamc.bpm.processes.zbwsdazl.activities.gdys.operations.reject.text=驳回  #id为gdys的activity的驳回按钮的名称自定义
+    chamc.bpm.processes.zbwsdazl.activities.tjsh.first=true #配置id为tjsh的activity为第一个活动，查询任务或任务列表时返回
+    chamc.bpm.processes.zbwsdazl.activities.wcgd.last=true  #配置id为wcgd的activity为最后一个活动
+    chamc.bpm.processes.zbwsdazl.todo-pc-url=receiveAudit   #配置以zbwsdazl为标识的流程的全局待办任务的pc-url
+    chamc.bpm.processes.zbwsdazl.todo-mobile-url=receiveAudit   #配置以zbwsdazl为标识的流程的全局待办任务的mobile-url
+    chamc.bpm.processes.zbwsdazl.done-pc-url=receiveAudit
+    chamc.bpm.processes.zbwsdazl.activities.tjsh.todo-pc-url=submitReview   #zbwsdazl中id为tjsh的activity的待办任务的pc-url地址
+    
+    chamc.bpm.tansun.log-level=full     #可选项为NONE、BASIC、HEADERS、FULL，流程引擎的日志级别配置
+
+3）<span id="huiqian">【示例】会签使用场景</span>
+
+（待补充）
+
+#### <span id="bpm_6">3.3.6 BPM模块基本请求</span>
+
+- com.chamc.boot.bpm.controller.TaskController
+
+##### <span id="bpm_6_1">1）说明</span>
+
+基本请求是在配置好BPM依赖之后，可以直接通过restful发起的请求，不需要再业务系统中书写其他代码。如果需要在操作前/后添加业务逻辑处理时，有以下两个方案：
+
+a、针对每个流程新建listener类并实现`com.chamc.boot.bpm.controller.listener.BpmOperateListener`接口即可，须实现该接口的`String processKey();`方法，并且在`before`方法中需要setOperatorId（操作人用户id），如下所示；
+
+b、BpmOperateListener中有`before、after、afterThrowing`三个时间段的方法，如果只需要其中一个或者几个的话，可以新建listener类并继承`com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter`即可，重载的方法同BpmOperateListener中所述方法。
+
+    import com.chamc.boot.bpm.controller.listener.BpmOperateListener;
+    import com.chamc.boot.bpm.controller.param.BpmOperateParam;
+    import com.chamc.boot.bpm.model.common.OperationType;
+    
+    public class AdminArchivingAuditListener implements BpmOperateListener {
+    	
+    	private final static String processKey = "zbwsdazl_process";
+    
+    	@Override
+    	public void before(BpmOperateParam param, OperationType type) {
+            //操作执行前，设置操作人
+    		param.setOperatorId(UserUtil.getUserId());
+            //***
+    	}
+    
+    	@Override
+    	public void after(BpmOperateParam param, OperationType type) { }
+    
+    	@Override
+    	public void afterThrowing(BpmOperateParam param, OperationType type, Throwable t) { }
+    
+    	@Override
+    	public String processKey() {
+    		return processKey;
+    	}
+    }
+
+##### <span id="bpm_6_2">2）基本请求列表</span>
+
+|----|----|----|----|----|
+|描述|请求url|请求类型|入参|出参|
+|同意审批|/bpm/task/agree|Post(Json)|BpmOperateParam|String(0)|
+|驳回到上一步|/bpm/task/reject|Post(Json)|BpmOperateParam|String(0)|
+|驳回到第一步|/bpm/task/rejectToFirst|Post(Json)|BpmOperateParam|String(0)|
+|改派|/bpm/task/delegate|Post(Json)|BpmOperateParam|String(0)|
+|加签|/bpm/task/addSign|Post(Json)|BpmOperateParam|String(0)|
+|指派|/bpm/task/assign|Post(Json)|BpmOperateParam|String(0)|
+
+##### <span id="bpm_6_3">3）异常说明</span>
+
+当请求处理发生异常时，统一抛出`BpmException`，错误信息内容包含在异常中。
+
+#### <span id="bpm_7">3.3.7 SDK接口</span>
+
+##### <span id="bpm_7_1"> 1）说明</span>
+
+SDK接口能够让开发人员快速的开发应用，进行灵活的流程应用的支持。在SDK中封装了工作流引擎提供的各种服务，为开发人员提供便利。
+
+##### <span id="bpm_7_2">2）获取接口的方式</span>
+
+目前SDK主要提供2类的接口，包路径为`com.chamc.boot.bpm.service`，接口分类列表如下：
 
 |----|----|----|
+|编号|interface|描述|
+|1|IInstanceService|流程实例相关的service，包括流程启动、终止以及根据流程实例/定义的一些查询方法|
+|2|ITaskService||
 
+##### <span id="bpm_7_3">3）接口列表</span>
 
+**IInstanceService**
 
-#### <span id="bpm_8">3.3.8 同步模块说明</span>
+|---|----|----|----|----|
+|编号|方法|入参|出参|描述|
+|1|startBpm|StartBpmParam|~|启动流程，启动参数中有不同情况的处理|
+|2|terminateBpm|userId，instanceId|~|终止流程|
+|3|terminateBpm|userId，instanceId，comment|~|终止流程，可传评论参数|
+|4|queryTransferDetail|instanceId|`List<ProcessTransferDetail>`|获取流转明细|
+|5|getProcessVariables|instanceId|`List<Variable>`|获取流程变量|
+|6|queryProcessInstance|processKey|`List<ProcessInstance>`|获取指定流程key对应的运行中的流程实例|
 
-#### <span id="bpm_9">3.3.9 版本变更历史</span>
+**ITaskService**
+
+|---|----|----|----|----|
+|编号|方法|入参|出参|描述|
+|1|queryTodo|userId,pageable|`Page<TaskTodo>`|分页查询待办列表|
+|2|getTaskTodo|taskId|`TaskTodo`|按照taskId查询待办任务|
+|3|queryDone|userId,pageable|`Page<TaskDone>`|分页查询已办列表|
+|4|getTaskDone|taskId|`TaskDone`|根据taskId查询已办任务|
+|5|completeTask|taskId, userId|~|同意审批/下一步|
+|5|completeTask|taskId, userId, variableList|~|~|
+|5|completeTask|taskId, userId, comment|~|~|
+|5|completeTask|taskId, userId, comment, variableList|~|同意审批/下一步，可选参数List<Variable>，传流程变量列表|
+|5|completeTask|taskId, userId, nextOrgId, comment, variableList|~|同意审批/下一步，可指定下一个activity参与人的orgId|
+|6|completeAndAssign|taskId, userId, nextParticipateList|~|同意审批并指派下一步的参与人（List<Participant>）|
+|6|completeAndAssign|taskId, userId, comment, nextParticipateList|~|同意审批并指派下一步的参与人|
+|7|addSign|taskId, userIdList|~|加签|
+|7|addSign|taskId, userIdList, comment|~|~|
+|8|reject|taskId, userId|~|驳回到上一步|
+|8|reject|taskId, userId, variableList|~|附件参数：变量列表|
+|8|reject|taskId, userId, comment|~|驳回到上一步|
+|8|reject|taskId, userId, comment, variableList|~|附件参数：变量列表|
+|9|rejectToFirst|taskId, userId|~|驳回到制单人（第一个activity）|
+|9|rejectToFirst|taskId, userId, variableList|~|~|
+|9|rejectToFirst|taskId, userId, comment|~|~|
+|9|rejectToFirst|taskId, userId, comment, variableList|~|~|
+|10|delegate|taskId, userId, toUserId|~|转办/委派|
+|10|delegate|taskId, userId, toUserId, comment|~|~|
+
+##### <span id="bpm_7_4">4) Model说明</span>
+
+- [a、BpmOperateParam](#BpmOperateParam)
+- [b、Variable](#Variable)
+- [c、AssignInfo](#AssignInfo)
+- [d、Activity](#Activity)
+- [e、Comment](#Comment)
+- [f、UserType（枚举）](#UserType)
+- [g、Participant](#Participant)
+- [h、StartBpmParam](#StartBpmParam)
+- [i、ProcessInstance](#ProcessInstance)
+- [j、Operation](#Operation)
+- [k、ProcessTransferDetail](#ProcessTransferDetail)
+- [l、TaskDone](#TaskDone)
+- [m、TaskTodo](#TaskTodo)
+- [n、OperationType（枚举）](#OperationType)
+
+**<span id="BpmOperateParam">a、BpmOperateParam</span>**
+
+    {
+      "comment": "string",  //审批意见
+      "definitionId": "string", //流程定义id
+      "instanceId": "string",   //流程实例ID
+      "operatorId": "string",   //任务操作人Id（必须）
+      "taskId": "string",       //任务Id
+      "userIds": [              //需要用户信息时添加，比如指派/加签
+        "string"
+      ],
+      "variables": [            //变量
+        {
+          "name": "string",
+          "type": "string",     //变量类型，如string/boolean/integer等
+          "value": "string"
+        }
+      ]
+    }
+
+**<span id="Variable">b、Variable</span>**
+
+    {
+        "name": "string",
+        "type": "string",     //变量类型，如string/boolean/integer等
+        "value": "string"
+    }
+
+**<span id="AssignInfo">c、AssignInfo</span>**
+
+    {
+        "userIds": "String[]", //被指派的用户id数组
+    }
+
+**<span id="Activity">d、Activity</span>**
+
+    {
+      "id": "string",
+      "name": "string",
+      "first": "boolean",   //是否流程的第一个activity
+      "last": "boolean",   //是否流程的最后一个activity
+    }
+
+**<span id="Comment">e、Comment</span>**
+
+    {
+      "id": "string",
+      "author": "string", //评论人
+      "message": "string",
+      "createTime": "Date"
+    }
+
+**<span id="UserType">f、UserType（枚举）</span>**
+
+    {
+        USER,
+        DEPT,
+        ORG,
+        USER_GROUP
+    }
+
+**<span id="Participant">g、Participant</span>**
+
+    {
+      "id": "string",  //用户id
+      "code": "string", //用户表尼玛
+      "name": "string",   //用户名称
+      "org": "string",   //用户所在机构Id
+      "orgName": "string",   //用户所在机构名称
+      "type": "UserType" //用户类型
+    }
+
+**<span id="StartBpmParam">h、StartBpmParam</span>**
+
+    {
+      "userId": "string",
+      "processKey": "string", //流程定义key
+      "bussinessKey": "string",   //业务单号
+      "title": "string",   //流程实例标题
+      "orgId": "string",       //制单人机构ID
+      "toNext": "boolean",      //是否跳过第一个activity
+      "variables": "List<Variable>",  //变量
+      "assignInfo": "AssignInfo"        //启动时的指派信息
+    }
+
+**<span id="ProcessInstance">i、ProcessInstance</span>**
+
+    {
+      "id": "string",  //流程实例id
+      "title": "string", //流程实例名称
+      "businessKey": "string",
+      "definitionId": "string",       //流程定义id，包括版本信息等
+      "definitionName": "string",       //流程定义名称
+      "currentActivity": "Activity",   //当前所在节点
+      "startParticipant": "Participant",      //启动人信息
+    }
+
+**<span id="Operation">j、Operation</span>**
+
+Operation返回值对象，包含信息较多：1、返回对应activity可进行的操作、操作名称及url；2、通过isNeedUserId标识该操作是否需要传用户id；3、通过isPlural标识需要用户id的话，是传1个还是多个；4、如果传的用户id（即下一个activity要用的用户id）有限定范围，那么会通过userRange返回给用户。
+
+    {
+        "op", "OperationType",
+        "text", "String",
+        "isPlural": "boolean",
+        "url", "String",
+        "isNeedUserId": "boolean",
+        "userRange", "List<String>",
+    }
+
+**<span id="ProcessTransferDetail">k、ProcessTransferDetail</span>**
+
+    {
+      "id": "string",  //任务id
+      "name": "string", //任务节点名称
+      "executionId": "string",       //任务执行id
+      "createTime": "Date",   //创建时间
+      "startTime": "Date",   //创建时间
+      "endTime": "Date",
+      "durationInMillis": "Long", //持续时间
+      "dueDate": "Date",   //持续时间
+      "deleteReason": "string",       //待办删除原因，比如处理了，驳回了，终止了，转办了等
+      "processInstance": "ProcessInstance",//流程实例
+      "participant": "Participant",      //任务参与人信息
+      "comment": "Comment"   //评论   
+    }
+
+**<span id="TaskDone">l、TaskDone</span>**
+
+    {
+      "id": "string",  //任务id
+      "name": "string", //任务节点名称
+      "executionId": "string",       //任务执行id
+      "startTime": "Date",   //创建时间
+      "endTime": "Date",
+      "durationInMillis": "Long", //持续时间
+      "dueDate": "Date",   //持续时间
+      "deleteReason": "string",       //待办删除原因，比如处理了，驳回了，终止了，转办了等
+      "processInstance": "ProcessInstance",//流程实例
+      "assigneeParticipant": "Participant",      //任务参与人信息
+      "comment": "Comment",   //评论
+      "pcUrl": "string",
+      "mobileUrl": "string"       //移动审批Url    
+    }
+
+**<span id="TaskTodo">m、TaskTodo</span>**
+
+    {
+      "id": "string",  //任务id
+      "name": "string", //任务节点名称
+      "createTime": "Date",   //创建时间
+      "dueDate": "Date",   //持续时间
+      "executionId": "string",       //任务执行id
+      "processInstance": "ProcessInstance",//流程实例
+      "operations": "List<Operation>",      //任务可执行的操作
+      "activity": "Activity",   //任务对应节点的描述对象
+      "pcUrl": "string",
+      "mobileUrl": "string"       //移动审批Url    
+    }
+
+**<span id="OperationType">n、OperationType（枚举）</span>**
+
+|----|----|----|----|
+|按钮名称(默认名称)|code|流程设计图对应任务节点功能设置|描述|
+|同意|agree|下一步|同意审批|
+|拒绝|refuse||
+|驳回|reject|退回上一步|
+|驳回到第一步|rejectToFirst|退回第一步|
+|驳回到指定环节|rejectToSpecified|退回指定节点|
+|改派|delegate|转发|
+|加签|addSign|加签|
+|指派|assign||
+|终止|terminate|终止流程|
+|挂起|suspend|挂起流程|
+|激活|activate|激活流程|
+|减签|delSign|减签|
+
+##### <span id="bpm_7_5">5）IInstanceService</span>
+
+##### <span id="bpm_7_6">6）ITaskService</span>
+
+#### <span id="bpm_8">3.3.8 错误说明</span>
+
+|----|----|----|
+|错误码|错误提示|描述|
+|**500**|查询待办发生异常|流程引擎内部错误，可能原因为：1、参数错误，2、流程引擎bug|
+
+#### <span id="bpm_9">3.3.9 同步模块说明</span>
+
+#### <span id="bpm_10">3.3.10 版本变更历史</span>
 
 |----|----|----|
 |SDK版本|发布时间|更新内容描述|
 |0.0.1SNAPSHOT||新建项目|
-
 
 ## <span id="how-to">4 “How-to”指南</span>
 
