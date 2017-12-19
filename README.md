@@ -46,128 +46,7 @@
 
 ### 2.2 环境安装
 
-使用开发平台后端框架需要以下环境：  
-
-- [jdk1.8](#jdk)
-- [maven3.5.0](#maven)
-- [spring tool suite](#sts)  
-
-以上软件都可通过 [公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6) 获得。
-
-#### <span id="jdk">2.2.1 jdk的安装配置</span>
-
-##### 1. 安装jdk
-根据安装提示进行安装。**注意：安装路径不要包含中文、空格、特殊字符** 
-##### 2. 配置环境变量  
-
-1) 新增环境变量JAVA_HOME 
-<pre>例：C:\Program Files\Java\jdk1.8.0_131</pre> 
-  
-![](https://i.imgur.com/49uVnkH.png)  
-
-2) 新增环境变量path(最好将其放在第一位)  
-<pre>例：C:\Program Files\Java\jdk1.8.0_131\bin;C:\Program Files\Java\jdk1.8.0_131\jre\bin;</pre>
- 
-![](https://i.imgur.com/d3H1T7E.png)
-
-3） 新增环境变量CLASSPATH  
-<pre>例：.;%JAVA_HOME%\lib;%JAVA_HOME%\lib\tools.jar</pre>
-
-![](https://i.imgur.com/xd78npM.png)
-
-##### 3. 在cmd中执行java -version,若出现下图则安装成功  
-
-![](https://i.imgur.com/k5g3ZUa.png)
-
-#### <span id="maven">2.2.2 maven的安装配置</span>
-
-##### 1. 解压apache-maven-3.5.0-bin.zip到某个目录（例如D盘） **注意：解压路径不要包含中文、空格、特殊字符**  
-##### 2. 设置环境变量  
-1） 新建系统变量  MAVEN_HOME  变量值：D:\apache-maven-3.5.0  
-
-![](https://i.imgur.com/KcBDyNb.png)
-
-2） 编辑系统变量  Path  添加变量值：;%MAVEN_HOME%\bin  
-
-![](https://i.imgur.com/hiaMCLH.png)
-
-##### 3. 打开命令行，输入 mvn --version，若出现以下情况则配置成功。 
-
-![](https://i.imgur.com/yY62UDa.png)
-
-##### 4. 在maven目录下的conf文件夹的settings.xml中加入：  
-  
-1） 在`<proxies>`标签中加入代理：  
-
-	<proxy>  
-		<id>optional</id>  
-		<active>true</active>  
-		<protocol>http</protocol>  
-		<username></username>  
-		<password></password>  
-		<host>10.80.2.4</host>  
-		<port>80</port>  
-		<nonProxyHosts>local.net|some.host.com</nonProxyHosts>  
-	</proxy>
-
-2） 在`<profiles>`标签中加入：  
-
-	<profile>  
-		<id>jdk-1.8</id>  
-		<activation>  
-			<activeByDefault>true</activeByDefault>  
-			<jdk>1.8</jdk>  
-		</activation>  
-		<properties>  
-			<maven.compiler.source>1.8</maven.compiler.source>  
-			<maven.compiler.target>1.8</maven.compiler.target>  
-			<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>  
-		</properties>  
-	</profile>  
-  
-3） 在`<activeProfiles>`标签中添加：  
-
-   `<activeProfile>jdk-1.8</activeProfile>`
-		
-#### <span id="sts">2.2.3 spring tool suite的安装配置</span>
-
-##### 1. STS的安装
-
-1） 解压 spring-tool-suite-3.8.4.RELEASE-e4.6.3-win32-x86_64.zip （**注意：解压路径不要包含中文、空格、特殊字符**）  
-2） 打开 sts-3.8.4.RELEASE 的 STS.exe ，即可使用  
-  
-##### 2. STS的配置
-
-1） Maven配置  
-  
-- 打开STS，进入windows —》Preferences —》Maven —》Installations。  
-- 点击Add...选择Maven的所在目录。  
- 
-![1](https://i.imgur.com/ilpB3Wu.png)  
-
-- 勾选这个Maven，并点击Apply。    
-
-![2](https://i.imgur.com/oMYGNrY.png)  
-
-- 选择User Settings，将设置User Settings为自己的settings.xml，OK。  
-		
-![3](https://i.imgur.com/1quxhE5.png)  
-
-2） JDK配置
-
-- 打开STS，进入windows —》Preferences —》Java —》Installed JREs。  
-
-![4](https://i.imgur.com/MZgsUFu.png)  
-
-- 选中jdk，选择Edit...。将jdk改为指向jdk的目录（**而不是jre**），Finish。 
-
-![5](https://i.imgur.com/W8hkZp6.png)
-
-3） <span id="daili">配置代理（可不配）</span>  
-
-- 打开 windows —》Preferences —》Network Connections，配置如图所示。
-
-![](https://i.imgur.com/UktUnq1.png)
+详见[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)开发平台后端框架环境搭建.html
 
 ### 2.3 第一个demo
 
@@ -656,7 +535,9 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 前端实现（vue）
 
+![](https://i.imgur.com/qAqJQ6V.png)
 
+![](https://i.imgur.com/eCtDAFF.png)
 
 #### 3.1.4 配置日志打印及其使用说明
 
@@ -1355,6 +1236,10 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |0.0.1SNAPSHOT||新建项目|
 
 ## <span id="how-to">4 “How-to”指南</span>
+
+## <span id="path">5 开发平台路线图</span>
+
+![](https://i.imgur.com/hBWZIUa.png)
 
 ## 6 附录
 
