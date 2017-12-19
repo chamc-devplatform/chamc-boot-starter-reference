@@ -913,7 +913,9 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 在任务详情页对待办任务进行操作，操作的按钮可以从待办任务的operations中获取，operations为对象数组，Operation返回值对象，包含信息较多：1、返回对应activity可进行的操作、操作名称及url；2、通过isNeedUserId标识该操作是否需要传用户id；3、通过isPlural标识需要用户id的话，是传1个还是多个；4、如果传的用户id（即下一个activity要用的用户id）有限定范围，那么会通过userRange返回给用户。operation对象示例可参考[Operation](#Operation)。
 
-对于前端使用来说，点击按钮时，取值Operation中的url，并按照Operation的要求附加参数并发送请求即可，使用示例参考[actionTask](#actionTask)，
+操作按钮的配置在流程设计界面完成，操作对应关系如[OperationType](#OperationType)所示。
+
+对于前端使用来说，点击按钮时，取值Operation中的url，并按照Operation的要求附加参数并发送请求即可，使用示例参考[actionTask](#actionTask)，如果需要在操作任务的前后添加业务逻辑处理，可参考[说明](#bpm_6_1)中关于`BpmOperateListener`的描述。
 
 	{
 	  "content": [
@@ -1115,7 +1117,7 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |----|----|----|
 |编号|interface|描述|
 |1|IInstanceService|流程实例相关的service，包括流程启动、终止以及根据流程实例/定义的一些查询方法|
-|2|ITaskService|任务相关service，包括查询待办、已办，以及操作任务等|
+|2|ITaskService|任务相关service，包括查询待办、已办，等|
 
 ##### <span id="bpm_7_3">3）接口列表</span>
 
@@ -1138,25 +1140,6 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |2|getTaskTodo|taskId|`TaskTodo`|按照taskId查询待办任务|
 |3|queryDone|userId,pageable|`Page<TaskDone>`|分页查询已办列表|
 |4|getTaskDone|taskId|`TaskDone`|根据taskId查询已办任务|
-|5|completeTask|taskId, userId|~|同意审批/下一步|
-|5|completeTask|taskId, userId, variableList|~|~|
-|5|completeTask|taskId, userId, comment|~|~|
-|5|completeTask|taskId, userId, comment, variableList|~|同意审批/下一步，可选参数List<Variable>，传流程变量列表|
-|5|completeTask|taskId, userId, nextOrgId, comment, variableList|~|同意审批/下一步，可指定下一个activity参与人的orgId|
-|6|completeAndAssign|taskId, userId, nextParticipateList|~|同意审批并指派下一步的参与人（List<Participant>）|
-|6|completeAndAssign|taskId, userId, comment, nextParticipateList|~|同意审批并指派下一步的参与人|
-|7|addSign|taskId, userIdList|~|加签|
-|7|addSign|taskId, userIdList, comment|~|~|
-|8|reject|taskId, userId|~|驳回到上一步|
-|8|reject|taskId, userId, variableList|~|附件参数：变量列表|
-|8|reject|taskId, userId, comment|~|驳回到上一步|
-|8|reject|taskId, userId, comment, variableList|~|附件参数：变量列表|
-|9|rejectToFirst|taskId, userId|~|驳回到制单人（第一个activity）|
-|9|rejectToFirst|taskId, userId, variableList|~|~|
-|9|rejectToFirst|taskId, userId, comment|~|~|
-|9|rejectToFirst|taskId, userId, comment, variableList|~|~|
-|10|delegate|taskId, userId, toUserId|~|转办/委派|
-|10|delegate|taskId, userId, toUserId, comment|~|~|
 
 ##### <span id="bpm_7_4">4) Model说明</span>
 
@@ -1277,12 +1260,12 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 **<span id="Operation">j、Operation</span>**
 
     {
-        "op", "OperationType",
-        "text", "String",
-        "isPlural": "boolean",
-        "url", "String",
-        "isNeedUserId": "boolean",
-        "userRange", "List<String>",
+        "op", "OperationType",  //操作按钮类型
+        "text", "String",       //按钮名称
+        "isPlural": "boolean",  //是否需要多个用户id做参数
+        "url", "String",        //操作按钮对应的url
+        "isNeedUserId": "boolean",  //入参是否需要用户id
+        "userRange", "List<String>",    //可选的用户范围
     }
 
 **<span id="ProcessTransferDetail">k、ProcessTransferDetail</span>**
@@ -1360,7 +1343,14 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 
 #### <span id="bpm_9">3.3.9 同步模块说明</span>
 
-#### <span id="bpm_10">3.3.10 版本变更历史</span>
+#### <span id="bpm_10">3.3.10 接口使用统计</span>
+
+说明：竖列标识系统列表，横列标识对外接口，中间内容区域，`~`标识该系统未用对应接口
+
+|---|----|----|----|----|----|----|----|----|----|----|
+|系统|startBpm|terminateBpm|queryTransferDetail|getProcessVariables|queryProcessInstance|queryTaskTodo|getTaskTodo|queryDone|getTaskDone|
+|档案系统|
+#### <span id="bpm_11">3.3.11 版本变更历史</span>
 
 |----|----|----|
 |SDK版本|发布时间|更新内容描述|
