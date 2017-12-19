@@ -690,15 +690,23 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - maven项目的集成：  
 
-**Step 1**：maven配置中添加私服信息。
+**Step 1**：下载文件
 
-    <mirror>
-        <id>nexus-200</id>
-        <mirrorOf>*</mirrorOf>
-        <url>http://10.80.38.200:8081/repository/maven-public/</url>
-    </mirror>
+到私服[http://10.80.38.200:8081/#browse/browse/components:maven-snapshots](http://10.80.38.200:8081/#browse/browse/components:maven-snapshots)下载，将`chamc-boot-starter-parent`、`chamc-boot-starter-bpm`文件夹下载到本地。
 
-**Step 2**：在pom文件的`<dependencies></dependencies>`中添加以下信息
+**Step 2**：把jar包安装到maven仓库
+
+打开本地maven仓库，在Preferences —》Maven —》User Settings 中查看本地仓库的目录，如“图 maven setting”所示的C:\Users\tanghongshi\.m2\repository。分别查看`chamc-boot-starter-parent`、`chamc-boot-starter-bpm`两个文件夹下的pom文件，在maven仓库中按照`com -> chamc -> boot -> *` 的路径创建文件夹。*为pom文件中的artifactId描述。如“图 pom文件”所示为“chamc-boot-starter-bpm”，然后将上一步下载的文件拷贝到对应目录下。
+
+![](https://i.imgur.com/blBvUrj.png)
+<center>图 maven setting</center>
+
+![pom文件](https://i.imgur.com/beJ4Cgz.jpg)
+<center>图 pom 文件</center>
+
+**Step 3**：项目依赖添加
+
+根据第一步下载的文件夹中的pom文件描述，可以获取到依赖包的artifactId和version，在pom文件的`<dependencies></dependencies>`中添加信息，如下所述，groupId为`com.chamc.boot`.
 
 	<dependency>
 		<groupId>com.chamc.boot</groupId>
@@ -706,7 +714,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 
-**Step 3**：在工程目录上右键，选择 `Maven` -> `Update Project` -> `OK`，项目自动编译后，如果没有异常，就能够使用流程服务了。
+**Step 4**：在工程目录上右键，选择 `Maven` -> `Update Project` -> `OK`，项目自动编译后，如果没有异常，就能够使用流程服务了。
 
 #### <span id="bpm_3">3.3.3 第一个流程</span>
 
