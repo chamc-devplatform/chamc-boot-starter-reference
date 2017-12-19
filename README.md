@@ -1126,11 +1126,9 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |---|----|----|----|----|
 |编号|方法|入参|出参|描述|
 |1|startBpm|StartBpmParam|~|启动流程，启动参数中有不同情况的处理|
-|2|terminateBpm|userId，instanceId|~|终止流程|
-|3|terminateBpm|userId，instanceId，comment|~|终止流程，可传评论参数|
-|4|queryTransferDetail|instanceId|`List<ProcessTransferDetail>`|获取流转明细|
-|5|getProcessVariables|instanceId|`List<Variable>`|获取流程变量|
-|6|queryProcessInstance|processKey|`List<ProcessInstance>`|获取指定流程key对应的运行中的流程实例|
+|2|queryTransferDetail|instanceId|`List<ProcessTransferDetail>`|获取流转明细|
+|3|getProcessVariables|instanceId|`List<Variable>`|获取流程变量|
+|4|queryProcessInstance|processKey|`List<ProcessInstance>`|获取指定流程key对应的运行中的流程实例|
 
 **ITaskService**
 
@@ -1347,8 +1345,8 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 
 说明：竖列标识系统列表，横列标识对外接口，中间内容区域，`~`标识该系统未用对应接口
 
-|---|----|----|----|----|----|----|----|----|----|----|
-|系统|startBpm|terminateBpm|queryTransferDetail|getProcessVariables|queryProcessInstance|queryTaskTodo|getTaskTodo|queryDone|getTaskDone|
+|---|----|----|----|----|----|----|----|----|----|
+|系统|startBpm|queryTransferDetail|getProcessVariables|queryProcessInstance|queryTaskTodo|getTaskTodo|queryDone|getTaskDone|
 |档案系统|
 #### <span id="bpm_11">3.3.11 版本变更历史</span>
 
