@@ -364,13 +364,19 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 #### <span id="get-web">2.3.4 获取组件</span>
 
-1） 申请svn库的开发平台项目权限，地址：`https://10.1.8.112/svn/DevelopPlatform`，将chamc-boot-starter-web项目下载到本地。
+1） 到私服[http://10.80.38.200:8081/#browse/browse/components:maven-snapshots](http://10.80.38.200:8081/#browse/browse/components:maven-snapshots)下载，将chamc-boot-starter-web文件夹下载到本地。
 
-![](https://i.imgur.com/pE7WnsV.png)
+2） 打开本地maven仓库，在Preferences —》Maven —》User Settings 中查看本地仓库的目录，如C:\Users\tanghongshi\.m2\repository。
 
-2） 将项目导入工作空间，maven -》 update project...
+![](https://i.imgur.com/blBvUrj.png)
 
-![](https://i.imgur.com/kudFdb2.png)
+3） 根据pom.xml文件中添加的依赖的groupId、artifactId和版本号进行目录创建，比如，web组件的groupId为`<groupId>com.chamc.boot</groupId>`，artifactId为`<artifactId>chamc-boot-starter-web</artifactId>`，版本为`<version>0.0.1-SNAPSHOT</version>`，则目录为com\chamc\boot\chamc-boot-starter-web\0.0.1-SNAPSHOT，如图：
+
+![](https://i.imgur.com/YXky7L6.png)
+
+将maven-metadata.xml放入chamc-boot-starter-web文件夹中（如上图），将jar包和pom文件放入0.0.1-SNAPSHOT文件夹中，如图：
+
+![](https://i.imgur.com/3aMadNV.png)
 
 ### <span id="querydsl">2.4 关于数据库操作的一些介绍</span>
 
@@ -378,6 +384,34 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 1） 示例请见，[2.3.1 — 4 — 9）](#jpa)  
 2） JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
+3） fetch的使用  
+
+- 某些时候，一个对象关联多个对象，在查询该对象时，会将对象所关联的其他对象统统查出来，然而，我们并不希望这样，我们只想查出我们所需要的对象，在这种情况下，fetch就派上了用场。  
+例如，user和role是一个多对多的关系，我们在查询user时，不希望查出role对象，则我们将FetchType设为Lazy，如图：
+
+![](https://i.imgur.com/gXi8eN1.png)
+
+写一个接口根据用户id返回用户姓名，该接口并未使用role对象，所以不会去查询role表，如图：
+
+![](https://i.imgur.com/fCcwLdu.png)
+
+sql语句只打印了一条  
+![](https://i.imgur.com/pu1FRkL.png)
+
+- 有时我们也需要将关联对象查询出来，这时，我们应该在查询对象的时候join上关联对象的表。  
+例如，写一个接口用角色code查用户名列表。
+
+![](https://i.imgur.com/ZPsS2Ew.png)
+
+![](https://i.imgur.com/ylfpRCJ.png)
+
+![](https://i.imgur.com/j5w88aO.png)
+
+请求接口后，查看打印的sql，发现查询user时fetch了role表。
+
+		Hibernate: select user0_.id as id1_6_0_, role2_.id as id1_5_1_, user0_.userdetail_id as userdeta4_6_0_, user0_.password as password2_6_0_, user0_.username as username3_6_0_, role2_.code as code2_5_1_, role2_.name as name3_5_1_, roles1_.user_id as user_id3_7_0__, roles1_.role_id as role_id2_7_0__ from t_user user0_ inner join t_user_role roles1_ on user0_.id=roles1_.user_id inner join t_role role2_ on roles1_.role_id=role2_.id where role2_.code=?
+		Hibernate: select userdetail0_.id as id1_8_0_, userdetail0_.age as age2_8_0_, userdetail0_.birthday as birthday3_8_0_, userdetail0_.name as name4_8_0_ from t_userdetail userdetail0_ where userdetail0_.id=?
+		Hibernate: select userdetail0_.id as id1_8_0_, userdetail0_.age as age2_8_0_, userdetail0_.birthday as birthday3_8_0_, userdetail0_.name as name4_8_0_ from t_userdetail userdetail0_ where userdetail0_.id=?
 
 #### 2.4.2 使用querydsl
 
@@ -391,6 +425,81 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 	}
 
 2） querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
+
+### <span id="validation">2.5 参数验证的使用与扩展</span>
+
+#### 2.5.1 参数验证的使用
+
+- spring和web组件实现了一些简单的参数验证的方法，使得接口免去了一些重复的冗余的验证代码。常用的validation有：
+
+		Bean Validation 中内置的 constraint         
+		@Null   被注释的元素必须为 null    
+		@NotNull    被注释的元素必须不为 null    
+		@AssertTrue     被注释的元素必须为 true    
+		@AssertFalse    被注释的元素必须为 false    
+		@Min(value)     被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
+		@Max(value)     被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
+		@DecimalMin(value)  被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
+		@DecimalMax(value)  被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
+		@Size(max=, min=)   被注释的元素的大小必须在指定的范围内    
+		@Digits (integer, fraction)     被注释的元素必须是一个数字，其值必须在可接受的范围内    
+		@Past   被注释的元素必须是一个过去的日期    
+		@Future     被注释的元素必须是一个将来的日期    
+		@Pattern(regex=,flag=)  被注释的元素必须符合指定的正则表达式    
+		    
+		Hibernate Validator 附加的 constraint    
+		@NotBlank(message =)   验证字符串非null，且长度必须大于0    
+		@Email  被注释的元素必须是电子邮箱地址    
+		@Length(min=,max=)  被注释的字符串的大小必须在指定的范围内    
+		@NotEmpty   被注释的字符串的必须非空    
+		@Range(min=,max=,message=)  被注释的元素必须在合适的范围内 
+
+- 示例：
+
+在入参的类里为需要验证的属性添加validation：
+
+![](https://i.imgur.com/Usw6Nc0.png)
+
+在controller方法的参数处添加`@Valid`：
+
+![](https://i.imgur.com/HU5GvKn.png)
+
+请求时，参数未通过验证就会报错：
+例如将入参中的price填为-1，就会报错，提示price不能小于0
+
+![](https://i.imgur.com/I8LFelD.png)
+
+![](https://i.imgur.com/wvF0tsc.png)
+
+#### 2.5.2 参数验证的扩展
+
+- 示例：写一个验证，验证参数必须不为空且都为大写字母。如下：
+
+先写一个注解：
+
+![](https://i.imgur.com/38dMFfR.png)
+
+再写一个类实现ConstraintValidator：
+
+![](https://i.imgur.com/CetgECz.png)
+
+使用：
+
+在role的code上加`@Uppercase`标签：
+
+![](https://i.imgur.com/BjzM6Fh.png)
+
+在controller方法的参数处添加`@Valid`：
+
+![](https://i.imgur.com/2PYYN4k.png)
+
+请求时，当code为小写时，将报错：
+
+![](https://i.imgur.com/LMAMMsx.png)
+
+code为大写时，请求成功：
+
+![](https://i.imgur.com/ezRW11u.png)
 
 ## <span id="component">3 开发平台后端框架组件</span>
 
@@ -492,15 +601,68 @@ test由自己定义，可再使用不同的命名继续增加数据源
 ![](https://i.imgur.com/ceOXBYy.png)
 
 #### 3.1.3 配置单点登录及其使用说明
-- 1. 简介
-- 2. 配置
-- 3. demo
+
+1） 简介
+
+该组件提供域登陆的方法，详细使用方法如下。
+
+2） 配置
+
+- 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
+
+![](https://i.imgur.com/6PB6u4w.png)
+
+- 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
+ - ajax类型，以档案系统为例，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
+ 
+![](https://i.imgur.com/8cbB0IF.png)
+
+ - normal类型，需配置验证成功的跳转地址。
+
+![](https://i.imgur.com/2W5sRPY.png)
+
+- token暂时用不到，先设置为false
+
+![](https://i.imgur.com/mlmmUqe.png)
+
+- 用户信息会放入redis缓存里，所以也要设置redis地址：
+
+![](https://i.imgur.com/FHq5VvY.png)
+
+3） demo
+
+下面以档案系统的域登陆（ajax类型）为例，详细介绍使用方法：
+
+- 注入bean：UserDetailsService
+
+![](https://i.imgur.com/X5GLL9J.png)
+
+- 实现UserDetails
+
+![](https://i.imgur.com/BOQQIKf.png)
+![](https://i.imgur.com/7xO72SV.png)
+
+- 实现UserDetailsService
+
+![](https://i.imgur.com/kqtoTVc.png)
+
+- 写一个接口返回ad登录地址
+
+![](https://i.imgur.com/aRqtgpe.png)
+
+- 访问档案系统首页，若系统中不存在用户信息（即用户不处于登录状态），将返回无权限错误提示（状态码为401），前端收到401错误信息后，将向后端请求AD登录地址，前端重定向到AD登录地址（需要带上retUrl），若用户AD登录状态为已登录（电脑已登录域），则带着用户信息重定向到retUrl，否则，弹出登录框，输入用户名、密码进行验证，验证通过则带着用户信息重定向到retUrl。流程图如下：
+
+![](https://i.imgur.com/YcV3rjA.png)
+
+- 前端实现（vue）
+
+
 
 #### 3.1.4 配置日志打印及其使用说明
 
 1） 简介  
 
-改组件提供对各层（controller、service、repository）进行日志跟踪，详细使用方法如下。
+该组件提供对各层（controller、service、repository）进行日志跟踪，详细使用方法如下。
 
 2） 配置
 
@@ -643,13 +805,17 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 3.3.2.1 集成方式
 
-流程引擎以jar工具包的形式提供服务，提供以下两种形式的集成：
+流程引擎以jar工具包的形式提供服务：
 
 - maven项目的集成：  
 
-如果能够连接公司私服，直接在pom文件添加依赖即可，可以跳过**Step 1**，否则需要先获取jar包，如下所述。
+**Step 1**：maven配置中添加私服信息。
 
-**Step 1**：在**SVN**获取"chamc-boot-starter-bpm"项目，导入STS。
+    <mirror>
+        <id>nexus-200</id>
+        <mirrorOf>*</mirrorOf>
+        <url>http://10.80.38.200:8081/repository/maven-public/</url>
+    </mirror>
 
 **Step 2**：在pom文件的`<dependencies></dependencies>`中添加以下信息
 
@@ -672,7 +838,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - Step 1：<span id="bpm_3_1">在管理页面设计流程图（包括流程参与人、操作等的配置）</span>
 
-根据流程管理平台操作指南，设计并发布流程。
+根据[网盘-流程引擎第一个流程](#http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1206)中“在管理页面设计流程图”的内容描述，设计并发布流程。
 
 - Step 2：<span id="bpm_3_2">在开发项目中引入`bpm`模块</span>
 
@@ -846,7 +1012,10 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 至此，已经完成了第一个流程demo。包括流程设计、流程发起、待办已办查询、任务处理及查询流转明细等。
 
-#### <span id="bpm_4">3.3.4 流程设计与管理平台</span>
+#### <span id="bpm_4">3.3.4 开发约定</span>
+
+- 1、在每个任务操作后，需要提示下一步任务的参与人
+- 2、部分任务需要指定下一步的参与人，需要弹窗让用户选人
 
 #### <span id="bpm_5">3.3.5 流程服务说明</span>
 
@@ -870,7 +1039,7 @@ BPM模块使用前需要在项目的`application.properties`中配置流程信�
 针对流程中单个activity的属性有`todo-pc-url、done-pc-url、todo-mobile-url、done-mobile-url、first、last`，其中first、last为boolean型。在配置activity属性时，以`chamc.bpm.processes.流程别名.activity的Id.`开头，activityId可以在流程设计（画流程图）的时候设置。
 
     chamc.bpm.type=tansun   #流程引擎类型
-    chamc.bpm.tansun.url=http://10.1.1.177:8081/workflow-console    #流程引擎服务url
+    chamc.bpm.tansun.url=http://10.1.8.117:8080/workflow-console    #流程引擎服务url
     chamc.bpm.tansun.tenant-id=archive  #租户id
     chamc.bpm.tansun.default-classify-code=root #流程分类
     
