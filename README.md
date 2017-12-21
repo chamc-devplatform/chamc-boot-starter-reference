@@ -46,7 +46,7 @@
 
 ### 2.2 环境安装
 
-详见[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)开发平台后端框架环境搭建.html
+详见[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E5%90%8E%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%8F%82%E8%80%83%E6%8C%87%E5%8D%97) - 开发平台后端框架环境搭建.html
 
 ### 2.3 第一个demo
 
@@ -54,30 +54,63 @@
 ##### 1. 在STS中新建项目 （此方法需[配代理](#daili)）
 1） 打开STS，File —》New —》Spring Starter Project  
 
-![](https://i.imgur.com/yorOwni.png)
+2） 填写Name、Group、Artifact、Package，Next —》Finish。例如：
 
-2） 填写信息，Next —》Finish。在STS中可见此项目，如下。**注意：项目group应为 com.chamc**  
+	Name: demo-d
+	Group: com.chamc
+	Artifact: demo-d
+	Package: com.chamc.demo
 
-![](https://i.imgur.com/IwqTOoy.png) 
+**注意：项目group应为 com.chamc，package应以com.chamc开头**  
+
+新建成功后，如图所示：
 
 ![](https://i.imgur.com/KCFKonw.png)
+
+3） 因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开pom.xml文件，将
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+改为
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
 
 ##### 2. 在官网新建项目
 1） 打开[https://start.spring.io/](https://start.spring.io/)，填入Group和Artifact，可添加一些依赖（例如：mysql等），点击Generate Project，将自动下载一个压缩包。**注意：项目group应为 com.chamc**  
 
 ![](https://i.imgur.com/xogLRCi.png)
 
-2） 解压压缩包，因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开/demo-1/pom.xml文件，修改如图所示。
+2） 解压压缩包，因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开/demo-1/pom.xml文件，将
 
-![](https://i.imgur.com/Re76Sva.png)
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+改为
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
 
 3） 打开STS，File —》import... —》Maven —》Existing Maven Projects —》next>。  
 
-![](https://i.imgur.com/KQ36uFH.png)
-
 4） 选择项目的路径，finish。在STS中可见此项目，如下。  
-
-![](https://i.imgur.com/Mej1yAz.png)
 
 ![](https://i.imgur.com/D5xYDkh.png)
 
@@ -112,8 +145,6 @@
 
 3） 右键项目，选择Maven —》update project...。此时可能还会报错，这是因为没有安装lombok，请执行下一步操作。  
 
-![](https://i.imgur.com/TRvxJpW.png) 
-
 4） 在maven dependencies中找lombok.jar所在路径，在其路径下找到它并安装。安装成功后，右键项目Maven —》update project...。（安装一次即可）  
 
 ![](https://i.imgur.com/f1vvl29.png)
@@ -124,49 +155,277 @@
 
 1） 在application.properties中添加数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
 
-![](https://i.imgur.com/acl5F7C.png)
+	spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+	spring.datasource.username=root
+	spring.datasource.password=1111
 
 2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，并且auto_increment）**例如：  
 
-![](https://i.imgur.com/KN2eVWi.png)
+- 新建数据库test
 
-![](https://i.imgur.com/diMhiYW.png)
+		CREATE SCHEMA `test3` ;
 
-![](https://i.imgur.com/blvD7uf.png)
+- 新建表t_user
 
-<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。右键run as java application  </span>
+		CREATE TABLE `t_user` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `username` varchar(50) DEFAULT NULL,
+		  `password` varchar(50) DEFAULT NULL,
+		  `userdetail_id` int(11) DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
-![](https://i.imgur.com/16HnSPI.png)
+- 新建表t_userdetail
 
-右键项目refresh一下，可见下图所示。  
+		CREATE TABLE `t_userdetail` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `name` varchar(45) DEFAULT NULL,
+		  `birthday` date DEFAULT NULL,
+		  `age` int(11) DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-![](https://i.imgur.com/eucG6TS.png)
+<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。例如：  </span>
 
-4） 生成的controller不是rest接口，若想改为rest接口，将@Controller改为@RestController，将继承的BaseController改为BaseRestController，如下图所示。
+	public static void main(String[] args) {
+		CodeGenerator.generate(
+				"D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java", 
+				"tanghongshi", 
+				DbType.MYSQL, 
+				"jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true", 
+				"com.mysql.jdbc.Driver", 
+				"root", 
+				"1111", 
+				new String[]{"t_"}, 
+				new String[]{
+						"t_user","t_userdetail"
+				}, 
+				"com.chamc.demo1", 
+				true, 
+				true, 
+				true, 
+				true, 
+				false);
+	}
 
-![](https://i.imgur.com/l7fXK7U.png)
+右键run as java application，控制台打印如下，则生成成功。
+
+	11:04:40.951 [main] DEBUG com.chamc.boot.generator.AutoGenerator - ==========================准备生成文件...==========================
+	11:04:41.244 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 创建目录： [D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\service]
+	11:04:41.244 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 创建目录： [D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\entity]
+	11:04:41.244 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 创建目录： [D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\controller]
+	11:04:41.244 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 创建目录： [D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\repository]
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Log4JLogChute initialized using file 'velocity.log'
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Initializing Velocity, Calling init()...
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Starting Apache Velocity v1.7 (compiled: 2010-11-19 12:14:37)
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Default Properties File: org\apache\velocity\runtime\defaults\velocity.properties
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Trying to use logger class org.apache.velocity.runtime.log.AvalonLogChute
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Target log system for org.apache.velocity.runtime.log.AvalonLogChute is not available (java.lang.NoClassDefFoundError: org/apache/log/format/Formatter).  Falling back to next log system...
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Trying to use logger class org.apache.velocity.runtime.log.Log4JLogChute
+	11:04:41.277 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Using logger class org.apache.velocity.runtime.log.Log4JLogChute
+	11:04:41.282 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceLoader instantiated: org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.295 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceCache: initialized (class org.apache.velocity.runtime.resource.ResourceCacheImpl) with class java.util.Collections$SynchronizedMap cache map.
+	11:04:41.300 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Stop
+	11:04:41.301 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Define
+	11:04:41.302 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Break
+	11:04:41.303 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Evaluate
+	11:04:41.304 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Literal
+	11:04:41.307 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Macro
+	11:04:41.310 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Parse
+	11:04:41.315 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Include
+	11:04:41.316 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Loaded System Directive: org.apache.velocity.runtime.directive.Foreach
+	11:04:41.348 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Created '20' parsers.
+	11:04:41.352 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : "velocimacro.library" is not set.  Trying default library: VM_global_library.vm
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Could not load resource 'VM_global_library.vm' from ResourceLoader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader: ClasspathResourceLoader Error: cannot find resource VM_global_library.vm
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : Default library not found.
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : allowInline = true : VMs can be defined inline in templates
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : allowInlineToOverride = false : VMs defined inline may NOT replace previous VM definitions
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : allowInlineLocal = false : VMs defined inline will be global in scope if allowed.
+	11:04:41.353 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - Velocimacro : autoload off : VM system will not automatically reload global library macros
+	11:04:41.372 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/entity.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.388 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/entity.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\entity\User.java
+	11:04:41.388 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/repository.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.390 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/repository.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\repository\UserRepository.java
+	11:04:41.394 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/serviceImpl.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.395 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/serviceImpl.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\service\UserService.java
+	11:04:41.396 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/controller.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.398 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/controller.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\controller\UserController.java
+	11:04:41.401 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/entity.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.406 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/entity.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\entity\Userdetail.java
+	11:04:41.408 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/repository.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.410 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/repository.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\repository\UserdetailRepository.java
+	11:04:41.412 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/serviceImpl.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.413 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/serviceImpl.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\service\UserdetailService.java
+	11:04:41.415 [main] DEBUG org.apache.velocity.runtime.log.Log4JLogChute - ResourceManager : found /templates/controller.java.vm with loader org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	11:04:41.417 [main] DEBUG com.chamc.boot.generator.AutoGenerator - 模板:/templates/controller.java.vm;  文件:D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java\com\chamc\demo\controller\UserdetailController.java
+	11:04:41.417 [main] DEBUG com.chamc.boot.generator.AutoGenerator - ==========================文件生成完成！！！==========================
+
+右键项目refresh一下，可见生成了controller、service、entity和repository的类，下图所示。  
+
+![](https://i.imgur.com/f6bhDU2.png)
+
+4） 生成的controller不是rest接口，若想改为rest接口，将@Controller改为@RestController，将继承的BaseController改为BaseRestController，以UserController为例，如下：
+
+	@RestController @RequiredArgsConstructor(onConstructor_=@Autowired)
+	@RequestMapping("/user")
+	public class UserController extends BaseRestController<User> {
+		
+		private final @Getter UserService service;
+		
+	}
+
 
 5） 打开BaseRestController可见已实现一些接口：如增删改查。
 
 ![](https://i.imgur.com/JkvftvX.png)
 
-6） 右键项目，选择Run as —》 Spring boot app，选择Demo1Application，OK.
-
-![](https://i.imgur.com/bsNzUI9.png)
-
-![](https://i.imgur.com/kUYA5N8.png)
+6） 右键项目，选择Run as —》 Spring boot app，选择DemoDocApplication，OK.  
 
 启动之后，可能报错
 
-![](https://i.imgur.com/XLMQtiT.png)
+	org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'org.springframework.boot.autoconfigure.session.SessionAutoConfiguration$SessionRepositoryValidator': Invocation of init method failed; nested exception is java.lang.IllegalArgumentException: No Spring Session store is configured: set the 'spring.session.store-type' property
+		at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:137) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:409) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1620) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:483) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:306) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:230) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:302) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:197) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:761) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:867) ~[spring-context-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543) ~[spring-context-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.boot.context.embedded.EmbeddedWebApplicationContext.refresh(EmbeddedWebApplicationContext.java:122) ~[spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:693) [spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:360) [spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) [spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at org.springframework.boot.SpringApplication.run(SpringApplication.java:1118) [spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at org.springframework.boot.SpringApplication.run(SpringApplication.java:1107) [spring-boot-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at com.chamc.demo.DemoDocApplication.main(DemoDocApplication.java:10) [classes/:na]
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_131]
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_131]
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_131]
+		at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_131]
+		at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49) [spring-boot-devtools-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+	Caused by: java.lang.IllegalArgumentException: No Spring Session store is configured: set the 'spring.session.store-type' property
+		at org.springframework.boot.autoconfigure.session.SessionAutoConfiguration$SessionRepositoryValidator.checkSessionRepository(SessionAutoConfiguration.java:105) ~[spring-boot-autoconfigure-1.5.4.RELEASE.jar:1.5.4.RELEASE]
+		at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:1.8.0_131]
+		at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[na:1.8.0_131]
+		at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:1.8.0_131]
+		at java.lang.reflect.Method.invoke(Method.java:498) ~[na:1.8.0_131]
+		at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:366) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:311) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:134) ~[spring-beans-4.3.9.RELEASE.jar:4.3.9.RELEASE]
+		... 23 common frames omitted
 
 session store type使用来存放session的存储方式，目前Spring boot中只支持redis方式。由于本应用暂无需将session放入redis的需求，故这里就可以将session store type设置为none，在application.properties文件中添加`spring.session.store-type=none`，重启应用
 
-![](https://i.imgur.com/nCwwjG3.png)
+控制台打印如下，则启动成功  
 
-启动成功...
-
-![](https://i.imgur.com/bE4ij3J.png)
+	11:19:58.297 [main] DEBUG org.springframework.boot.devtools.settings.DevToolsSettings - Included patterns for restart : []
+	11:19:58.300 [main] DEBUG org.springframework.boot.devtools.settings.DevToolsSettings - Excluded patterns for restart : [/spring-boot-starter/target/classes/, /spring-boot-autoconfigure/target/classes/, /spring-boot-starter-[\w-]+/, /spring-boot/target/classes/, /spring-boot-actuator/target/classes/, /spring-boot-devtools/target/classes/, /hibernate-.*.jar, /chamc-boot-starter-web.*.jar, /chamc-boot-starter-web/target/classes/]
+	11:19:58.300 [main] DEBUG org.springframework.boot.devtools.restart.ChangeableUrls - Matching URLs for reloading : [file:/D:/Program%20Files%20(x86)/sts-bundle/dev-platform-demo/demo-doc/target/classes/, file:/D:/Program%20Files%20(x86)/sts-bundle/dev-platform-demo/chamc-boot-starter-swagger/target/classes/]
+	未发现配置：spring.jackson.locale，默认配置为：zh
+	未发现配置：spring.jackson.time-zone，默认配置为：GMT+8
+	未发现配置：spring.jackson.date-format，默认配置为：yyyy-MM-dd HH:mm
+	未发现配置：chamc.security.addtional-none-filter-urls，默认配置为：/swagger-ui*.html,/swagger-resources/**,/v2/api-docs
+	
+	  .   ____          _            __ _ _
+	 /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+	( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+	 \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+	  '  |____| .__|_| |_|_| |_\__, | / / / /
+	 =========|_|==============|___/=/_/_/_/
+	 :: Spring Boot ::        (v1.5.4.RELEASE)
+	
+	2017-12-21 11:19:58.863  INFO  1572 --- [  restartedMain] com.chamc.demo.DemoDocApplication        : Starting DemoDocApplication on TANGHONGSHI1 with PID 1572 (started by tanghongshi in D:\Program Files (x86)\sts-bundle\dev-platform-demo\demo-doc)
+	2017-12-21 11:19:58.868  INFO  1572 --- [  restartedMain] com.chamc.demo.DemoDocApplication        : No active profile set, falling back to default profiles: default
+	2017-12-21 11:19:59.272  INFO  1572 --- [  restartedMain] ationConfigEmbeddedWebApplicationContext : Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@66bb48a2: startup date [Thu Dec 21 11:19:59 CST 2017]; root of context hierarchy
+	2017-12-21 11:20:00.300  INFO  1572 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+	2017-12-21 11:20:00.689  INFO  1572 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode!
+	2017-12-21 11:20:00.716  INFO  1572 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.chamc.demo.repository.UserRepository.
+	2017-12-21 11:20:00.718  INFO  1572 --- [  restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.chamc.demo.repository.UserdetailRepository.
+	2017-12-21 11:20:01.210  INFO  1572 --- [  restartedMain] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+	2017-12-21 11:20:01.828  INFO  1572 --- [  restartedMain] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat initialized with port(s): 8080 (http)
+	2017-12-21 11:20:01.841  INFO  1572 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+	2017-12-21 11:20:01.843  INFO  1572 --- [  restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet Engine: Apache Tomcat/8.5.15
+	2017-12-21 11:20:01.997  INFO  1572 --- [ost-startStop-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+	2017-12-21 11:20:01.997  INFO  1572 --- [ost-startStop-1] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2728 ms
+	2017-12-21 11:20:02.670  INFO  1572 --- [ost-startStop-1] c.c.b.web.config.WebAutoConfiguration    : init servletRequestListener...
+	2017-12-21 11:20:02.685  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'metricsFilter' to: [/*]
+	2017-12-21 11:20:02.685  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'characterEncodingFilter' to: [/*]
+	2017-12-21 11:20:02.685  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+	2017-12-21 11:20:02.686  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'httpPutFormContentFilter' to: [/*]
+	2017-12-21 11:20:02.686  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'requestContextFilter' to: [/*]
+	2017-12-21 11:20:02.687  INFO  1572 --- [ost-startStop-1] .s.DelegatingFilterProxyRegistrationBean : Mapping filter: 'springSecurityFilterChain' to: [/*]
+	2017-12-21 11:20:02.687  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'webRequestLoggingFilter' to: [/*]
+	2017-12-21 11:20:02.687  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.FilterRegistrationBean   : Mapping filter: 'applicationContextIdFilter' to: [/*]
+	2017-12-21 11:20:02.687  INFO  1572 --- [ost-startStop-1] o.s.b.w.servlet.ServletRegistrationBean  : Mapping servlet: 'dispatcherServlet' to [/]
+	2017-12-21 11:20:03.378  INFO  1572 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Building JPA container EntityManagerFactory for persistence unit 'default'
+	2017-12-21 11:20:03.393  INFO  1572 --- [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+		name: default
+		...]
+	2017-12-21 11:20:03.501  INFO  1572 --- [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate Core {5.0.12.Final}
+	2017-12-21 11:20:03.503  INFO  1572 --- [  restartedMain] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+	2017-12-21 11:20:03.505  INFO  1572 --- [  restartedMain] org.hibernate.cfg.Environment            : HHH000021: Bytecode provider name : javassist
+	2017-12-21 11:20:03.554  INFO  1572 --- [  restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.1.Final}
+	2017-12-21 11:20:03.712  INFO  1572 --- [  restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+	2017-12-21 11:20:04.452  INFO  1572 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+	2017-12-21 11:20:04.788  INFO  1572 --- [  restartedMain] c.c.boot.web.support.BaseRestController  : after create controller(UserController)...
+	2017-12-21 11:20:04.835  INFO  1572 --- [  restartedMain] c.chamc.boot.web.support.BaseController  : create controller(UserdetailController) end...
+	2017-12-21 11:20:04.841  INFO  1572 --- [  restartedMain] c.c.b.web.config.WebAutoConfiguration    : init stringToDateConverter...
+	2017-12-21 11:20:04.849  INFO  1572 --- [  restartedMain] c.chamc.boot.web.support.BaseController  : after create controller(UserdetailController)...
+	2017-12-21 11:20:05.128  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : Looking for @ControllerAdvice: org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@66bb48a2: startup date [Thu Dec 21 11:19:59 CST 2017]; root of context hierarchy
+	2017-12-21 11:20:05.221  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/{id}],methods=[GET]}" onto public org.springframework.http.ResponseEntity<T> com.chamc.boot.web.support.BaseRestController.get(T)
+	2017-12-21 11:20:05.224  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/{id}],methods=[PUT]}" onto public org.springframework.http.ResponseEntity<T> com.chamc.boot.web.support.BaseRestController.update(T,T)
+	2017-12-21 11:20:05.225  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/{id}],methods=[DELETE]}" onto public org.springframework.http.ResponseEntity<java.lang.Long> com.chamc.boot.web.support.BaseRestController.delete(T)
+	2017-12-21 11:20:05.225  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user],methods=[POST]}" onto public org.springframework.http.ResponseEntity<T> com.chamc.boot.web.support.BaseRestController.create(T)
+	2017-12-21 11:20:05.225  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user/page],methods=[GET]}" onto public org.springframework.http.ResponseEntity<org.springframework.data.domain.Page<T>> com.chamc.boot.web.support.BaseRestController.search(org.springframework.data.domain.Pageable,java.lang.String)
+	2017-12-21 11:20:05.226  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/user],methods=[GET]}" onto public org.springframework.http.ResponseEntity<java.util.List<T>> com.chamc.boot.web.support.BaseRestController.search(java.lang.String)
+	2017-12-21 11:20:05.231  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/delete],methods=[GET]}" onto public java.lang.String com.chamc.boot.web.support.BaseController.delete(T,org.springframework.ui.Model)
+	2017-12-21 11:20:05.237  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/dtlist],methods=[GET]}" onto public com.chamc.boot.web.support.dt.DtPage<T> com.chamc.boot.web.support.BaseController.list(com.chamc.boot.web.support.dt.DtQuery,javax.servlet.http.HttpServletRequest)
+	2017-12-21 11:20:05.237  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/save],methods=[POST]}" onto public java.lang.String com.chamc.boot.web.support.BaseController.save(org.springframework.ui.Model,T,org.springframework.validation.Errors)
+	2017-12-21 11:20:05.238  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/list],methods=[GET || POST]}" onto public java.lang.String com.chamc.boot.web.support.BaseController.query(org.springframework.ui.Model,org.springframework.data.domain.Pageable,java.lang.String)
+	2017-12-21 11:20:05.239  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/action],methods=[POST]}" onto public com.chamc.boot.web.support.dt.ActionModel<T> com.chamc.boot.web.support.BaseController.action(com.chamc.boot.web.support.dt.ActionModel<T>,org.springframework.validation.Errors,org.springframework.ui.Model)
+	2017-12-21 11:20:05.246  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/detail],methods=[GET]}" onto public java.lang.String com.chamc.boot.web.support.BaseController.detail(T,org.springframework.ui.Model)
+	2017-12-21 11:20:05.247  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/userdetail/dtlist2],methods=[GET]}" onto public com.chamc.boot.web.support.dt.DtPage<T> com.chamc.boot.web.support.BaseController.list2(com.chamc.boot.web.support.dt.DtQuery,javax.servlet.http.HttpServletRequest)
+	2017-12-21 11:20:05.250  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+	2017-12-21 11:20:05.251  INFO  1572 --- [  restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+	2017-12-21 11:20:05.323  INFO  1572 --- [  restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+	2017-12-21 11:20:05.323  INFO  1572 --- [  restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+	2017-12-21 11:20:05.414  INFO  1572 --- [  restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+	2017-12-21 11:20:06.002  INFO  1572 --- [  restartedMain] c.c.b.web.config.CacheAutoConfiguration  : init cacheManager...
+	2017-12-21 11:20:06.176  INFO  1572 --- [  restartedMain] b.a.s.AuthenticationManagerConfiguration : 
+	
+	Using default security password: dd13a24d-1e7a-472e-b196-e32116719e19
+	
+	2017-12-21 11:20:06.412  INFO  1572 --- [  restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.security.web.util.matcher.AnyRequestMatcher@1, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@510c8dc6, org.springframework.security.web.context.SecurityContextPersistenceFilter@1867bc89, org.springframework.security.web.header.HeaderWriterFilter@4d4476f8, org.springframework.security.web.authentication.logout.LogoutFilter@76e93ead, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@b5c41eb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7d28fe10, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@398848, org.springframework.security.web.session.SessionManagementFilter@46e3d3de, org.springframework.security.web.access.ExceptionTranslationFilter@489813ab, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@74a85e4f]
+	2017-12-21 11:20:06.459  INFO  1572 --- [  restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: org.springframework.boot.actuate.autoconfigure.ManagementWebSecurityAutoConfiguration$LazyEndpointPathRequestMatcher@65b502bf, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@446ae55b, org.springframework.security.web.context.SecurityContextPersistenceFilter@5d030dcf, org.springframework.security.web.header.HeaderWriterFilter@6632a71b, org.springframework.security.web.authentication.logout.LogoutFilter@7f4ce67f, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@414bd57, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3d6bf28a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4e929043, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@55afed7d, org.springframework.security.web.session.SessionManagementFilter@3d057f16, org.springframework.security.web.access.ExceptionTranslationFilter@52cb499, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@86e07c2]
+	2017-12-21 11:20:06.506  INFO  1572 --- [  restartedMain] c.c.b.web.config.WebAutoConfiguration    : init servletInitializerListener...
+	2017-12-21 11:20:06.512  WARN  1572 --- [  restartedMain] c.c.b.web.config.WebAutoConfiguration    : 未发现有注册dictService，字典初始化终止...
+	2017-12-21 11:20:07.024  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/auditevents || /auditevents.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public org.springframework.http.ResponseEntity<?> org.springframework.boot.actuate.endpoint.mvc.AuditEventsMvcEndpoint.findByPrincipalAndAfterAndType(java.lang.String,java.util.Date,java.lang.String)
+	2017-12-21 11:20:07.025  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/heapdump || /heapdump.json],methods=[GET],produces=[application/octet-stream]}" onto public void org.springframework.boot.actuate.endpoint.mvc.HeapdumpMvcEndpoint.invoke(boolean,javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.io.IOException,javax.servlet.ServletException
+	2017-12-21 11:20:07.026  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/metrics/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.MetricsMvcEndpoint.value(java.lang.String)
+	2017-12-21 11:20:07.026  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/metrics || /metrics.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.026  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/mappings || /mappings.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.027  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/dump || /dump.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.028  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/autoconfig || /autoconfig.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.029  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/loggers/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.get(java.lang.String)
+	2017-12-21 11:20:07.030  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/loggers/{name:.*}],methods=[POST],consumes=[application/vnd.spring-boot.actuator.v1+json || application/json],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.LoggersMvcEndpoint.set(java.lang.String,java.util.Map<java.lang.String, java.lang.String>)
+	2017-12-21 11:20:07.030  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/loggers || /loggers.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.031  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/health || /health.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.HealthMvcEndpoint.invoke(javax.servlet.http.HttpServletRequest,java.security.Principal)
+	2017-12-21 11:20:07.032  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/env/{name:.*}],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EnvironmentMvcEndpoint.value(java.lang.String)
+	2017-12-21 11:20:07.032  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/env || /env.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.032  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/info || /info.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.033  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/trace || /trace.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.033  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/configprops || /configprops.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.034  INFO  1572 --- [  restartedMain] o.s.b.a.e.mvc.EndpointHandlerMapping     : Mapped "{[/beans || /beans.json],methods=[GET],produces=[application/vnd.spring-boot.actuator.v1+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.mvc.EndpointMvcAdapter.invoke()
+	2017-12-21 11:20:07.359  INFO  1572 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+	2017-12-21 11:20:07.452  INFO  1572 --- [  restartedMain] o.s.j.e.a.AnnotationMBeanExporter        : Registering beans for JMX exposure on startup
+	2017-12-21 11:20:07.466  INFO  1572 --- [  restartedMain] o.s.c.support.DefaultLifecycleProcessor  : Starting beans in phase 0
+	2017-12-21 11:20:07.680  INFO  1572 --- [  restartedMain] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+	2017-12-21 11:20:07.691  INFO  1572 --- [  restartedMain] com.chamc.demo.DemoDocApplication        : Started DemoDocApplication in 9.375 seconds (JVM running for 10.064)
 
 7) 先在数据库t_user表中新增几条数据，使用postman（可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获取，也可直接使用浏览器测试），访问`http://localhost:8080/user`（GET方法）查询所有用户，可见结果如下图
 
