@@ -116,7 +116,7 @@
 
 #### 2.3.2 添加依赖
 
-1） 打开pom.xml在`<dependencies>`标签中添加开发平台web组件依赖，若没有后端开发平台框架组件请先[获取](#get-web)  
+1） 打开pom.xml在`<dependencies>`标签中添加开发平台web组件依赖 
 
 	<dependency>
 		<groupId>com.chamc.boot</groupId>
@@ -185,8 +185,25 @@
 		  PRIMARY KEY (`id`)
 		) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。例如：  </span>
+<span id="codegenerate">3） 生成代码，使用CodeGenerator.generate(……)方法。例如：  </span>
 
+    /**
+	 * @param fileAbsoluteOutPath 生成的文件绝对目录，如："D:/eclipse-jee-neon/framework/chamc-boot-starter-web/src/main/java"
+	 * @param author 作者，如：luomq
+	 * @param dbtype 数据库类型，如：DbType.MYSQL
+	 * @param url 数据库连接url，如："jdbc:mysql://127.0.0.1:3306/spt?characterEncoding=utf8"
+	 * @param driver 数据库驱动类名，如："com.mysql.jdbc.Driver"
+	 * @param username 数据库用户名
+	 * @param password 数据库密码
+	 * @param tablePrefixs 表前缀，生成entity类名的时候，会剔除掉这个前缀
+	 * @param tableNames 表名
+	 * @param basePackage 包名，如：com.chamc.demo，则生成的entity会在com.chamc.demo.entity包下，repository会在com.chamc.demo.repository包下，service和controller同理
+	 * @param entity 是否生成entity
+	 * @param repository 是否生成repository
+	 * @param service 是否生成service
+	 * @param controller 是否生成controller
+	 * @param auditable 是否继承AuditableEntity
+	 */
 	public static void main(String[] args) {
 		CodeGenerator.generate(
 				"D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java", 
@@ -215,6 +232,12 @@
 右键项目refresh一下，可见生成了controller、service、entity和repository的类，下图所示。  
 
 ![](https://i.imgur.com/f6bhDU2.png)
+
+其中，  
+controller负责具体的业务模块流程的控制，调用service中的方法，详细介绍请见[2.4.1 关于controller](#controller)  
+service负责业务逻辑的实现，调用repository中的方法，详细介绍请见[2.4.2 关于service](#service)  
+repository与数据库进行交互，详细介绍请见[2.4.3 关于repository](#repository)  
+entity是实体，详细介绍请见[2.4.4 关于entity](#entity)  
 
 4） 生成的controller不是rest接口，若想改为rest接口，将@Controller改为@RestController，将继承的BaseController改为BaseRestController，以UserController为例，如下：
 
@@ -328,13 +351,13 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 	//	@Column(name = "userdetail_id")
 	//	private Long userdetailId;
 		
-		@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+		@OneToOne(cascade = CascadeType.ALL)
 		@JoinColumn(name = "userdetail_id")
 		private Userdetail detail;
 	
 	}
 
-cascade表示级联操作，如一起新增、一起修改、一起删除等。新增一个新的user，请求`(POST)http://localhost:8080/user?username=test003&password=123456&detail.name=测试三号&detail.birthday=1994-10-10&detail.age=24`，结果如下
+新增一个新的user，请求`(POST)http://localhost:8080/user?username=test003&password=123456&detail.name=测试三号&detail.birthday=1994-10-10&detail.age=24`，结果如下
 
 	{
 	    "id": 4,
@@ -353,7 +376,7 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 **【其他注意事项】**
 
 - @OneToOne一对一，@ManyToOne多对一，@OneToMany一对多。
-- Cascade是级联操作，比如一起删除，一起新增等。
+- Cascade是级联操作，比如一起删除，一起新增等。**（不推荐使用）**
 - Fetch是抓取策略，即查询时机。
  - fetchType.EAGER代表立即查询，即查询了Userinfo立马根据Userinfo去查询Userdetail。
  - fetchType.LAZY代表延迟查询，即先不查询，先拿到Userinfo的数据，没有查询Userdetail的数据，当我们要使用Userdetail的时候再去查询.
@@ -406,48 +429,199 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 - JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
 - 在service里面加对数据库的复杂操作。推荐使用querydsl写数据库语句，querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)，示例请见[2.4](#querydsl)
 
-#### <span id="get-web">2.3.4 获取组件</span>
+### <span id="gecengjieshao">2.4 关于各层的介绍</span>
 
-1） 到私服[http://10.80.38.200:8081/#browse/browse/components:maven-snapshots](http://10.80.38.200:8081/#browse/browse/components:maven-snapshots)下载，将chamc-boot-starter-parent的pom文件下载到本地。
+#### <span id="controller">2.4.1 关于controller</span>
 
-2） 将chamc-boot-starter-web文件夹的jar和pom文件下载到本地。
+1. 简介： controller层负责具体的业务模块流程的控制，controller层主要调用service层里面的方法控制具体的业务流程。
 
-3） 打开CMD，执行mvn install命令，例如：
+2. controller书写规范
 
-	mvn install:install-file -Dfile=D:\jar\chamc-boot-starter-web-0.0.1-20171225.110130-4.jar -DgroupId=com.chamc.boot -DartifactId=chamc-boot-starter-web -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
+ - 对于Rest接口，Controller请求方法返回类型应为ResponseEntity<T>类型
+ 
+ - 方法体内尽可能三段（行）论：调用校验参数的函数、调用业务服务、产生结果、返回结果
+    <pre>
+	public class TestController extends BaseController {
+	
+		private final @Getter UserService service;
+	
+		@GetMapping("/findByUsername")
+		public ResponseEntity findOrgByUsername(String username) {
+			processFindOrgByUsernameParam(username);//校验入参数据并组装业务处理需要的数据
+			Org org = service.processFindOrgByUsernameBussiness(username);//调用业务处理方法
+			ResponseEntity result = processFindOrgByUsernameResult(org);//根据业务处理返回值组装返回给客户端的结果
+			return result;
+		}
+	
+	}
+    </pre>
+ - 建议对入参和出参进行封装，在controller包下新建param和result包，param存放入参，result存放出参，类的命名为：（入参）请求方法+controller方法名+param、（出参）请求方法+controller方法名+result，例如
+   
+			@GetMapping("relatedList")
+			public ResponseEntity<GetRelatedArchiveListResult> relatedArchiveList(Pageable pageable,GetRelatedArchiveListParam param){		
+				processRelatedArchiveListParam(param.getArchiveDeptId(),param.getArchiveTypeId());
+				Page<BaseDoc> baseDocs = service.processRelatedArchiveListBussiness(pageable,param);
+				ResponseEntity<GetRelatedArchiveListResult> result = processRelatedArchiveListResult(baseDocs);
+				return result;
+			}
+ - 建议controller里不要调用controller，调用service
+ - 当入参的类中存在List里嵌套List，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`，例如
 
-其中-Dfile是jar包的绝对路径，-DgroupId对应pom.xml文件中的`<groupId>`，-DartifactId对应pom.xml文件中的`<artifactId>`，-Dversion对应pom.xml文件中的`<version>`
+			chamc.method.complex-argument-support-types=com.chamc.archives.archive.controller.param.PostDocArchiveDetailParam
 
-控制台中打印<font color='green'>**BUILD SUCCESS**</font>，则成功。
+3. Rest接口url书写规范
 
-### <span id="querydsl">2.4 关于数据库操作的一些介绍</span>
+ - 单资源( singular-resourceX )
 
-#### 2.4.1 使用JPA
+			url样例：order/  (order即指那个单独的资源X)   
+			GET — 返回一个新的order  
+			POST — 创建一个新的order，从post请求携带的内容获取值  
+ - 单资源带id(singular-resourceX/{id} )
 
-1） 示例请见，[2.3.1 — 4 — 9）](#jpa)  
-2） JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation) 
+			URL样例：order/1 ( order即指那个单独的资源X )
+			GET — 返回id是1的order
+			DELETE — 删除id是1的order
+			PUT — 更新id是1的order，order的值从请求的内容体中获取。
+ - 复数资源(plural-resourceX/)
+
+		    URL样例:orders/
+			GET – 返回所有orders
+ - 复数资源查找(plural-resourceX/search)
+
+		    URL样例：orders/search?name=123
+		    GET – 返回所有满足查询条件的order资源。(实例查询，无关联) – order名字等于123的。
+ - 复数资源查找(plural-resourceX/searchByXXX)
+
+			URL样例：orders/searchByItems?name=ipad
+			GET – 将返回所有满足自定义查询的orders – 获取所有与items名字是ipad相关联的orders。
+ - 单数资源(singular-resourceX/{id}/pluralY)
+
+			URL样例：order/1/items/ (这里order即为资源X，items是复数资源Y)
+			GET – 将返回所有与order id 是1关联的items。
+ - singular-resourceX/{id}/singular-resourceY/
+
+			URL样例：order/1/item/
+			GET – 返回一个瞬时的新的与order id是1关联的item实例。
+			POST – 创建一个与order id 是1关联的item实例。Item的值从post请求体中获取。
+ - singular-resourceX/{id}/singular-resourceY/{id}/singular-resourceZ/
+
+			URL样例：order/1/item/2/package/
+			GET – 返回一个瞬时的新的与item2和order1关联的package实例。
+			POST – 创建一个新的与item 2和order1关联的package实例，package的值从post请求体中获得。
+
+	上面的规则可以在继续递归下去，并且复数资源后面永远不会再跟随负数资源。  
+	总结几个关键点，来更清晰的表述规则。  
+	△ 在使用复数资源的时候，返回的是最后一个复数资源使用的实例。  
+	△ 在使用单个资源的时候，返回的是最后一个但是资源使用的实例。  
+	查询的时候，返回的是最后一个复数实体使用的实例(们)。  
+
+4. 参数验证： 详见[2.5 参数验证的使用与扩展](#validation)
+
+#### <span id="service">2.4.2 关于service</span>
+
+1. 简介：service负责实现业务逻辑，service调用repository中的方法，在service中进行事务控制。
+
+2. 事务控制  
+在service中进行事务控制，只需在service的方法上添加`@Transactional`，推荐在做数据库更新操作时都加上事务控制，注意，不推荐在service中调用service，这样做可能会让事务失效。例如：
+
+		@Transactional
+		public ResponseEntity<?> processModifyArchiveBussiness(BaseDoc baseDoc, PostDocArchiveDetailParam docArchive) {
+		    ……
+		}
+
+#### <span id="repository">2.4.3 关于repository</span>
+
+1. 简介：repository与数据库交互，可以看做是一个原子操作。
+
+2. JPA的使用  
+
+1） 使用方法  
+
+a、属性名查询  
+findByXxx，findByXxxLike，findByXxxAndYyy  
+findBy可以替换成find、read、readBy、query、queryBy、get、getBy  
+Xxx可以为：and，or，is，equals，between，lessthen，lessthanequal，greaterthen，greaterthenequal，after，before， isnull，isnotnull，notnull，like，notlike，startingwith，endingwith，containing，orderby，not，in，notin，true，false，ignorecase`  
+
+b、限制结果数量  
+
+		findFirst10ByName()//获得符合条件的前10条数据  
+		findTop30ByName()//前30条数据 
+ 
+如果要分页，则将pageable传入，例如：  
+
+		Page<User> findByName(String name,Pageable pageable);
+
+c、NamedQuery  
+在entity中注解查询方法  
+
+		@NamedQuery(name = "Person.findByName",query = "select p from Person p where p.name = ?1")
+
+在Repository中定义方法  
+
+		List<Person> findByName(String name);
+
+d、使用`@Query`  
+repository也可使用jpql语句进行查询，在repository方法上加`@Query`注解。  
+查询参数：=?1 -> 第一个参数 或者 = :name -> 名字为name的参数`
+
+		@Query("select u from User u where u.emailAddress = ?1")
+		User findByEmailAddress(String emailAddress);
+		
+		@Query("select u from User u where u.firstname = :firstname or u.lastname = :lastname")
+		User findByLastnameOrFirstname(@Param("lastname") String lastname, @Param("firstname") String firstname);
+
+2） JPA学习资料请参考[Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/#jpa.query-methods.query-creation)   
+
 3） fetch的使用  
 
 - 某些时候，一个对象关联多个对象，在查询该对象时，会将对象所关联的其他对象统统查出来，然而，我们并不希望这样，我们只想查出我们所需要的对象，在这种情况下，fetch就派上了用场。  
+
 例如，user和role是一个多对多的关系，我们在查询user时，不希望查出role对象，则我们将FetchType设为Lazy，如图：
 
-![](https://i.imgur.com/gXi8eN1.png)
+	    @ManyToMany(fetch = FetchType.LAZY)
+		@JoinTable(name = "t_user_role",
+				joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+				inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
+		private List<Role> roles;
 
 写一个接口根据用户id返回用户姓名，该接口并未使用role对象，所以不会去查询role表，如图：
 
-![](https://i.imgur.com/fCcwLdu.png)
+		@GetMapping("{id}/name")
+		public ResponseEntity<String> name(@PathVariable Long id){
+			User user = service.findOne(id);
+			if (user == null){
+				return ResponseEntity.noContent().build();
+			}
+			return ResponseEntity.ok(user.getDetail().getName());
+		}
 
 sql语句只打印了一条  
-![](https://i.imgur.com/pu1FRkL.png)
+
+		Hibernate: select user0_.id as id1_5_0_, user0_.userdetail_id as userdeta4_5_0_, user0_.password as password2_5_0_, user0_.username as username3_5_0_, userdetail1_.id as id1_7_1_, userdetail1_.age as age2_7_1_, userdetail1_.birthday as birthday3_7_1_, userdetail1_.name as name4_7_1_ from t_user user0_ left outer join t_userdetail userdetail1_ on user0_.userdetail_id=userdetail1_.id where user0_.id=?
 
 - 有时我们也需要将关联对象查询出来，这时，我们应该在查询对象的时候join上关联对象的表。  
 例如，写一个接口用角色code查用户名列表。
 
-![](https://i.imgur.com/ZPsS2Ew.png)
+		@GetMapping("names")
+		public ResponseEntity<List<String>> names(@RequestParam String roleCode){
+			List<String> result = service.processNamesBussiness(roleCode);
+			return ResponseEntity.ok(result);
+		}
 
-![](https://i.imgur.com/ylfpRCJ.png)
+		public List<String> processNamesBussiness(String roleCode) {
+			List<User> users = repository.findNamesByRolesCode(roleCode);
+			if (users != null){
+				List<String> names = new ArrayList<>();
+				users.forEach(u->{
+					names.add(u.getUsername());
+				});
+				return names;
+			}
+			return null;
+		}
 
-![](https://i.imgur.com/j5w88aO.png)
+		@Query("select u from User as u join FETCH u.roles as role where role.code = ?")
+		List<User> findNamesByRolesCode(String roleCode);
 
 请求接口后，查看打印的sql，发现查询user时fetch了role表。
 
@@ -455,9 +629,11 @@ sql语句只打印了一条
 		Hibernate: select userdetail0_.id as id1_8_0_, userdetail0_.age as age2_8_0_, userdetail0_.birthday as birthday3_8_0_, userdetail0_.name as name4_8_0_ from t_userdetail userdetail0_ where userdetail0_.id=?
 		Hibernate: select userdetail0_.id as id1_8_0_, userdetail0_.age as age2_8_0_, userdetail0_.birthday as birthday3_8_0_, userdetail0_.name as name4_8_0_ from t_userdetail userdetail0_ where userdetail0_.id=?
 
-#### 2.4.2 使用querydsl
+3. querydsl的使用
 
-1） 示例：查询年龄小于X岁的用户并按年龄倒序排列
+1） 使用方法
+
+示例：查询年龄小于X岁的用户并按年龄倒序排列
 
 	public List<User> processAgeLtBusinessByQsdl(Long age){
 		AbstractJPAQuery<User, JPAQuery<User>> query = this.repository.createDslQuery();
@@ -466,9 +642,47 @@ sql语句只打印了一条
 		return jpqlQuery.fetch();
 	}
 
-2） querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
+2） fetch的使用
 
-### <span id="validation">2.5 参数验证的使用与扩展</span>
+示例：
+
+	JPQLQuery<User> jpqlQuery = query.select(qUser).from(qUser).join(qUser.roles).fetchJoin().where(qUser.roles.contains(role));
+
+3） querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
+
+#### <span id="entity">2.4.4 关于entity</span>
+
+1. 简介：entity对应数据库中的表
+
+2. entity中的注释介绍
+
+ - @Entity注释指名这是一个实体Bean
+ - @Table注释指定了Entity所要映射带数据库表，其中@Table.name()用来指定映射表的表名。如果缺省@Table注释，系统默认采用类名作为映射表的表名。实体Bean的每个实例代表数据表中的一行数据，行中的一列对应实例中的一个属性。
+ - @Column注释定义了将成员属性映射到关系表中的哪一列和该列的结构信息，属性如下：
+
+			  name：映射的列名，默认与数据库同名。若属性名为驼峰类型，默认找数据库中下划线类型，例如属性名为userName，则数据库中对应的字段为user_name；
+			  unique：是否唯一；
+			  nullable：是否允许为空；
+			  length：对于字符型列，length属性指定列的最大字符长度；
+			  insertable：是否允许插入；
+			  updatetable：是否允许更新；
+
+ - @Id注释指定表的主键。
+ - @GeneratedValue注释定义了标识字段生成方式。
+ - @Temporal注释用来指定java.util.Date或java.util.Calender属性与数据库类型date、time或timestamp中的那一种类型进行映射。
+ - @JoinColumn用来标明映射中的关系。
+
+3. entity的使用规范
+
+1） 属性名使用驼峰形式，对应数据库中的下划线形式。
+
+2） 当使用实体关系映射时，fetch类型设置为lazy，当需要时再fetch。例：
+
+		@ManyToMany(fetch = FetchType.LAZY)
+	    @JoinTable(name = "t_user_role",
+			joinColumns = {@JoinColumn(name = "user_id",referencedColumnName = "id")},
+			inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
+	    private List<Role> roles;
 
 #### 2.5.1 参数验证的使用
 
@@ -500,48 +714,105 @@ sql语句只打印了一条
 
 在入参的类里为需要验证的属性添加validation：
 
-![](https://i.imgur.com/Usw6Nc0.png)
+	public @Data class GetLoginParam {
+	
+		private @NotBlank String username;
+		private @Length(min = 6,max = 16)String password;
+	}
 
 在controller方法的参数处添加`@Valid`：
 
-![](https://i.imgur.com/HU5GvKn.png)
+	@GetMapping("login")
+	public ResponseEntity<User> login(@Valid GetLoginParam param){
+		
+		return null;
+	}
 
 请求时，参数未通过验证就会报错：
-例如将入参中的price填为-1，就会报错，提示price不能小于0
 
-![](https://i.imgur.com/I8LFelD.png)
-
-![](https://i.imgur.com/wvF0tsc.png)
+	{
+	    "timestamp": "2017-12-27 15:13",
+	    "status": 400,
+	    "error": "Bad Request",
+	    "exception": "org.springframework.validation.BindException",
+	    "errors": [
+	        {
+	            "codes": [
+	                "Length.getLoginParam.password",
+	                "Length.password",
+	                "Length.java.lang.String",
+	                "Length"
+	            ],
+	            "arguments": [
+	                {
+	                    "codes": [
+	                        "getLoginParam.password",
+	                        "password"
+	                    ],
+	                    "arguments": null,
+	                    "defaultMessage": "password",
+	                    "code": "password"
+	                },
+	                16,
+	                6
+	            ],
+	            "defaultMessage": "长度需要在6和16之间",
+	            "objectName": "getLoginParam",
+	            "field": "password",
+	            "rejectedValue": "123",
+	            "bindingFailure": false,
+	            "code": "Length"
+	        }
+	    ],
+	    "message": "Validation failed for object='getLoginParam'. Error count: 1",
+	    "path": "/user/login"
+	}
 
 #### 2.5.2 参数验证的扩展
 
 - 示例：写一个验证，验证参数必须不为空且都为大写字母。如下：
 
-先写一个注解：
+1） 先写一个注解：
 
-![](https://i.imgur.com/38dMFfR.png)
+	@Target({ ElementType.FIELD, ElementType.PARAMETER })
+	@Retention(RetentionPolicy.RUNTIME)
+	@Constraint(validatedBy = UppercaseValidator.class)
+	@Documented
+	public @interface Uppercase {
+	
+	    String message() default "必须不为空且全为大写";
+		
+		Class<?>[] groups() default { };
+	
+		Class<? extends Payload>[] payload() default { };
+		
+	}
 
-再写一个类实现ConstraintValidator：
+2） 再写一个类实现ConstraintValidator：
 
-![](https://i.imgur.com/CetgECz.png)
+	public class UppercaseValidator implements ConstraintValidator<Uppercase,String>{
+	
+		@Override
+		public void initialize(Uppercase constraintAnnotation) {
+			// TODO Auto-generated method stub
+			
+		}
+	
+		@Override
+		public boolean isValid(String value, ConstraintValidatorContext context) {
+			if (value != null && value.length() > 0){
+				for(int i = 0; i < value.length(); i++){
+					if (Character.isUpperCase(value.charAt(i))) continue;
+					else return false;
+				}
+				return true;
+			}
+			return false;
+		}
+	
+	}
 
-使用：
-
-在role的code上加`@Uppercase`标签：
-
-![](https://i.imgur.com/BjzM6Fh.png)
-
-在controller方法的参数处添加`@Valid`：
-
-![](https://i.imgur.com/2PYYN4k.png)
-
-请求时，当code为小写时，将报错：
-
-![](https://i.imgur.com/LMAMMsx.png)
-
-code为大写时，请求成功：
-
-![](https://i.imgur.com/ezRW11u.png)
+3） 按照上一点的使用方法使用即可。
 
 ## <span id="component">3 开发平台后端框架组件</span>
 
@@ -578,17 +849,67 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 在controller中：
 
-![](https://i.imgur.com/TbXZnw3.png)
+		@GetMapping("test")
+		public ResponseEntity<?> bookOrUsers(@RequestParam Long type){
+			if (type.equals(0L)){
+				List<User> users = service.findUsers();
+				return ResponseEntity.ok(users);
+			}else {
+				List<Book> books = service.findBooks();
+				return ResponseEntity.ok(books);
+			}
+		}
 
 在service中：
 
-![](https://i.imgur.com/OebEjTv.png)
+		public List<User> findUsers() {
+			return repository.findAll();
+		}
+	
+		@TargetDataSource("test")
+		public List<Book> findBooks() {
+			return bookRepository.findAll();
+		}
 
 运行结果如下：
 
-![](https://i.imgur.com/uIDAY6V.png)
+请求：`http://localhost:8080/user/test?type=0`
 
-![](https://i.imgur.com/r78mqPr.png)
+		[
+		  {
+		    "id": 1,
+		    "username": "test001",
+		    "password": "111111",
+		    "userdetailId": 1,
+		    "new": false
+		  },
+		  {
+		    "id": 2,
+		    "username": "test002",
+		    "password": "222222",
+		    "userdetailId": 2,
+		    "new": false
+		  }
+		]
+
+请求：`http://localhost:8080/user/test?type=1`
+
+		[
+		  {
+		    "id": 1,
+		    "name": "三国演义",
+		    "price": 56,
+		    "writer": "罗贯中",
+		    "new": false
+		  },
+		  {
+		    "id": 2,
+		    "name": "测试书本",
+		    "price": 12,
+		    "writer": "测试",
+		    "new": false
+		  }
+		]
 
 **注意**：  
 1. 当一个controller中需要使用多个数据源的数据，应该在controller中调用多个service方法，而不是在service中调用service  
@@ -596,53 +917,23 @@ test由自己定义，可再使用不同的命名继续增加数据源
 3. 不指定数据源时，均使用默认数据源  
 4. 错误示例  
 
-![](https://i.imgur.com/EwzZW9n.png)
-![](https://i.imgur.com/xTjRWWp.png)
+		@GetMapping("test")
+		public ResponseEntity<?> bookOrUsers2(@RequestParam Long type){
+			ResponseEntity<?> result = service.processBookOrUsers2Bussiness(type);
+			return result;
+		}
+	
+		public ResponseEntity<?> processBookOrUsers2Bussiness(Long type) {
+			if (type.equals(0L)){
+				List<User> users = this.findUsers();
+				return ResponseEntity.ok(users);
+			}else{
+				List<Book> books = this.findBooks();
+				return ResponseEntity.ok(books);
+			}
+		}
 
-#### 3.1.2 配置主从及其使用说明
-
-1） 简介
-
-该组件支持配置主从分离，即在主库执行新增操作、从库执行其他操作，详细使用方法见下。
-
-2） 配置
-
-- 在配置文件application.properties中，开启主从分离并配置主库和从库（**注意：如果之前配了数据库，需删除之前配置**）。配置如下所示：
-
-		chamc.ds.rw.enable=true
-		chamc.ds.rw.master.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
-		chamc.ds.rw.master.username=root
-		chamc.ds.rw.master.password=1111
-		
-		chamc.ds.rw.slave.url=jdbc:mysql://10.1.8.147:3306/test?characterEncoding=utf8&useSSL=true
-		chamc.ds.rw.slave.username=root
-		chamc.ds.rw.slave.password=1111
-
-3） demo
-
-使用之前的demo进行测试，为了看出效果两个数据库未配主从。目前，主库`t_user`表中有4条数据，从库`t_user`表中有1条数据。
-
-![主库](https://i.imgur.com/PRyT0A7.png)  ![从库](https://i.imgur.com/zfRahVM.png)
-
-- 查询所有用户数据，结果为从库数据，如下图：
-
-![](https://i.imgur.com/cAgMwVo.png)
-
-- 新增一个用户，新增到了主库中，如下图：
-
-![](https://i.imgur.com/Fty0FL6.png)
-![](https://i.imgur.com/QkjCCIe.png)
-
-- 修改id为1的用户，从库被修改，如下图：
-
-![](https://i.imgur.com/X6uk51B.png)
-![](https://i.imgur.com/vnGgnDi.png)
-
-- 删除id为1的用户，`http://localhost:8080/user/1`，从库数据被删除，如下图：
-
-![](https://i.imgur.com/ceOXBYy.png)
-
-#### 3.1.3 配置单点登录及其使用说明
+#### 3.1.2 配置单点登录及其使用说明
 
 1） 简介
 
@@ -652,24 +943,30 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
 
-![](https://i.imgur.com/6PB6u4w.png)
+		chamc.security.enable=true
+		chamc.security.addtional-none-filter-urls=/home-page,/recordSort,/pdfjs-dist,/webjars/**,/index.html
+		chamc.security.addtional-none-login-urls=/file/download,/ajaxLogin,/loginUrl,/syncArchive/**
+		chamc.security.ma.enable-token-filter=false
+		chamc.security.sso.enable-token-filter=false
 
 - 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
  - ajax类型，以档案系统为例，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
  
-![](https://i.imgur.com/8cbB0IF.png)
+			#ajax
+			chamc.security.ad.login-type=ajax 
+			chamc.security.ad.url=http://10.1.8.81/ChamcSSO/LoginWin.ashx
+			chamc.security.ad.app-name=TestApp
+			chamc.security.ad.ret-url=http://localhost:8080/api/index%23/login
 
  - normal类型，需配置验证成功的跳转地址。
 
-![](https://i.imgur.com/2W5sRPY.png)
-
-- token暂时用不到，先设置为false
-
-![](https://i.imgur.com/mlmmUqe.png)
+            #normal
+			chamc.security.ad.login-type=normal
+			chamc.security.ad.success-url=/index
 
 - 用户信息会放入redis缓存里，所以也要设置redis地址：
 
-![](https://i.imgur.com/FHq5VvY.png)
+			spring.redis.host=10.1.8.119
 
 3） demo
 
@@ -677,20 +974,90 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 注入bean：UserDetailsService
 
-![](https://i.imgur.com/X5GLL9J.png)
+		@Configuration
+		public class ArchiveConfig {
+			
+			public @Bean UserDetailsService userDetailsService() {
+				return new UserService();
+			}
+		}
 
 - 实现UserDetails
 
-![](https://i.imgur.com/BOQQIKf.png)
-![](https://i.imgur.com/7xO72SV.png)
+		public class LoginUser implements UserDetails {
+			private static final long serialVersionUID = -3992617548497168965L;
+			private @Getter User user;
+			
+			private List<GrantedAuthority> gs;
+			
+			public LoginUser(User user) {
+				this.user = user;
+				this.gs = new ArrayList<>(this.user.getRoles().size());
+				this.user.getRoles().forEach(r -> this.gs.add(new SimpleGrantedAuthority("ROLE_" + r.getRoleCode())));
+			}
+		
+			@Override
+			public Collection<? extends GrantedAuthority> getAuthorities() {
+				return this.gs;
+			}
+		
+			@Override
+			public String getPassword() {
+				return "";
+			}
+		
+			@Override
+			public String getUsername() {
+				return this.user.getUserName();
+			}
+		
+			@Override
+			public boolean isAccountNonExpired() {
+				return true;
+			}
+		
+			@Override
+			public boolean isAccountNonLocked() {
+				return true;
+			}
+		
+			@Override
+			public boolean isCredentialsNonExpired() {
+				return true;
+			}
+		
+			@Override
+			public boolean isEnabled() {
+				return !this.user.getIsDeleted();
+			}
+		
+		}
 
 - 实现UserDetailsService
 
-![](https://i.imgur.com/kqtoTVc.png)
+		public class UserService implements UserDetailsService {
+		
+			private @Autowired UserRepository userRepository;
+			
+			@Override @Transactional
+			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+				User user = this.userRepository.findByUserId(username);
+				if(user == null) {
+					throw new UsernameNotFoundException(username);
+				}
+				return new LoginUser(user);
+			}
+		
+		}
 
 - 写一个接口返回ad登录地址
 
-![](https://i.imgur.com/aRqtgpe.png)
+		@GetMapping("loginUrl")
+		public String loginUrl(){
+			String loginUrl = securityProperties.getAd().getUrl() + "?appName=" + securityProperties.getAd().getAppName() 
+		    + "&retUrl=" + securityProperties.getAd().getRetUrl();
+			return loginUrl;	
+		}
 
 - 访问档案系统首页，若系统中不存在用户信息（即用户不处于登录状态），将返回无权限错误提示（状态码为401），前端收到401错误信息后，将向后端请求AD登录地址，前端重定向到AD登录地址（需要带上retUrl），若用户AD登录状态为已登录（电脑已登录域），则带着用户信息重定向到retUrl，否则，弹出登录框，输入用户名、密码进行验证，验证通过则带着用户信息重定向到retUrl。流程图如下：
 
@@ -702,7 +1069,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 ![](https://i.imgur.com/eCtDAFF.png)
 
-#### 3.1.4 配置日志打印及其使用说明
+#### 3.1.3 配置日志打印及其使用说明
 
 1） 简介  
 
@@ -716,7 +1083,13 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 请求某个接口后，如下：
 
-![](https://i.imgur.com/3L5EIt4.png)
+		2017-12-27 16:12:07.608 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Entering UserController.bookOrUsers(Long)
+		2017-12-27 16:12:07.612 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Entering UserService.findBooks()
+		2017-12-27 16:12:07.620 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Entering .Proxy192.findAll()
+		Hibernate: select book0_.id as id1_4_, book0_.name as name2_4_, book0_.price as price3_4_, book0_.writer as writer4_4_ from t_book book0_
+		2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  .Proxy192.findAll, took 94ms
+		2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserService.findBooks, took 102ms
+		2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserController.bookOrUsers, took 106ms
 
 - 同时可以对各层进行配置：
 
@@ -739,20 +1112,30 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 在application.properties配置如图所示：
 
-![](https://i.imgur.com/0Mh31y6.png)
+		chamc.tracelog.enable=true
+		chamc.tracelog.controller.enable=true
+		chamc.tracelog.service.enable=true
+		chamc.tracelog.service.return-value=true
+		chamc.tracelog.repository.enable=true
+		chamc.tracelog.repository.arguments=true
 
-请求一个接口，service的返回值和repository的入参被跟踪打印，如下图：
+请求一个接口，service的返回值和repository的入参被跟踪打印，如下：
 
-![](https://i.imgur.com/89GWTy6.png)
+		2017-12-27 16:22:33.064 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Entering UserController.bookOrUsers(Long)
+		2017-12-27 16:22:33.077 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Entering UserService.findBooks()
+		2017-12-27 16:22:33.086 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Entering .Proxy202.findAll()()
+		2017-12-27 16:22:33.129  INFO 988 --- [io-8080-exec-10] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+		Hibernate: select book0_.id as id1_4_, book0_.name as name2_4_, book0_.price as price3_4_, book0_.writer as writer4_4_ from t_book book0_
+		2017-12-27 16:22:33.135 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  .Proxy202.findAll(), took 49ms
+		2017-12-27 16:22:33.135 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserService.findBooks with return value [Book(id=1, name=三国演义, price=56, writer=罗贯中), Book(id=2, name=测试书本, price=12, writer=测试)], took 58ms
+		2017-12-27 16:22:33.135 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserController.bookOrUsers, took 71ms
 
 ### <span id="swagger">3.2 swagger组件</span>
 
 #### 3.2.1 简介
   - 本组件集成了Swagger。Swagger 是一个规范和完整的框架，用于生成、描述、调用和可视化 RESTful 风格的 Web 服务。总体目标是使客户端和文件系统作为服务器以同样的速度来更新。文件的方法，参数和模型紧密集成到服务器端的代码，允许API来始终保持同步。Swagger 让部署管理和使用功能强大的API从未如此简单。了解更多请到[https://swagger.io/](https://swagger.io/)。  
   - 关于Swagger UI官方解释是这样的：*The Swagger UI is an open source project to visually render documentation for a Swagger defined API directly from the API’s Swagger specifcation*。Swagger可以将某种固定格式的JSON数据生成可以视图的在线API文档，支持在线测试，可以清楚的观察到IO数据。
-  - 使用本组件可以获得在线API文档，并能在线测试，节省编写接口文档的时间。示例图：
-
-![](https://i.imgur.com/NZ6hqfi.png)
+  - 使用本组件可以获得在线API文档，并能在线测试，节省编写接口文档的时间。
 
 #### 3.2.2 配置
 
@@ -789,11 +1172,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 1） 示例  
 按照以上说明，修改demo-1的配置，启动demo-1，访问`http://localhost:8080/swagger-ui.html`。api文档的标题、介绍已省略。  
 
-![](https://i.imgur.com/vvAY8Ir.png)
-
-除此界面以外，还提供另一版本，访问`http://localhost:8080/swagger-ui-3.html`，将检索框url改为`/v2/api-docs?group=User`，如图：
-
-![](https://i.imgur.com/aJl57Qf.png)
+除此界面以外，还提供另一版本，访问`http://localhost:8080/swagger-ui-3.html`，将检索框url改为`/v2/api-docs?group=User`，group的值为配置文件中设置的group的值。
 
 2） 使用
 
@@ -815,11 +1194,27 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 - 一些简单使用例子
 
-![](https://i.imgur.com/MxfOmOp.png)
+		@GetMapping("ageLt")
+		@ApiOperation("查询年龄小于age的用户并按倒序排列")
+		public ResponseEntity<List<User>> ageLt(@RequestParam @ApiParam(name = "age",value = "年龄",required = true) Long age){
+			List<User> users = service.processAgeLtBusiness(age);
+			return ResponseEntity.ok(users);
+		}
 
-![](https://i.imgur.com/iBxy1th.png)
-
-![](https://i.imgur.com/kHxIOrn.png)
+		@ApiModel(value="Book", description="书")
+		public @Data class Book extends BaseEntity {
+		
+			@Id @GeneratedValue
+			@ApiModelProperty(value = "ID",example = "1")
+			private Long id;
+			@ApiModelProperty(value = "书名",example = "这是一本书")
+			private @NotBlank String name;
+			@ApiModelProperty(value = "价格",example = "11")
+			private @Min(0) Long price;
+			@ApiModelProperty(value = "作者",example = "佚名")
+			private @Length(max=100) String writer;
+		
+		}
 
 详细请参考：[https://github.com/swagger-api/swagger-core/wiki/Annotations#apimodel](https://github.com/swagger-api/swagger-core/wiki/Annotations#apimodel)、[http://www.cnblogs.com/softidea/p/6251249.html](http://www.cnblogs.com/softidea/p/6251249.html)
 
