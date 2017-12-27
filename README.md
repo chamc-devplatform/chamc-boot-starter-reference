@@ -40,7 +40,7 @@
 ### <span id="content2_1">2.1 开发平台后端框架介绍</span>
 
 1. 简介    
-开发平台后端框架基于Spring实现，只需引入依赖便可使用。
+开发平台后端框架基于Spring实现，只需引入依赖便可使用。使用开发平台后端框架，你可以配置多数据源、实现单点登录、进行日志追踪、使用swagger查看接口、使用工作流。
 2. 系统要求  
 开发平台后端框架使用的Spring Boot的版本为：Spring Boot 1.5.4.RELEASE；JDK版本为：jdk1.8；MAVEN版本为：maven3.5.0。
 
@@ -251,8 +251,6 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 
 
 5） 打开BaseRestController可见已实现一些接口：如增删改查。
-
-![](https://i.imgur.com/JkvftvX.png)
 
 6） 右键项目，选择Run as —》 Spring boot app，选择DemoDocApplication，OK.  
 
