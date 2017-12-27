@@ -46,7 +46,7 @@
 
 ### 2.2 环境安装
 
-详见[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)开发平台后端框架环境搭建.html
+详见[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F%E5%BC%80%E5%8F%91%E5%B9%B3%E5%8F%B0%E5%90%8E%E7%AB%AF%E6%A1%86%E6%9E%B6%E5%8F%82%E8%80%83%E6%8C%87%E5%8D%97) - 开发平台后端框架环境搭建.html
 
 ### 2.3 第一个demo
 
@@ -54,30 +54,63 @@
 ##### 1. 在STS中新建项目 （此方法需[配代理](#daili)）
 1） 打开STS，File —》New —》Spring Starter Project  
 
-![](https://i.imgur.com/yorOwni.png)
+2） 填写Name、Group、Artifact、Package，Next —》Finish。例如：
 
-2） 填写信息，Next —》Finish。在STS中可见此项目，如下。**注意：项目group应为 com.chamc**  
+	Name: demo-d
+	Group: com.chamc
+	Artifact: demo-d
+	Package: com.chamc.demo
 
-![](https://i.imgur.com/IwqTOoy.png) 
+**注意：项目group应为 com.chamc，package应以com.chamc开头**  
+
+新建成功后，如图所示：
 
 ![](https://i.imgur.com/KCFKonw.png)
+
+3） 因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开pom.xml文件，将
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+改为
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
 
 ##### 2. 在官网新建项目
 1） 打开[https://start.spring.io/](https://start.spring.io/)，填入Group和Artifact，可添加一些依赖（例如：mysql等），点击Generate Project，将自动下载一个压缩包。**注意：项目group应为 com.chamc**  
 
 ![](https://i.imgur.com/xogLRCi.png)
 
-2） 解压压缩包，因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开/demo-1/pom.xml文件，修改如图所示。
+2） 解压压缩包，因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开/demo-1/pom.xml文件，将
 
-![](https://i.imgur.com/Re76Sva.png)
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.9.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+
+改为
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
 
 3） 打开STS，File —》import... —》Maven —》Existing Maven Projects —》next>。  
 
-![](https://i.imgur.com/KQ36uFH.png)
-
 4） 选择项目的路径，finish。在STS中可见此项目，如下。  
-
-![](https://i.imgur.com/Mej1yAz.png)
 
 ![](https://i.imgur.com/D5xYDkh.png)
 
@@ -112,8 +145,6 @@
 
 3） 右键项目，选择Maven —》update project...。此时可能还会报错，这是因为没有安装lombok，请执行下一步操作。  
 
-![](https://i.imgur.com/TRvxJpW.png) 
-
 4） 在maven dependencies中找lombok.jar所在路径，在其路径下找到它并安装。安装成功后，右键项目Maven —》update project...。（安装一次即可）  
 
 ![](https://i.imgur.com/f1vvl29.png)
@@ -124,53 +155,113 @@
 
 1） 在application.properties中添加数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
 
-![](https://i.imgur.com/acl5F7C.png)
+	spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+	spring.datasource.username=root
+	spring.datasource.password=1111
 
 2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，并且auto_increment）**例如：  
 
-![](https://i.imgur.com/KN2eVWi.png)
+- 新建数据库test
 
-![](https://i.imgur.com/diMhiYW.png)
+		CREATE SCHEMA `test3` ;
 
-![](https://i.imgur.com/blvD7uf.png)
+- 新建表t_user
 
-<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。右键run as java application  </span>
+		CREATE TABLE `t_user` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `username` varchar(50) DEFAULT NULL,
+		  `password` varchar(50) DEFAULT NULL,
+		  `userdetail_id` int(11) DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
-![](https://i.imgur.com/16HnSPI.png)
+- 新建表t_userdetail
 
-右键项目refresh一下，可见下图所示。  
+		CREATE TABLE `t_userdetail` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `name` varchar(45) DEFAULT NULL,
+		  `birthday` date DEFAULT NULL,
+		  `age` int(11) DEFAULT NULL,
+		  PRIMARY KEY (`id`)
+		) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
-![](https://i.imgur.com/eucG6TS.png)
+<span id="codegenerate">3） 生成代码，新建一个generate包，新建一个Generator类，添加一个main方法，使用CodeGenerator.generate(……)。例如：  </span>
 
-4） 生成的controller不是rest接口，若想改为rest接口，将@Controller改为@RestController，将继承的BaseController改为BaseRestController，如下图所示。
+	public static void main(String[] args) {
+		CodeGenerator.generate(
+				"D:/Program Files (x86)/sts-bundle/dev-platform-demo/demo-doc/src/main/java", 
+				"tanghongshi", 
+				DbType.MYSQL, 
+				"jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true", 
+				"com.mysql.jdbc.Driver", 
+				"root", 
+				"1111", 
+				new String[]{"t_"}, 
+				new String[]{
+						"t_user","t_userdetail"
+				}, 
+				"com.chamc.demo1", 
+				true, 
+				true, 
+				true, 
+				true, 
+				false);
+	}
 
-![](https://i.imgur.com/l7fXK7U.png)
+右键run as java application，控制台打印如下，则生成成功。
+
+	11:04:41.417 [main] DEBUG com.chamc.boot.generator.AutoGenerator - ==========================文件生成完成！！！==========================
+
+右键项目refresh一下，可见生成了controller、service、entity和repository的类，下图所示。  
+
+![](https://i.imgur.com/f6bhDU2.png)
+
+4） 生成的controller不是rest接口，若想改为rest接口，将@Controller改为@RestController，将继承的BaseController改为BaseRestController，以UserController为例，如下：
+
+	@RestController @RequiredArgsConstructor(onConstructor_=@Autowired)
+	@RequestMapping("/user")
+	public class UserController extends BaseRestController<User> {
+		
+		private final @Getter UserService service;
+		
+	}
+
 
 5） 打开BaseRestController可见已实现一些接口：如增删改查。
 
 ![](https://i.imgur.com/JkvftvX.png)
 
-6） 右键项目，选择Run as —》 Spring boot app，选择Demo1Application，OK.
-
-![](https://i.imgur.com/bsNzUI9.png)
-
-![](https://i.imgur.com/kUYA5N8.png)
+6） 右键项目，选择Run as —》 Spring boot app，选择DemoDocApplication，OK.  
 
 启动之后，可能报错
-
-![](https://i.imgur.com/XLMQtiT.png)
+	
+	Caused by: java.lang.IllegalArgumentException: No Spring Session store is configured: set the 'spring.session.store-type' property
 
 session store type使用来存放session的存储方式，目前Spring boot中只支持redis方式。由于本应用暂无需将session放入redis的需求，故这里就可以将session store type设置为none，在application.properties文件中添加`spring.session.store-type=none`，重启应用
 
-![](https://i.imgur.com/nCwwjG3.png)
+控制台打印如下，则启动成功  
 
-启动成功...
+	2017-12-21 11:20:07.680  INFO  1572 --- [  restartedMain] s.b.c.e.t.TomcatEmbeddedServletContainer : Tomcat started on port(s): 8080 (http)
+	2017-12-21 11:20:07.691  INFO  1572 --- [  restartedMain] com.chamc.demo.DemoDocApplication        : Started DemoDocApplication in 9.375 seconds (JVM running for 10.064)
 
-![](https://i.imgur.com/bE4ij3J.png)
+7) 先在数据库t_user表中新增几条数据，使用postman（可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获取，也可直接使用浏览器测试），访问`http://localhost:8080/user`（GET方法）查询所有用户，可见结果如下
 
-7) 先在数据库t_user表中新增几条数据，使用postman（可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获取，也可直接使用浏览器测试），访问`http://localhost:8080/user`（GET方法）查询所有用户，可见结果如下图
-
-![](https://i.imgur.com/4Y22TFk.png)
+	[
+	    {
+	        "id": 1,
+	        "username": "test001",
+	        "password": "111111",
+	        "userdetailId": null,
+	        "new": false
+	    },
+	    {
+	        "id": 2,
+	        "username": "test002",
+	        "password": "222222",
+	        "userdetailId": null,
+	        "new": false
+	    }
+	]
 
 同时还有以下接口可以使用：  
 <pre>
@@ -183,21 +274,81 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 （GET） http://localhost:8080/user/page 分页查询（可添加@GlobalSearch） 例如：http://localhost:8080/user/page?search=1&page=0&size=10
 </pre>
 
-添加@GlobalSearch：在实体类中，添加需要查询的字段名称，如下图（配置按username查询）
+添加@GlobalSearch：在实体类中，添加需要查询的字段名称，如下（配置按username查询）
 
-![](https://i.imgur.com/e18H5DT.png)
+	@Entity
+	@Table(name = "t_user")
+	@EqualsAndHashCode(callSuper = true)
+	@GlobalSearch({"username"})
+	public @Data class User extends BaseEntity {
+	
+		@Id @GeneratedValue
+		private Long id;
+		private String username;
+		private String password;
+		@Column(name = "userdetail_id")
+		private Long userdetailId;
+	
+	}
 
-访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下图
+访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下
 
-![](https://i.imgur.com/uqrnZCF.png)
+	{
+	    "content": [
+	        {
+	            "id": 1,
+	            "username": "test001",
+	            "password": "111111",
+	            "userdetailId": null,
+	            "new": false
+	        }
+	    ],
+	    "last": true,
+	    "totalPages": 1,
+	    "totalElements": 1,
+	    "number": 0,
+	    "size": 10,
+	    "sort": null,
+	    "first": true,
+	    "numberOfElements": 1
+	}
 
-8） 新增关联关系，每个user关联一个userdetail，如图所示
+8） 新增关联关系，每个user关联一个userdetail，如下所示
 
-![](https://i.imgur.com/Y4XyGTj.png)
+	@Entity
+	@Table(name = "t_user")
+	@EqualsAndHashCode(callSuper = true)
+	@GlobalSearch({"username"})
+	public @Data class User extends BaseEntity {
+	
+		@Id @GeneratedValue
+		private Long id;
+		private String username;
+		private String password;
+	//	@Column(name = "userdetail_id")
+	//	private Long userdetailId;
+		
+		@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+		@JoinColumn(name = "userdetail_id")
+		private Userdetail detail;
+	
+	}
 
-cascade表示级联操作，如一起新增、一起修改、一起删除等。新增一个新的user，如下图
+cascade表示级联操作，如一起新增、一起修改、一起删除等。新增一个新的user，请求`(POST)http://localhost:8080/user?username=test003&password=123456&detail.name=测试三号&detail.birthday=1994-10-10&detail.age=24`，结果如下
 
-![](https://i.imgur.com/As2g0xx.png)
+	{
+	    "id": 4,
+	    "username": "test003",
+	    "password": "123456",
+	    "detail": {
+	        "id": 6,
+	        "name": "测试三号",
+	        "birthday": "1994-10-10 00:00",
+	        "age": 24,
+	        "new": false
+	    },
+	    "new": false
+	}
 
 **【其他注意事项】**
 
@@ -232,9 +383,23 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 		List<User> findByDetailAgeLessThanOrderByDetailAgeDesc(Long age);
 
 
-运行效果如图所示：  
+请求`(GET)http://localhost:8888/user/ageLt?age=20`，运行效果如下：  
 
-![](https://i.imgur.com/mzGIq5S.png)
+	[
+	    {
+	        "id": 1,
+	        "username": "test001",
+	        "password": "111111",
+	        "detail": {
+	            "id": 1,
+	            "name": "测试1号",
+	            "birthday": "2017-11-11 00:00",
+	            "age": 1,
+	            "new": false
+	        },
+	        "new": false
+	    }
+	]
 
 **【其他注意事项】**  
 
@@ -243,19 +408,17 @@ cascade表示级联操作，如一起新增、一起修改、一起删除等。�
 
 #### <span id="get-web">2.3.4 获取组件</span>
 
-1） 到私服[http://10.80.38.200:8081/#browse/browse/components:maven-snapshots](http://10.80.38.200:8081/#browse/browse/components:maven-snapshots)下载，将chamc-boot-starter-web文件夹下载到本地。
+1） 到私服[http://10.80.38.200:8081/#browse/browse/components:maven-snapshots](http://10.80.38.200:8081/#browse/browse/components:maven-snapshots)下载，将chamc-boot-starter-parent的pom文件下载到本地。
 
-2） 打开本地maven仓库，在Preferences —》Maven —》User Settings 中查看本地仓库的目录，如C:\Users\tanghongshi\.m2\repository。
+2） 将chamc-boot-starter-web文件夹的jar和pom文件下载到本地。
 
-![](https://i.imgur.com/blBvUrj.png)
+3） 打开CMD，执行mvn install命令，例如：
 
-3） 根据pom.xml文件中添加的依赖的groupId、artifactId和版本号进行目录创建，比如，web组件的groupId为`<groupId>com.chamc.boot</groupId>`，artifactId为`<artifactId>chamc-boot-starter-web</artifactId>`，版本为`<version>0.0.1-SNAPSHOT</version>`，则目录为com\chamc\boot\chamc-boot-starter-web\0.0.1-SNAPSHOT，如图：
+	mvn install:install-file -Dfile=D:\jar\chamc-boot-starter-web-0.0.1-20171225.110130-4.jar -DgroupId=com.chamc.boot -DartifactId=chamc-boot-starter-web -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar
 
-![](https://i.imgur.com/YXky7L6.png)
+其中-Dfile是jar包的绝对路径，-DgroupId对应pom.xml文件中的`<groupId>`，-DartifactId对应pom.xml文件中的`<artifactId>`，-Dversion对应pom.xml文件中的`<version>`
 
-将maven-metadata.xml放入chamc-boot-starter-web文件夹中（如上图），将jar包和pom文件放入0.0.1-SNAPSHOT文件夹中，如图：
-
-![](https://i.imgur.com/3aMadNV.png)
+控制台中打印<font color='green'>**BUILD SUCCESS**</font>，则成功。
 
 ### <span id="querydsl">2.4 关于数据库操作的一些介绍</span>
 
