@@ -934,7 +934,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 1） 简介
 
-该组件提供域登陆、权限控制等安全相关功能，详细使用方法如下。
+该组件提供域登陆、权限控制、用户组织机构数据同步等安全相关功能，详细使用方法如下。
 
 2） 域登陆配置
 
@@ -1076,7 +1076,100 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
  - 第一步：建表，新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
- - 第二步：同步用户、组织数据（@苗世鹏），插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+ - 第二步：同步用户、组织数据，插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+
+**【同步用户-组织机构数据】**
+
+**【1】**同步程序设计说明
+
+- 同步程序需要多数据源的支持，数据源来自人力系统`EntUserDb`,目标数据库是业务系统数据库，entuserdb和sys的数据库er图如下所示；
+- 同步模块可配置使用或关闭，如下“使用demo”中的配置项所示；
+- 同步程序以两种方式提供服务，定时任务+service调用；
+- 同步程序使用多线程处理，相对来说效率较高，线程池可配置，如下“使用demo”中的配置项所示，多线程处理后会等待处理结果，然后再继续执行下一步逻辑；
+- 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行，
+
+![entuserdb ER图](https://i.imgur.com/IS2yDal.jpg)
+
+<center>图：EntUserDb ER图</center>
+
+![t_sys_er图](https://i.imgur.com/IhZMUbt.jpg)
+
+<center>图：sys_ ER图</center>
+
+**【2】**使用
+
+前置条件：1、已根据第一步的数据库初始化脚本在数据库中间表；2、启用多数据源
+
+步骤1：在项目的`application.propertis`中添加配置项，如下所示：
+
+    chamc.ds.compose.enable=true    #启用多数据源
+    chamc.ds.compose.data-sources.entuserdb.url=jdbc:sqlserver://bak-kmssql1.chamc.com.cn;DatabaseName=EntUserDb #entuserdb的数据源地址
+    chamc.ds.compose.data-sources.entuserdb.username=xxxxxx
+    chamc.ds.compose.data-sources.entuserdb.password=xxxxxx
+    
+    chamc.security.permission.enable=true   #是否启用permission模块
+    chamc.web.permission.sync.operatorId=1  #同步的操作人id
+    #chamc.web.permission.sync.timer.enable=true     #（可选）是否启用定时同步任务，默认为false
+    #chamc.web.permission.sync.timer.cron=0 27 11 17 1 ?    #（可选）定时任务的任务计划，为cron表达式，默认值为每天晚上九点同步（0 0 21 * * *），corn说明参考[3、cron简单示例]
+    #chamc.web.permission.sync.thread.core-pool-size=50     #（可选）同步程序线程池配置，实例中数字为默认值
+    #chamc.web.permission.sync.thread.max-pool-size=200     #（可选）
+    #chamc.web.permission.sync.thread.queue-capacity=500        #（可选）
+
+步骤2：运行同步程序
+
+如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
+
+如果需要手动调用同步程序，只需要在业务系统代码中注入对应的`syncService`并调用同步方法即可，如下所示：
+
+    @RestController
+    public class SyncController {
+    
+    	private @Autowired com.chamc.boot.web.support.sys.service.SyncOrgService orgService;
+    	private @Autowired SyncUserService userService;
+    	private @Autowired SyncUserOrgService userOrgService;
+    	
+    	@GetMapping("org")
+    	public void syncOrg() {
+    		orgService.synOrg();
+    	}
+    	
+    	@GetMapping("user")
+    	public void syncUser() {
+    		userService.syncUser();
+    	}
+    	
+    	@GetMapping("userorg")
+    	public void syncUserOrg() {
+    		userOrgService.syncUserOrg();
+    	}
+    }
+
+**【3】**<span id="cron">cron简单示例</span>
+
+ps：可网上在线搜索“cron在线表达式”，在线获得表达式，粘贴使用即可，另[cron说明直通车：wikipdeia-cron](https://en.wikipedia.org/wiki/Cron)
+
+cron表达式为5位或者6位的、用空格分隔的字符串
+
+    ? 0 21 * * *
+
+如上示例，6位的表达式，分别为`second minute hour day month weekday`；  
+
+|----|----|----|----|----|
+|类别|是否必须|值范围|可用符号|附注|
+|second|是|0-59|`*` `,` `-`||
+|minute|是|0-59|`*` `,` `-`|`*`表示通配任意匹配，`,`表示可以有多个值，用`,`隔开，`-`表示一个区间范围|
+|hour|是|0-23|`*` `,` `-`||
+|day|是|1-31|`*` `,` `-` `?` `L` `W`|`?`表示时间不确定，以任务触发的时间为准，重启前都按照任务触发的时间同步；`W`表示最近的周末|
+|month|是|1-12/JAN-DEC|`*` `,` `-`||
+|weekday|是|0-6/SUN-SAT|`*` `,` `-` `?` `L` `#`|`L`表示last；`#`按照`number#number`的形式，只能在1-5之间，表示第几个星期几|
+
+示例：
+
+? 0 21 * * *：以启动时刻的秒数，每天的晚上九点整执行任务  
+0 0 21 * * 5L：每个月的最后一个星期五晚上九点执行任务  
+0 0 21 10L * *：每个月距离10号最近的周末（周六/周日）的晚上九点执行任务  
+0 0 21 * * 5#3：每个月的第3个周五的晚上九点整执行任务  
+0 0 * 1,2 JAN-NOV *:表示每年的1-11月份的每个月的1号、2号的每天的每个小时的0分0秒执行任务  
 
 **【后端权限控制】**
 
