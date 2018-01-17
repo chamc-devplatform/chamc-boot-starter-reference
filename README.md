@@ -1148,7 +1148,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 ps：可网上在线搜索“cron在线表达式”，在线获得表达式，粘贴使用即可，另[cron说明直通车：wikipdeia-cron](https://en.wikipedia.org/wiki/Cron)
 
-cron表达式为5位或者6位的、用空格分隔的字符串
+cron表达式为6位的、用空格分隔的字符串
 
     ? 0 21 * * *
 
