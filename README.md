@@ -815,6 +815,11 @@ sql语句只打印了一条
 
 ### <span id="web">3.1 web组件</span>
 
+#### 3.1.0 基础信息配置 ####
+
+    chamc.web.scan.repository=com.chamc.archive     #业务系统的repository的扫描配置，业务系统的repository不需要再加@Repository注解
+    chamc.web.scan.entity=com.chamc.archive     #业务系统的entity扫描配置
+
 #### 3.1.1 配置多数据源及其使用说明
 
 1） 简介
