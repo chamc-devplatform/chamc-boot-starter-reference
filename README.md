@@ -63,11 +63,15 @@
 
 **注意：项目group应为 com.chamc，package应以com.chamc开头**  
 
-新建成功后，如图所示：
+3） next之后，选择自己需要的依赖，如MySQL、DevTools等，如图：
+
+![](https://i.imgur.com/uE9fvcw.png)
+
+finish，新建成功后，如图所示：
 
 ![](https://i.imgur.com/KCFKonw.png)
 
-3） 因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开pom.xml文件，将
+4） 因为父工程的版本为spring boot 1.5.4，此处最好将工程的版本改为1.5.4，打开pom.xml文件，将
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -86,7 +90,7 @@
 	</parent>
 
 ##### 2. 在官网新建项目
-1） 打开[https://start.spring.io/](https://start.spring.io/)，填入Group和Artifact，可添加一些依赖（例如：mysql等），点击Generate Project，将自动下载一个压缩包。**注意：项目group应为 com.chamc**  
+1） 打开[https://start.spring.io/](https://start.spring.io/)，填入Group和Artifact，可添加一些依赖（例如：MySQL等），点击Generate Project，将自动下载一个压缩包。**注意：项目group应为 com.chamc**  
 
 ![](https://i.imgur.com/xogLRCi.png)
 
@@ -341,13 +345,8 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 	@EqualsAndHashCode(callSuper = true)
 	@GlobalSearch({"username"})
 	public @Data class User extends BaseEntity {
-	
-		@Id @GeneratedValue
-		private Long id;
-		private String username;
-		private String password;
-	//	@Column(name = "userdetail_id")
-	//	private Long userdetailId;
+
+	    ... ...
 		
 		@OneToOne(cascade = CascadeType.ALL)
 		@JoinColumn(name = "userdetail_id")
@@ -931,13 +930,13 @@ test由自己定义，可再使用不同的命名继续增加数据源
 			}
 		}
 
-#### 3.1.2 配置单点登录及其使用说明
+#### 3.1.2 安全相关功能及其使用说明
 
 1） 简介
 
-该组件提供域登陆的方法，详细使用方法如下。
+该组件提供域登陆、权限控制等安全相关功能，详细使用方法如下。
 
-2） 配置
+2） 域登陆配置
 
 - 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
 
@@ -966,7 +965,7 @@ test由自己定义，可再使用不同的命名继续增加数据源
 
 			spring.redis.host=10.1.8.119
 
-3） demo
+3） 域登陆demo
 
 下面以档案系统的域登陆（ajax类型）为例，详细介绍使用方法：
 
@@ -1066,6 +1065,110 @@ test由自己定义，可再使用不同的命名继续增加数据源
 ![](https://i.imgur.com/qAqJQ6V.png)
 
 ![](https://i.imgur.com/eCtDAFF.png)
+
+4） 权限控制
+
+开启security之后，可使用注解进行权限控制，目前仅支持前后端不分离的模式，前端模板使用thymeleaf。
+
+有三种安全注解可供使用：`@Secured`注解、`@RolesAllowed`注解以及表达式驱动的注解（`@PreAuthorize`、`@PostAuthorize`、`@PreFilter`和`@PostFilter`）。推荐使用表达式驱动的注解。
+
+**【准备工作】**
+
+ - 第一步：建表，新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
+
+ - 第二步：同步用户、组织数据（@苗世鹏），插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+
+**【后端权限控制】**
+
+在方法上加注解来控制方法的权限。 
+
+**[1]** `@Secured`和`@RolesAllowed`类似，使用一个String数组作为参数，每个String值是一个权限，调用这个方法至少需要具备其中的一个权限。例如以下两个例子，用户要访问add方法必须有`ADD`角色或者`ADMIN`角色之一；用户要访问delete方法必须有`DELETE`角色或者`ADMIN`角色之一。
+<pre>
+@Secured({"ROLE_ADD","ROLE_ADMIN"})
+public String add(){
+   ……
+   return "add";
+}
+
+@RolesAllowed({"ROLE_DELETE","ROLE_ADMIN"})
+public String delete(){
+   ……
+   return "delete";
+}
+</pre>
+
+这两个注解再拒绝未认证用户方面还不错，但是都存在一个缺点：它们只能根据用户有没有授予特定的权限来限制方法的调用，在判断方式是否执行方面，无法使用其他的因素。为此，Spring Security 3.0引入了表达式驱动的注解。
+
+**[2]** 表达式驱动的注解：这些注解的值参数中都可以接受一个SpEL表达式（[了解更多](https://docs.spring.io/spring-security/site/docs/5.0.0.RELEASE/reference/htmlsingle/#el-access)）。表达式可以是任意合法的SpEL表达式，如果表达式的计算结果为true，那么安全规则通过，否则就会失败。安全规则通过或失败的结果会因为所使用注解的差异而有所不同。
+
+**【常用的几个EL表达式】**
+<pre>
+hasAnyRole([role1,role2])  //如果用户被授予了列表中任意的指定角色，结果为true
+hasRole([role])            //如果用户被授予了指定的角色，结果为true
+hasAuthority([authority])  //如果用户有指定的权限，结果为true
+hasAnyAuthority([authority1,authority2])  //如果用户有列表中任意的权限，结果为true
+</pre>
+
+示例：
+<pre>
+@PreAuthorize("hasRole('ADMIN')")
+public String list(){……}
+
+@PreAuthorize("hasAnyAuthority('project:view','project:*')")
+public String list(){……}
+</pre>
+
+**【四个注解】**
+<pre>
+@PreAuthorize   //在方法调用之前，基于表达式的计算结果来限制对方法的访问
+@PostAuthorize  //允许方法调用，但是如果表达式计算结果为false，将抛出一个安全性异常
+@PostFilter     //允许方法调用，但必须按照表达式来过滤方法的结果
+@PreFilter      //允许方法调用，但必须在进入方法之前过滤输入值
+</pre>
+
+**@PreAuthorize**  表达式会在方法调用之前执行，如果表达式的计算结果不为true的话，将会阻止方法执行。与`@Secured`和`@RolesAllowed`相比，除了可以限制角色以外，还可以进行参数的验证。例如：  
+<pre>
+@PreAuthorize("hasAuthority('project:view') and #size>0")
+@GetMapping("view")
+public String list(int size) {
+   return "project";
+}
+</pre>  
+用户有`project:view`权限，并且入参size>0时，才能访问该方法。
+
+**@PostAuthorize**  表达式直到方法返回才会执行，然后决定是否抛出安全性的异常。除了验证的时机之外，`@PostAuthorize`与`@PreAuthorize`的工作方式差不多，只不过它会在方法执行之后，才会应用安全规则。例如：
+
+    @PostAuthorize("returnObject.size() == #size")
+	@GetMapping("postAuth")
+	public List<Book> testPost(int size) {
+		……
+		return books;
+	}
+
+`returnObject`表示返回的对象，本例中若返回列表中对象的个数与size不等，将抛出异常。
+
+**@PostFilter**  会使用这个表达式计算该方法所返回集合的每个成员，将计算结果为false的成员移除掉。例如：
+
+**@PreFilter**  过滤的是要进入方法中的集合成员，只有满足SpEL表达式的元素才会留在集合中。
+
+**【前端的权限控制】**
+
+在标签中加`sec:authorize`属性，其值也是SpEL表达式。例如：`<li sec:authorize="hasAuthority('project:view')">查看项目</li>`，当用户有`project:view`的权限，这个`<li>`才会显示在页面中。
+
+**【相关类介绍】**
+
+- com.chamc.boot.web.utils.SecurityUtils：提供获取当前用户信息（包括用户信息，角色及权限信息，主机构，兼职机构）和切换机构的方法。
+
+		static com.chamc.boot.web.support.sys.service.LoginUser getCurrentUser();
+		static void switchOrg(Long orgId); //orgId为目标机构Id
+
+- LoginUser：当前用户信息
+
+		com.chamc.boot.web.support.sys.model.User getUser(); //用户信息
+		List<org.springframework.security.core.GrantedAuthority> getAuthorites(); //权限信息：包括角色和权限
+		List<com.chamc.boot.web.support.sys.model.Org> getConcurrentOrgs(); //用户兼职机构
+		List<com.chamc.boot.web.support.sys.model.Org> getOrgs(); //用户的所有机构
+		Optional<com.chamc.boot.web.support.sys.model.Org> getMainOrg(); //用户的主机构（可为空）
 
 #### 3.1.3 配置日志打印及其使用说明
 
