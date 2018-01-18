@@ -316,7 +316,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 	
 	}
 
-查询username中包含1的用户，访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下
+查询username中包含1的用户，访问`http://localhost:8080/user/page?search=1&page=0&size=10`，search为匹配字段，即查询（select * from t_user where username like '%1%'），结果如下
 
 	{
 	    "content": [
