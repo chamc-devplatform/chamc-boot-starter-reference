@@ -299,7 +299,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 （GET） http://localhost:8080/user/page 分页查询（可添加@GlobalSearch） 例如：http://localhost:8080/user/page?search=1&page=0&size=10
 </pre>
 
-添加@GlobalSearch：在实体类中，添加需要查询的字段名称，如下（配置按username查询）
+添加@GlobalSearch，@GlobalSearch接受一个字符串数组，添加需要查询的字段名称，如下（配置按username查询）
 
 	@Entity
 	@Table(name = "t_user")
@@ -316,7 +316,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 	
 	}
 
-访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下
+查询username中包含1的用户，访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下
 
 	{
 	    "content": [
@@ -917,7 +917,9 @@ test由自己定义，可再使用不同的命名继续增加数据源
 1. 当一个controller中需要使用多个数据源的数据，应该在controller中调用多个service方法，而不是在service中调用service  
 2. 使用哪一个数据源进行操作，取决于第一次进入service中指定的数据源  
 3. 不指定数据源时，均使用默认数据源  
-4. 错误示例  
+4. 错误示例：controller调用service中的processBookOrUsers2Bussiness()方法后，数据源已经指定为默认数据源，在 processBookOrUsers2Bussiness()中再调用service的findBooks()方法，findBooks()上配置的test数据源将不起作用。数据源已第一次进入service时指定的数据源为准。 
+
+controller中：
 
 		@GetMapping("test")
 		public ResponseEntity<?> bookOrUsers2(@RequestParam Long type){
@@ -925,6 +927,8 @@ test由自己定义，可再使用不同的命名继续增加数据源
 			return result;
 		}
 	
+service中：
+
 		public ResponseEntity<?> processBookOrUsers2Bussiness(Long type) {
 			if (type.equals(0L)){
 				List<User> users = this.findUsers();
@@ -933,6 +937,15 @@ test由自己定义，可再使用不同的命名继续增加数据源
 				List<Book> books = this.findBooks();
 				return ResponseEntity.ok(books);
 			}
+		}
+
+        public List<User> findUsers() {
+			return repository.findAll();
+		}
+	
+		@TargetDataSource("test")
+		public List<Book> findBooks() {
+			return bookRepository.findAll();
 		}
 
 #### 3.1.2 安全相关功能及其使用说明
