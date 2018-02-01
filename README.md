@@ -1452,8 +1452,6 @@ public String list(int size) {
 - [开发平台后端框架参考指南-流程引擎模块.html](docs/开发平台后端框架参考指南-流程引擎模块.html)
 - 网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
 
-或查看git项目下docs -> 开发平台后端框架参考指南-流程引擎模块.md；
-
 ## <span id="how-to">4 “How-to”指南</span>
 
 ## 5 附录
