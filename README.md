@@ -1137,24 +1137,45 @@ ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加s
 
     @RestController
     public class SyncController {
-    
-    	private @Autowired com.chamc.boot.web.support.sys.service.SyncOrgService orgService;
-    	private @Autowired SyncUserService userService;
-    	private @Autowired SyncUserOrgService userOrgService;
+
+    	//import com.chamc.boot.web.support.sys.service.SyncService;
+    	private @Autowired SyncService service;
     	
+    	/**
+    	 * 同步机构（包含enteruserdb中对应的role）
+    	 */
     	@GetMapping("org")
     	public void syncOrg() {
-    		orgService.synOrg();
+    		service.syncOrg();
     	}
     	
+    	/**
+    	 * 同步用户
+    	 */
     	@GetMapping("user")
     	public void syncUser() {
-    		userService.syncUser();
+    		service.syncUser();
     	}
     	
+    	/**
+    	 * 同步"用户-机构关系"
+    	 */
     	@GetMapping("userorg")
     	public void syncUserOrg() {
-    		userOrgService.syncUserOrg();
+    		service.syncUserOrg();
+    	}
+    	
+    	/**
+    	 * 同步"用户，机构（enteruserdb的角色），用户-机构关系"
+    	 */
+    	@GetMapping("sync")
+    	public void sync() {
+    		service.sync();
+    	}
+    	
+    	@GetMapping("syncTest")
+    	public void syncTest() {
+    		service.syncThread();
     	}
     }
 
