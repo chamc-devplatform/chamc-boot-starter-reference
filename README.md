@@ -163,7 +163,7 @@ finish，新建成功后，如图所示：
 	spring.datasource.username=root
 	spring.datasource.password=1111
 
-2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，并且auto_increment）**例如：  
+2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，数据类型为Decimal(18,0)）**例如：  
 
 - 新建数据库test
 
@@ -172,22 +172,22 @@ finish，新建成功后，如图所示：
 - 新建表t_user
 
 		CREATE TABLE `t_user` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `id` decimal(18,0) NOT NULL,
 		  `username` varchar(50) DEFAULT NULL,
 		  `password` varchar(50) DEFAULT NULL,
 		  `userdetail_id` int(11) DEFAULT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 - 新建表t_userdetail
 
 		CREATE TABLE `t_userdetail` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `id` decimal(18,0) NOT NULL,
 		  `name` varchar(45) DEFAULT NULL,
 		  `birthday` date DEFAULT NULL,
 		  `age` int(11) DEFAULT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 <span id="codegenerate">3） 生成代码，使用CodeGenerator.generate(……)方法。例如：  </span>
 
@@ -666,6 +666,14 @@ sql语句只打印了一条
 
  - @Id注释指定表的主键。
  - @GeneratedValue注释定义了标识字段生成方式。
+ - @GenericGenerator注释是hibernate所提供的自定义主键生成策略生成器，由@GenericGenerator实现多定义的策略。  
+   
+			使用CodeGenerator生成的entity使用snowflake策略生成主键，使主键全局唯一：
+            @Id
+	        @GeneratedValue(generator = "snowflake")
+	        @GenericGenerator(name = "snowflake",strategy = "com.chamc.boot.web.support.SnowflakeIdGenerator")
+	        private Long id;
+   
  - @Temporal注释用来指定java.util.Date或java.util.Calender属性与数据库类型date、time或timestamp中的那一种类型进行映射。
  - @JoinColumn用来标明映射中的关系。
 
