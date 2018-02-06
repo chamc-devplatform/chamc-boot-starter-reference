@@ -1137,28 +1137,58 @@ service中：
 
 如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
 
+ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加sqlserver依赖，如下所示：
+
+    <dependency>
+    	<groupId>com.microsoft.sqlserver</groupId>
+    	<artifactId>sqljdbc4</artifactId>
+    	<version>4.0</version>
+        <scope>runtime</scope>
+    </dependency>
+
 如果需要手动调用同步程序，只需要在业务系统代码中注入对应的`syncService`并调用同步方法即可，如下所示：
 
     @RestController
     public class SyncController {
-    
-    	private @Autowired com.chamc.boot.web.support.sys.service.SyncOrgService orgService;
-    	private @Autowired SyncUserService userService;
-    	private @Autowired SyncUserOrgService userOrgService;
+
+    	//import com.chamc.boot.web.support.sys.service.SyncService;
+    	private @Autowired SyncService service;
     	
+    	/**
+    	 * 同步机构（包含enteruserdb中对应的role）
+    	 */
     	@GetMapping("org")
     	public void syncOrg() {
-    		orgService.synOrg();
+    		service.syncOrg();
     	}
     	
+    	/**
+    	 * 同步用户
+    	 */
     	@GetMapping("user")
     	public void syncUser() {
-    		userService.syncUser();
+    		service.syncUser();
     	}
     	
+    	/**
+    	 * 同步"用户-机构关系"
+    	 */
     	@GetMapping("userorg")
     	public void syncUserOrg() {
-    		userOrgService.syncUserOrg();
+    		service.syncUserOrg();
+    	}
+    	
+    	/**
+    	 * 同步"用户，机构（enteruserdb的角色），用户-机构关系"
+    	 */
+    	@GetMapping("sync")
+    	public void sync() {
+    		service.sync();
+    	}
+    	
+    	@GetMapping("syncTest")
+    	public void syncTest() {
+    		service.syncThread();
     	}
     }
 
@@ -1431,9 +1461,9 @@ public String list(int size) {
 
 ### <span id="bpm">3.3 工作流组件</span>
 
-详情请参考网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
-
-或查看git项目下docs -> 开发平台后端框架参考指南-流程引擎模块.md；
+详情请参考
+- [开发平台后端框架参考指南-流程引擎模块.html](docs/开发平台后端框架参考指南-流程引擎模块.html)
+- 网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
 
 ## <span id="how-to">4 “How-to”指南</span>
 

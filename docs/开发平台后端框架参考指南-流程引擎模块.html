@@ -1,0 +1,1347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>开发平台后端框架参考指南-流程引擎模块</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: b13fe65ca28d2e568c6ed5d7f06581183df8f2ff */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+    font-family: Helvetica, arial, freesans, clean, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+    padding: 20px;
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+body>*:first-child {
+    margin-top: 0 !important;
+}
+
+body>*:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+    margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+    font-size: inherit;
+}
+
+h1 {
+    font-size: 28px;
+    color: #000;
+}
+
+h2 {
+    font-size: 24px;
+    border-bottom: 1px solid #ccc;
+    color: #000;
+}
+
+h3 {
+    font-size: 18px;
+}
+
+h4 {
+    font-size: 16px;
+}
+
+h5 {
+    font-size: 14px;
+}
+
+h6 {
+    color: #777;
+    font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+    margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+    padding-left: 30px;
+}
+
+ul li > :first-child,
+ol li > :first-child,
+ul li ul:first-of-type,
+ol li ol:first-of-type,
+ul li ol:first-of-type,
+ol li ul:first-of-type {
+    margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+    margin-bottom: 0;
+}
+
+dl {
+    padding: 0;
+}
+
+dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+    padding: 0;
+}
+
+dl dt>:first-child {
+    margin-top: 0px;
+}
+
+dl dt>:last-child {
+    margin-bottom: 0px;
+}
+
+dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px;
+}
+
+dl dd>:first-child {
+    margin-top: 0px;
+}
+
+dl dd>:last-child {
+    margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+    font-size: 12px;
+    font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+    margin: 0 0px;
+    padding: 2px 4px;
+    color: #c7254e;
+    font-size: 90%;
+    white-space: nowrap;
+    border: 1px solid #eaeaea;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+}
+
+pre>code {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    border: none;
+    background: transparent;
+}
+
+pre {
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    font-size: 13px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 10px;
+    border-radius: 3px;
+}
+
+pre code, pre tt {
+    background-color: transparent;
+    border: none;
+}
+
+kbd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #DDDDDD;
+    background-image: linear-gradient(#F1F1F1, #DDDDDD);
+    background-repeat: repeat-x;
+    border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+    border-image: none;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 10px;
+    padding: 1px 4px;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+    border-left: 4px solid #DDD;
+    padding: 0 15px;
+    color: #777;
+}
+
+blockquote>:first-child {
+    margin-top: 0px;
+}
+
+blockquote>:last-child {
+    margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+    clear: both;
+    margin: 15px 0;
+    height: 0px;
+    overflow: hidden;
+    border: none;
+    background: transparent;
+    border-bottom: 4px solid #ddd;
+    padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table {
+    width:100%;
+    max-width: 100%;
+    color: #5c5d5e;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table th {
+    font-weight: bold;
+    background-color: #faf9f9;
+    border-bottom: 2px solid #eef0f2;
+}
+
+table th, table td {
+    border: 1px solid #eef0f2;
+    padding: 6px 13px;
+}
+
+table tr {
+    border-top: 1px solid #eef0f2;
+    background-color: #fff;
+}
+
+table td {
+    border-color: #eef0f2;
+    border-bottom: 1px solid #efeff1;
+}
+
+table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+    max-width: 100%
+}
+</style>
+</head>
+<body>
+<h3>目录（开发平台后端框架参考指南流程引擎子模块，序号延续母文档）</h3>
+<ul>
+<li>
+<a href="#bpm">3.3 工作流组件</a>
+<ul>
+<li><a href="#bpm_1">3.3.1 流程引擎基本信息</a></li>
+<li><a href="#bpm_2">3.3.2 集成及获取服务</a></li>
+<li>
+<a href="#bpm_3">3.3.3 第一个流程</a>
+<ul>
+<li><a href="#bpm_3_1">在管理页面设计流程图（包括流程参与人、操作等的配置）</a></li>
+<li><a href="#bpm_3_2">在开发项目中引入bpm模块</a></li>
+<li><a href="#bpm_3_3">项目中的流程配置</a></li>
+<li><a href="#bpm_3_4">流程发起及操作</a></li>
+</ul>
+</li>
+<li><a href="#bpm_4">3.3.4 开发约定</a></li>
+<li>
+<a href="#bpm_5">3.3.5 流程服务说明</a>
+<ul>
+<li><a href="#lcfwzs">流程服务总述</a></li>
+<li><a href="#properties">【示例】application中配置流程信息</a></li>
+<li><a href="#huiqian">【示例】会签使用场景</a></li>
+</ul>
+</li>
+<li><a href="#bpm_6">3.3.6 添加自定义逻辑</a></li>
+<li>
+<a href="#bpm_7">3.3.7 SDK接口</a>
+<ul>
+<li><a href="#bpm_7_1">说明</a></li>
+<li><a href="#bpm_7_2">获取接口的方式</a></li>
+<li><a href="#bpm_7_3">接口列表</a></li>
+<li><a href="#bpm_7_4">Model说明</a></li>
+</ul>
+</li>
+<li><a href="#bpm_8">3.3.8 异常说明</a></li>
+<li><a href="#bpm_9">3.3.9 同步模块说明</a></li>
+<li><a href="#bpm_10">3.3.10 接口使用统计</a></li>
+<li><a href="#bpm_11">3.3.11 版本变更历史</a></li>
+<li><a href="#bpm_12">3.3.12 工作流平台架构图</a></li>
+<li><a href="#fz">附注</a></li>
+</ul>
+</li>
+</ul>
+<h3><span id="bpm">3.3 工作流组件</span></h3>
+<h4><span id="bpm_1">3.3.1 流程引擎基本信息</span></h4>
+<ul>
+<li>术语</li>
+</ul>
+<blockquote>
+<ul>
+<li>流程定义：业务过程的形式化描述，过程可分解为一系列的子过程和活动，其中定义包括描述过程起始、终止的活动关系网络，以及一些关于个体行为的信息，具体而言，即构成过程的活动以及各活动的关系、组织成员的角色、应用中的数据结构等。</li>
+<li>活动（activity）：流程定义中的活动，定义了在业务过程中某个环节的信息</li>
+<li>流程实例：一个工作流过程的具体执行。</li>
+<li>任务：对应流程定义中的活动，是具体的执行实例</li>
+<li>BPM：业务流程管理(Business Process Management)</li>
+<li>BPM模块：开发平台建设的流程相关子项目模块，项目名“chamc-boot-starter-bpm”</li>
+</ul>
+</blockquote>
+<ul>
+<li>介绍</li>
+</ul>
+<blockquote>
+<p>流程引擎模块属于开发平台的一个子模块，专门为业务系统提供工作流及业务自动化服务。该模块能够以maven依赖的方式快速引入在建项目中，对于基础的流程发起、待办已办任务查询等操作，直接调用相应的rest接口即可。在提供流程处理基础服务 + 租户、角色等基础管理服务的基础上，项目支持在管理页面设计流程图、在管理后台操作流程。希望通过流程引擎模块，为应用及项目的开发提供支持。</p>
+</blockquote>
+<ul>
+<li>SDK接口说明</li>
+</ul>
+<blockquote>
+<p>SDK组件封装了流程引擎的服务，以方便各个系统的个性化需求。</p>
+</blockquote>
+<h4><span id="bpm_2">3.3.2 集成及获取服务</span></h4>
+<p>3.3.2.1 集成方式</p>
+<p>流程引擎以jar工具包的形式提供服务：</p>
+<ul>
+<li>maven项目的集成：  </li>
+</ul>
+<p><strong>Step 1</strong>：配置/检查私服配置</p>
+<p>参考<a href="#get-weg">2.3.4获取组件</a>，检查/配置maven的私服配置信息</p>
+<p><strong>Step 3</strong>：项目依赖添加</p>
+<p>在pom文件的<code>&lt;dependencies&gt;&lt;/dependencies&gt;</code>中添加信息，如下所述，groupId为<code>com.chamc.boot</code>.</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.chamc.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;chamc-boot-starter-bpm&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p><strong>Step 4</strong>：在工程目录上右键，选择 <code>Maven</code> -&gt; <code>Update Project</code> -&gt; <code>OK</code>，项目自动编译后，如果没有异常，就能够使用流程服务了。</p>
+<h4><span id="bpm_3">3.3.3 第一个流程</span></h4>
+<ul>
+<li>步骤概述：</li>
+</ul>
+<blockquote>
+<p><a href="#bpm_3_1">Step 1：在管理页面设计流程图（包括流程参与人、操作等的配置）</a><br />
+<a href="#bpm_3_2">Step 2：在开发项目中引入<code>starter-bpm</code>模块</a><br />
+<a href="#bpm_3_3">Step 3：项目中的流程配置</a><br />
+<a href="#bpm_3_4">Step 4：流程发起及操作</a></p>
+</blockquote>
+<ul>
+<li>Step 1：<span id="bpm_3_1">在管理页面设计流程图（包括流程参与人、操作等的配置）</span></li>
+</ul>
+<p>1）访问并登录<strong>流程引擎后台管理平台</strong>，登录后主页面及导航栏如图process-1所示，<code>系统设置</code>的子菜单可以管理用户、机构和角色等，可以分别点击进行对应的操作。为了方便使用，系统初始已预置初始数据，可查看确认。</p>
+<p><img src="https://i.imgur.com/ls4so0u.jpg" alt="图 process-1：系统设置" /></p>
+<p><center>图 process-1：系统设置</center></p>
+<p>2）点击<code>工作流管理</code>-<code>流程创建管理</code>，如图process-2所示，进入流程设计管理页面，在该页面可以完成流程的新建、发布等。</p>
+<p><img src="https://i.imgur.com/2iqIYgv.png" alt="图 process-2：流程设计界面" /></p>
+<p><center>图 process-2：流程设计界面</center></p>
+<p>3）点击新建流程，如图process-3所示，填写流程定义信息（所属租户，流程key等），填写完成后，点击确认保存流程定义信息。再次点击主页面的导航栏<code>工作流管理</code>-<code>流程创建管理</code>,可以看到列表第一条数据为刚才新建的流程，点击编辑操作，进入流程设计界面，如图process-4所示。</p>
+<p><img src="https://i.imgur.com/WoDqP2d.png" alt="图 process-3：新建流程" /></p>
+<p><center>图 process-3：新建流程</center></p>
+<p><img src="https://i.imgur.com/2xZUH6z.png" alt="图 process-4：进入流程设计界面" /></p>
+<p><center>图 process-4：进入流程设计界面</center></p>
+<p>4）设计流程图，在demo示例中设计简单的流程（启动-制单-领导审批-结束）。点击左侧<code>启动事件</code>，将<code>事件</code>控件拖入页面中间设计区域，如图process-5所示；点击拖入的<code>事件</code>，周围显示可以连接的其他控件，点击<code>分配给特定人的任务</code>，如图process-6所示，添加一个新的activity；按照同样的步骤，点击刚新建的activity，在周围出现的选项中点击<code>分配给特定人的任务</code>，添加第二个activity；同理点击第二个activity，选择红色的圈（一个无触发器的结束任务），添加结束节点。</p>
+<p><img src="https://i.imgur.com/5Nn8DQ3.png" alt="图 process-5：拖入启动事件" /></p>
+<p><center>图 process-5：拖入启动事件</center></p>
+<p><img src="https://i.imgur.com/Qlx6Iyv.png" alt="图 process-6：添加activity" /></p>
+<p><center>图 process-6：添加activity</center></p>
+<p>5）配置activity。如图process-7所示，点击后可以在右侧菜单设置activity属性，点击创建的第一个activity，输入id、名称，点击代理后的输入框，选择参与人信息，如图process-8所示，确认后点击任务节点功能，配置对于该activity的功能操作，勾选下一步操作，保存确认后，点击流程设计页面中控件栏上方的保存按钮，并关闭该页面，如图process-9所示。</p>
+<p><img src="https://i.imgur.com/Ixi3we6.png" alt="图 process-7：修改属性" /></p>
+<p><center>图 process-7：修改属性</center></p>
+<p><img src="https://i.imgur.com/3iyabyT.png" alt="图 process-8：设置参与人" /></p>
+<p><center>图 process-8：设置参与人</center></p>
+<p><img src="https://i.imgur.com/91F6Xfp.png" alt="图 process-9：保存" /></p>
+<p><center>图 process-9：保存</center></p>
+<p>6）发布流程图，再次点击主页面的导航栏<code>工作流管理</code>-<code>流程创建管理</code>，找到刚编辑的流程定义的条目并点击发布，提示流程发布成功，即完成了流程的设计与发布过程。</p>
+<ul>
+<li>Step 2：<span id="bpm_3_2">在开发项目中引入<code>bpm</code>模块</span></li>
+</ul>
+<p>1）：集成方式</p>
+<p>参考<a href="http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1213">开发平台后端框架环境搭建</a>给开发环境配置私服；</p>
+<p>2）：项目依赖添加</p>
+<p>根据第一步下载的文件夹中的pom文件描述，可以获取到依赖包的artifactId和version，在pom文件的<code>&lt;dependencies&gt;&lt;/dependencies&gt;</code>中添加信息，如下所述，groupId为<code>com.chamc.boot</code>，版本信息可通过私服查看最新版本；</p>
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.chamc.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;chamc-boot-starter-bpm&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>3）：在工程目录上右键，选择 <code>Maven</code> -&gt; <code>Update Project</code> -&gt; <code>OK</code>，项目自动编译后，如果没有异常，就能够使用流程服务了。</p>
+<ul>
+<li>Step 3：<span id="bpm_3_3">项目中的流程配置</span></li>
+</ul>
+<p>以SpringBoot项目为例：</p>
+<p>1）在配置文件（application.properties）中添加如下所示的内容：</p>
+<pre><code>chamc.bpm.type=tansun
+chamc.bpm.tansun.url=http://localhost:8080/workflow-console #流程引擎服务地址
+chamc.bpm.tansun.tenant-id=archive  #租户ID，可以在“流程引擎后台管理平台——工作流管理——租户管理”查看
+chamc.bpm.tansun.default-classify-code=root #流程分配编码
+</code></pre>
+
+<ul>
+<li>Step 4：<span id="bpm_3_4">流程发起及操作</span></li>
+</ul>
+<p>1）发起流程</p>
+<p>在SpringBoot项目需要的地方注入<code>com.chamc.boot.bpm.service.IInstanceService</code>，调用iInstanceService.startBpm(startBpmParam)即可启动流程，示例：</p>
+<pre><code>import org.springframework.beans.factory.annotation.Autowired;
+
+import com.chamc.boot.bpm.model.process.param.StartBpmParam;
+import com.chamc.boot.bpm.service.IInstanceService;
+
+public class InstanceServiceDemo {
+
+    private @Autowired IInstanceService iInstanceService;
+
+    public void startBpm() {
+        StartBpmParam startBpmParam = new StartBpmParam();
+        startBpmParam.setProcessKey(&quot;process-helloworld&quot;);
+        startBpmParam.setUserId(&quot;user1&quot;);
+        startBpmParam.setTitle(&quot;测试任务标题&quot;);
+        iInstanceService.startBpm(startBpmParam);
+    }
+}
+</code></pre>
+
+<p>2）查看待办<strong>/</strong>已办任务</p>
+<p>注入<code>com.chamc.boot.bpm.service.ITaskService</code>，调用iTaskService.queryTodo(userId, pageable)方法查看待办任务列表，根据<a href="#bpm_3_1">流程定义信息</a>，此时第一个activity配置的参与人应收到一条待办任务。或者通过queryDone接口查看已办任务列表，如下所示：</p>
+<pre><code>import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import com.chamc.boot.bpm.model.task.TaskDone;
+import com.chamc.boot.bpm.model.task.TaskTodo;
+import com.chamc.boot.bpm.service.ITaskService;
+
+public class TaskServiceDemo {
+
+    private @Autowired ITaskService iTaskService;
+
+    public Page&lt;TaskTodo&gt; queryTaskTodo(String userId) {
+        Pageable pageable = new PageRequest(0, 20);     //构造pageable对象，查询第1页数据，分页大小为20
+        Page&lt;TaskTodo&gt; todoPage = iTaskService.queryTodo(userId, pageable);
+        return todoPage;
+    }
+
+    public Page&lt;TaskDone&gt; queryTaskDone(String userId) {
+        Pageable pageable = new PageRequest(0, 20);
+        Page&lt;TaskDone&gt; donePage = iTaskService.queryDone(userId, pageable);
+        return donePage;
+    }
+}
+</code></pre>
+
+<p>待办任务TaskTodo列表如下所示，包含分页信息及待办任务列表，对每个待办任务，包含该任务当前所处的环节、基本信息、可进行的操作和流程实例信息等，其中基本信息中的<code>pcUrl</code>和<code>mobileUrl</code>分别对应pc段和移动端的任务详情页，该地址可以通过配置文件配置。获取待办列表后直接访问待办的pcUrl/mobileUrl即可进入任务的详情页面。</p>
+<pre><code>{
+  &quot;content&quot;: [
+    {
+      &quot;activity&quot;: {
+        &quot;first&quot;: true,
+        &quot;id&quot;: &quot;string&quot;,
+        &quot;last&quot;: true,
+        &quot;name&quot;: &quot;string&quot;
+      },
+      &quot;createTime&quot;: &quot;2017-12-18T05:23:44.730Z&quot;,
+      &quot;dueDate&quot;: &quot;2017-12-18T05:23:44.730Z&quot;,
+      &quot;executionId&quot;: &quot;string&quot;,
+      &quot;id&quot;: &quot;string&quot;,
+      &quot;mobileUrl&quot;: &quot;string&quot;,
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;operations&quot;: [
+        {
+          &quot;needUserId&quot;: true,
+          &quot;op&quot;: &quot;同意&quot;,
+          &quot;plural&quot;: true,
+          &quot;text&quot;: &quot;string&quot;,
+          &quot;url&quot;: &quot;string&quot;,
+          &quot;userRange&quot;: [
+            &quot;string&quot;
+          ]
+        }
+      ],
+      &quot;pcUrl&quot;: &quot;string&quot;,
+      &quot;processInstance&quot;: {
+        &quot;businessKey&quot;: &quot;string&quot;,
+        &quot;currentActivity&quot;: {
+          &quot;first&quot;: true,
+          &quot;id&quot;: &quot;string&quot;,
+          &quot;last&quot;: true,
+          &quot;name&quot;: &quot;string&quot;
+        },
+        &quot;definitionId&quot;: &quot;string&quot;,
+        &quot;definitionName&quot;: &quot;string&quot;,
+        &quot;id&quot;: &quot;string&quot;,
+        &quot;startParticipant&quot;: {
+          &quot;code&quot;: &quot;string&quot;,
+          &quot;id&quot;: &quot;string&quot;,
+          &quot;name&quot;: &quot;string&quot;,
+          &quot;org&quot;: &quot;string&quot;,
+          &quot;orgName&quot;: &quot;string&quot;,
+          &quot;type&quot;: &quot;USER&quot;
+        },
+        &quot;title&quot;: &quot;string&quot;
+      }
+    }
+  ],
+  &quot;first&quot;: true,
+  &quot;last&quot;: true,
+  &quot;number&quot;: 0,
+  &quot;numberOfElements&quot;: 0,
+  &quot;size&quot;: 0,
+  &quot;sort&quot;: {},
+  &quot;totalElements&quot;: 0,
+  &quot;totalPages&quot;: 0
+}
+</code></pre>
+
+<p>3）处理任务</p>
+<p>在任务详情页对待办任务进行操作，操作的按钮可以从待办任务的operations中获取，operations为对象数组，Operation返回值对象，包含信息较多：1、返回对应activity可进行的操作、操作名称及url；2、通过isNeedUserId标识该操作是否需要传用户id；3、通过isPlural标识需要用户id的话，是传1个还是多个；4、如果传的用户id（即下一个activity要用的用户id）有限定范围，那么会通过userRange返回给用户。operation对象示例可参考<a href="#Operation">Operation</a>。</p>
+<p>对于前端使用来说，点击按钮时，取Operation中的url值，并按照Operation的要求附加参数，使用示例如下所示。</p>
+<p>如果需要在处理任务之前或者之后添加业务逻辑，可参考<a href="#bpm_6">3.3.6 添加自定义逻辑</a> 内容说明，通过添加<code>Listener</code>即可实现。</p>
+<p><span id="actionTask">前端任务操作示例：actionTask</span></p>
+<pre><code>function actionTask(instanceId, taskId, url, needUserId, plural) {
+    if(needUserId) {
+        //弹框选人
+    }
+    var params = {};
+    params.instanceId = instanceId;
+    params.taskId = taskId;
+    params.operatorId = &quot;&quot;;
+    params.comment = $(&quot;#task_comment&quot;).val();
+    params.variables = {};
+    if(needUserId) {
+        //添加用户变量，多个用逗号隔开
+        params.userId = &quot;default_user_id&quot;;
+    }
+    $.post(url, params, function(result) {
+        if(&quot;OK&quot; == result) {
+            document.location = &quot;http://localhost:8000/zouzhentian@chamc.com.cn@8499/todo&quot;;
+        } else {
+            alert(result);
+        }
+    });
+}
+</code></pre>
+
+<p>4）查看流转明细</p>
+<pre><code>private @Autowired IInstanceService iInstanceService;
+
+public List&lt;ProcessTransferDetail&gt; queryTransferDetail(String instanceId) {
+    List&lt;ProcessTransferDetail&gt; result = iInstanceService.queryTransferDetail(instanceId);
+    return result;
+}
+</code></pre>
+
+<p>至此，已经完成了第一个完整的流程。包括流程设计、流程发起、待办已办查询、任务处理及查询流转明细等。
+我们把很多底层接口都已经封装到了流程引擎设计器中，所以，1.0版本对外只提供4个核心接口供业务系统，尽量减少业务系统的集成复杂度。</p>
+<h4><span id="bpm_4">3.3.4 开发约定</span></h4>
+<ul>
+<li>1、在每个任务操作后，需要提示下一步任务的参与人</li>
+<li>2、部分任务需要指定下一步的参与人，需要弹窗让用户选人</li>
+</ul>
+<h4><span id="bpm_5">3.3.5 流程服务说明</span></h4>
+<p>1）<span id="lcfwzs">流程服务总述</span><br />
+流程服务模块（BPM模块）以jar包的形式添加到项目系统中，为业务系统提供流程相关的所有服务。在开发的过程中只需要按照<a href="#bpm_2">3.3.2 集成及获取服务</a>为项目添加流程引擎模块依赖，并在项目配置文件中添加一些简单的信息，即可使用流程引擎服务。</p>
+<p>BPM模块能够提供的流程引擎服务包括流程设计、流程发起、待办已办查询、任务处理及查询流转明细，并包括查询activity定义、查询流程变量和查询任务可进行的操作等。开发人员在使用流程服务时，如果需要在操作前后添加业务逻辑处理，可参考<a href="#bpm_6">3.3.6 添加自定义逻辑</a>。另外对于需要接口使用的功能，注入相应的service并调用接口即可，接口的入参和出参详情可参考<a href="#bpm_7">3.3.7 SDK接口</a>。</p>
+<p>BPM模块使用前需要在项目的<code>application.properties</code>中配置流程信息，分为必须信息和可选信息两种，配置的具体信息可参考<a href="#properties">【示例】application中配置流程信息</a></p>
+<p>如果流程中涉及到会签的使用场景，可以在设计流程图的时候进行配置，具体可参考<a href="#huiqian">【示例】会签使用场景</a></p>
+<p>2）<span id="properties">【示例】application中配置流程信息</span></p>
+<p>通过配置信息，能够对指定processKey的流程的key进行配置，也能够对该key对应的每个activity的属性进行配置，包括操作按钮的名称等。</p>
+<p>配置项以<code>chamc.bpm.processes</code>开头，后跟流程定义别名（只供配置信息用），以下示例中为<code>zbwsdazl</code>。</p>
+<p>针对流程中单个activity的属性有<code>todo-pc-url、done-pc-url、todo-mobile-url、done-mobile-url、first、last</code>等，可以在流程设计（画流程图）的时候设置，url会在查询任务详情/任务列表时返回。</p>
+<pre><code>chamc.bpm.type=tansun   #流程引擎类型
+chamc.bpm.tansun.url=http://10.1.8.117:8080/workflow-console    #流程引擎服务url
+chamc.bpm.tansun.tenant-id=archive  #租户id
+chamc.bpm.tansun.default-classify-code=root #流程分类
+
+chamc.bpm.processes.zbwsdazl.process-key=zbwsdazl_process   #以zbwsdazl为标识配置processKey为zbwsdazl_process的流程
+chamc.bpm.processes.zbwsdazl.activities.gdys.operations.agree.text=同意审批     #zbwsdazl流程中id为gdys的activity的同意按钮的名称自定义 【注：每个activity的每个按钮的名称都可以自定义，按钮类型列表参考3.3.7.x【示例】按钮列表】
+chamc.bpm.processes.zbwsdazl.activities.gdys.operations.reject.text=驳回  #id为gdys的activity的驳回按钮的名称自定义
+
+chamc.bpm.tansun.log-level=full     #可选项为NONE、BASIC、HEADERS、FULL，流程引擎的日志级别配置
+</code></pre>
+
+<p>3）<span id="huiqian">【示例】会签使用场景</span></p>
+<p>如下图所示，可以在会签属性栏配置节点的会签属性</p>
+<p><img src="https://i.imgur.com/DWonte1.jpg" alt="会签节点" /></p>
+<p><center>会签节点</center></p>
+<p>注：会签节点不能被退回</p>
+<blockquote>
+<ul>
+<li>会签类型：并行会签/串行会签，并行时该节点所有参与人都收到待办，串行时按照入参输入的用户id次序审批；</li>
+<li>基数：可留空；</li>
+<li>集合：传入的用户集合名词</li>
+<li>元素变量：循环上述集合时，每个集合条目的循环变量名词，可用在配置参与人上；</li>
+<li>完成条件：会签结束的条件，如<code>${nrOfCompletedInstances/nrOfInstances &gt;= 1}</code>表示任务都办理完成后结束会签</li>
+</ul>
+</blockquote>
+<p>配置完上述会签属性后，可以在参与人中配置元素变量，如下所示：</p>
+<p><img src="https://i.imgur.com/96odvJG.jpg" alt="会签处理人" />
+<center>会签处理人</center></p>
+<h4><span id="bpm_6">3.3.6 添加自定义逻辑</span></h4>
+<p>1）、针对每个流程新建listener类并实现<code>com.chamc.boot.bpm.controller.listener.BpmOperateListener</code>（局部）接口即可，须实现该接口的<code>String processKey();</code>方法，并且在<code>before</code>方法中需要setOperatorId（操作人用户id），如下代码所示；</p>
+<p>2）、BpmOperateListener中有<code>before、after、afterThrowing</code>三个时间段的方法，如果只需要其中一个或者几个的话，新建listener类并继承<code>com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter</code>（局部listener）即可，重载的方法同BpmOperateListener中所述方法。</p>
+<p>3）、BpmOperateListener的before方法支持自动化的事务，后台自动判断在before方法中是否需要事务。添加listener后任务操作的执行顺序为<code>before -&gt; taskOperation -&gt; after</code>，如果在before中有需要事务的方法调用，那么当taskOperation）任务操作）发生异常时，会自动回滚before方法中的方法。</p>
+<p>4）、Listener支持全局配置与局部的配置。1）、全局的listener配置对业务系统中所有的流程都生效，也就是说所有的流程只要发生操作事件就会调用的方法，比如前端通过<code>operation</code>的<code>url</code>请求操作任务时，是不带有<code>operator（操作人）</code>的参数的，但是按照逻辑来说，每个操作都需要操作人，因此可以添加全局的<code>listener</code>，并在<code>before</code>方法中给<code>BpmOperateParam</code>对象设置<code>operatorId</code>，注意：全局监听的配置，需要实现<code>com.chamc.boot.bpm.controller.listener.GlobalBpmOperateListener</code>接口，或者继承<code>com.chamc.boot.bpm.controller.listener.support.GlobalBpmOperateAdapter</code>类并按需实现方法。2）、局部的listener配置只针对特定processKey的流程，流程在流转过程中，可能需要特定的业务逻辑处理，比如对于档案系统的文书整理流程来说，发生任务操作事件时要同步的修改档案状态，这个修改逻辑只针对文书整理流程，对于其他的借阅续借流程都不需要，因此可以通过配置局部listener来为该业务添加逻辑，注意：局部监听的配置，需要实现<code>com.chamc.boot.bpm.controller.listener.BpmOperateListener</code>接口，或者继承<code>com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter</code>类并按需实现方法。</p>
+<p>注：before方法中需要设置操作人ID，如<code>param.setOperatorId(UserUtil.getUserId());</code>，在任务操作时，通过待办任务返回的<code>operation</code>对象中的操作任务url是没有操作人参数的，一般来说需要后端获取登录人信息并设置属性值，因此如果是为了方便使用的话，需要一个全局的listener，用来设置操作人id，避免每个流程都需要添加局部listener并<code>setOperatorId</code>。</p>
+<pre><code>import com.chamc.boot.bpm.controller.listener.BpmOperateListener;
+import com.chamc.boot.bpm.controller.param.BpmOperateParam;
+import com.chamc.boot.bpm.model.common.OperationType;
+
+public class AdminArchivingAuditListener implements BpmOperateListener {
+
+    private final static String processKey = &quot;zbwsdazl_process&quot;;
+
+    @Override
+    public void before(BpmOperateParam param, OperationType type) {
+        //操作执行前，设置操作人
+        param.setOperatorId(UserUtil.getUserId());
+        //***根据operationType的不同，添加不同的业务逻辑处理方法
+    }
+
+    @Override
+    public void after(BpmOperateParam param, OperationType type) { }
+
+    @Override
+    public void afterThrowing(BpmOperateParam param, OperationType type, Throwable t) { }
+
+    @Override
+    public String processKey() {
+        return processKey;
+    }
+}
+</code></pre>
+
+<h4><span id="bpm_7">3.3.7 SDK接口</span></h4>
+<h5><span id="bpm_7_1"> 1）说明</span></h5>
+<p>SDK接口能够让开发人员快速的开发应用，进行灵活的流程应用的支持。在SDK中封装了工作流引擎提供的各种服务，为开发人员提供便利。</p>
+<h5><span id="bpm_7_2">2）获取接口的方式</span></h5>
+<p>目前SDK主要提供2类的接口，包路径为<code>com.chamc.boot.bpm.service</code>，接口分类列表如下：</p>
+<table>
+<tbody>
+<tr>
+	<td>编号</td>
+	<td>interface</td>
+	<td>描述</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>IInstanceService</td>
+	<td>流程实例相关的service，包括流程启动、终止以及根据流程实例/定义的一些查询方法</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>ITaskService</td>
+	<td>任务相关service，包括查询待办、已办，等</td>
+</tr>
+</tbody>
+</table>
+<h5><span id="bpm_7_3">3）接口列表</span></h5>
+<p><strong>IInstanceService</strong></p>
+<table>
+<tbody>
+<tr>
+	<td>编号</td>
+	<td>方法</td>
+	<td>入参</td>
+	<td>出参</td>
+	<td>描述</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>startBpm</td>
+	<td>StartBpmParam</td>
+	<td>StartBpmResult</td>
+	<td>启动流程，启动参数中有不同情况的处理</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>terminateBpm</td>
+	<td>userId,instanceId</td>
+	<td>~</td>
+	<td>终止流程</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>terminateBpm</td>
+	<td>userId,instanceId,comment</td>
+	<td>~</td>
+	<td>终止流程</td>
+</tr>
+<tr>
+	<td>3</td>
+	<td>queryTransferDetail</td>
+	<td>instanceId</td>
+	<td><code>List&lt;ProcessTransferDetail&gt;</code></td>
+	<td>获取流转明细</td>
+</tr>
+<tr>
+	<td>4</td>
+	<td>getProcessVariables</td>
+	<td>instanceId</td>
+	<td><code>List&lt;Variable&gt;</code></td>
+	<td>获取流程变量</td>
+</tr>
+<tr>
+	<td>5</td>
+	<td>queryProcessInstance</td>
+	<td>processKey</td>
+	<td><code>List&lt;ProcessInstance&gt;</code></td>
+	<td>获取指定流程key对应的运行中的流程实例</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ITaskService</strong></p>
+<p>注：page对象为分页对象，结果包含分页信息、排序信息及结果content；</p>
+<table>
+<tbody>
+<tr>
+	<td>编号</td>
+	<td>方法</td>
+	<td>入参</td>
+	<td>出参</td>
+	<td>描述</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>queryTodo</td>
+	<td>userId,pageable</td>
+	<td><code>Page&lt;TaskTodo&gt;</code></td>
+	<td>分页查询待办列表</td>
+</tr>
+<tr>
+	<td>1</td>
+	<td>queryTodo</td>
+	<td>userId,processDefineKey,pageable</td>
+	<td><code>Page&lt;TaskTodo&gt;</code></td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>2</td>
+	<td>getTaskTodo</td>
+	<td>taskId</td>
+	<td><code>TaskTodo</code></td>
+	<td>按照taskId查询待办任务</td>
+</tr>
+<tr>
+	<td>3</td>
+	<td>queryDone</td>
+	<td>userId,pageable</td>
+	<td><code>Page&lt;TaskDone&gt;</code></td>
+	<td>分页查询已办列表</td>
+</tr>
+<tr>
+	<td>3</td>
+	<td>queryDone</td>
+	<td>userId,processDefineKey,pageable</td>
+	<td><code>Page&lt;TaskDone&gt;</code></td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>4</td>
+	<td>getTaskDone</td>
+	<td>taskId</td>
+	<td><code>TaskDone</code></td>
+	<td>根据taskId查询已办任务</td>
+</tr>
+<tr>
+	<td>5</td>
+	<td>countTask</td>
+	<td>userId</td>
+	<td><code>TaskCount</code></td>
+	<td>查询待办任务总数和各个流程定义下的待办总数</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>completeTask</td>
+	<td>taskId,userId</td>
+	<td>~</td>
+	<td>同意审批/完成任务</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>completeTask</td>
+	<td>taskId,userId,variables</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>completeTask</td>
+	<td>taskId,userId,comment</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>6</td>
+	<td>completeTask</td>
+	<td>taskId,userId,comment,variables</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>completeTask</td>
+	<td>taskId,userId, nextOrgId,comment,variables</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>completeAndAssign</td>
+	<td>taskId,userId,nextParticipates</td>
+	<td>~</td>
+	<td>提交任务并指派下一节点参与人</td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>completeAndAssign</td>
+	<td>taskId,userId,nextParticipates</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>7</td>
+	<td>completeAndAssign</td>
+	<td>taskId,userId,nextParticipates,variables</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>8</td>
+	<td>addSign</td>
+	<td>taskId,userIds</td>
+	<td>~</td>
+	<td>给当前任务加签</td>
+</tr>
+<tr>
+	<td>8</td>
+	<td>addSign</td>
+	<td>taskId,userIds,comment</td>
+	<td>~</td>
+	<td>~</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>reject</td>
+	<td>taskId,userId</td>
+	<td>~</td>
+	<td>驳回到上一节点</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>reject</td>
+	<td>taskId,userId,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>reject</td>
+	<td>taskId,userId,comment</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>9</td>
+	<td>reject</td>
+	<td>taskId,userId,comment,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>rejectToFirst</td>
+	<td>taskId,userId</td>
+	<td>~</td>
+	<td>驳回到制单节点</td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>rejectToFirst</td>
+	<td>taskId,userId,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>rejectToFirst</td>
+	<td>taskId,userId,comment</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>10</td>
+	<td>rejectToFirst</td>
+	<td>taskId,userId,comment,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>rejectToSpecified</td>
+	<td>taskId,userId,activityId</td>
+	<td>~</td>
+	<td>驳回到指定节点</td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>rejectToSpecified</td>
+	<td>taskId,userId,activityId,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>rejectToSpecified</td>
+	<td>taskId,userId,activityId,comment</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>11</td>
+	<td>rejectToSpecified</td>
+	<td>taskId,userId,activityId,comment,variables</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>12</td>
+	<td>delegate</td>
+	<td>taskId,userId,toUserId</td>
+	<td>~</td>
+	<td>转办任务</td>
+</tr>
+<tr>
+	<td>12</td>
+	<td>delegate</td>
+	<td>taskId,userId,toUserId,comment</td>
+	<td>~</td>
+	<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h5><span id="bpm_7_4">4) Model说明</span></h5>
+<ul>
+<li><a href="#BpmOperateParam">a、BpmOperateParam</a></li>
+<li><a href="#Variable">b、Variable</a></li>
+<li><a href="#AssignInfo">c、AssignInfo</a></li>
+<li><a href="#Activity">d、Activity</a></li>
+<li><a href="#Comment">e、Comment</a></li>
+<li><a href="#UserType">f、UserType（枚举）</a></li>
+<li><a href="#Participant">g、Participant</a></li>
+<li><a href="#StartBpmParam">h、StartBpmParam</a></li>
+<li><a href="#ProcessInstance">i、ProcessInstance</a></li>
+<li><a href="#Operation">j、Operation</a></li>
+<li><a href="#ProcessTransferDetail">k、ProcessTransferDetail</a></li>
+<li><a href="#TaskDone">l、TaskDone</a></li>
+<li><a href="#TaskTodo">m、TaskTodo</a></li>
+<li><a href="#OperationType">n、OperationType（枚举）</a></li>
+</ul>
+<p><strong><span id="BpmOperateParam">a、BpmOperateParam</span></strong></p>
+<p>在添加<code>BpmOperateListener</code>时出现，为before/after等方法的入参。</p>
+<pre><code>{
+  &quot;comment&quot;: &quot;string&quot;,  //审批意见
+  &quot;definitionId&quot;: &quot;string&quot;, //流程定义id
+  &quot;instanceId&quot;: &quot;string&quot;,   //流程实例ID
+  &quot;operatorId&quot;: &quot;string&quot;,   //任务操作人Id（必须）
+  &quot;taskId&quot;: &quot;string&quot;,       //任务Id
+  &quot;userIds&quot;: [              //需要用户信息时添加，比如指派/加签
+    &quot;string&quot;
+  ],
+  &quot;variables&quot;: [            //变量
+    {
+      &quot;name&quot;: &quot;string&quot;,
+      &quot;type&quot;: &quot;string&quot;,     //变量类型，如string/boolean/integer等
+      &quot;value&quot;: &quot;string&quot;
+    }
+  ]
+}
+</code></pre>
+
+<p><strong><span id="Variable">b、Variable</span></strong></p>
+<pre><code>{
+    &quot;name&quot;: &quot;string&quot;,
+    &quot;type&quot;: &quot;string&quot;,     //变量类型，如string/boolean/integer等
+    &quot;value&quot;: &quot;string&quot;
+}
+</code></pre>
+
+<p><strong><span id="AssignInfo">c、AssignInfo</span></strong></p>
+<pre><code>{
+    &quot;userIds&quot;: &quot;String[]&quot;, //被指派的用户id数组
+}
+</code></pre>
+
+<p><strong><span id="Activity">d、Activity</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,
+  &quot;name&quot;: &quot;string&quot;,
+  &quot;first&quot;: &quot;boolean&quot;,   //是否流程的第一个activity
+  &quot;last&quot;: &quot;boolean&quot;,   //是否流程的最后一个activity
+}
+</code></pre>
+
+<p><strong><span id="Comment">e、Comment</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,
+  &quot;author&quot;: &quot;string&quot;, //评论人
+  &quot;message&quot;: &quot;string&quot;,
+  &quot;createTime&quot;: &quot;Date&quot;
+}
+</code></pre>
+
+<p><strong><span id="UserType">f、UserType（枚举）</span></strong></p>
+<pre><code>{
+    USER,
+    DEPT,
+    ORG,
+    USER_GROUP
+}
+</code></pre>
+
+<p><strong><span id="Participant">g、Participant</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,  //用户id
+  &quot;code&quot;: &quot;string&quot;, //用户表尼玛
+  &quot;name&quot;: &quot;string&quot;,   //用户名称
+  &quot;org&quot;: &quot;string&quot;,   //用户所在机构Id
+  &quot;orgName&quot;: &quot;string&quot;,   //用户所在机构名称
+  &quot;type&quot;: &quot;UserType&quot; //用户类型
+}
+</code></pre>
+
+<p><strong><span id="StartBpmParam">h、StartBpmParam</span></strong></p>
+<pre><code>{
+  &quot;userId&quot;: &quot;string&quot;,
+  &quot;processKey&quot;: &quot;string&quot;, //流程定义key
+  &quot;bussinessKey&quot;: &quot;string&quot;,   //业务单号
+  &quot;title&quot;: &quot;string&quot;,   //流程实例标题
+  &quot;orgId&quot;: &quot;string&quot;,       //制单人机构ID
+  &quot;toNext&quot;: &quot;boolean&quot;,      //是否跳过第一个activity
+  &quot;variables&quot;: &quot;List&lt;Variable&gt;&quot;,  //变量
+  &quot;assignInfo&quot;: &quot;AssignInfo&quot;        //启动时的指派信息
+}
+</code></pre>
+
+<p><strong><span id="ProcessInstance">i、ProcessInstance</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,  //流程实例id
+  &quot;title&quot;: &quot;string&quot;, //流程实例名称
+  &quot;businessKey&quot;: &quot;string&quot;,
+  &quot;definitionId&quot;: &quot;string&quot;,       //流程定义id，包括版本信息等
+  &quot;definitionName&quot;: &quot;string&quot;,       //流程定义名称
+  &quot;currentActivity&quot;: &quot;Activity&quot;,   //当前所在节点
+  &quot;startParticipant&quot;: &quot;Participant&quot;,      //启动人信息
+}
+</code></pre>
+
+<p><strong><span id="Operation">j、Operation</span></strong></p>
+<pre><code>{
+    &quot;op&quot;, &quot;OperationType&quot;,  //操作按钮类型
+    &quot;text&quot;, &quot;String&quot;,       //按钮名称
+    &quot;isPlural&quot;: &quot;boolean&quot;,  //是否需要多个用户id做参数
+    &quot;url&quot;, &quot;String&quot;,        //操作按钮对应的url
+    &quot;isNeedUserId&quot;: &quot;boolean&quot;,  //入参是否需要用户id
+    &quot;userRange&quot;, &quot;List&lt;String&gt;&quot;,    //可选的用户范围
+}
+</code></pre>
+
+<p><strong><span id="ProcessTransferDetail">k、ProcessTransferDetail</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,  //任务id
+  &quot;name&quot;: &quot;string&quot;, //任务节点名称
+  &quot;executionId&quot;: &quot;string&quot;,       //任务执行id
+  &quot;createTime&quot;: &quot;Date&quot;,   //创建时间
+  &quot;startTime&quot;: &quot;Date&quot;,   //创建时间
+  &quot;endTime&quot;: &quot;Date&quot;,
+  &quot;durationInMillis&quot;: &quot;Long&quot;, //持续时间
+  &quot;dueDate&quot;: &quot;Date&quot;,   //持续时间
+  &quot;deleteReason&quot;: &quot;string&quot;,       //待办删除原因，比如处理了，驳回了，终止了，转办了等
+  &quot;processInstance&quot;: &quot;ProcessInstance&quot;,//流程实例
+  &quot;participant&quot;: &quot;Participant&quot;,      //任务参与人信息
+  &quot;comment&quot;: &quot;Comment&quot;   //评论   
+}
+</code></pre>
+
+<p><strong><span id="TaskDone">l、TaskDone</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,  //任务id
+  &quot;name&quot;: &quot;string&quot;, //任务节点名称
+  &quot;executionId&quot;: &quot;string&quot;,       //任务执行id
+  &quot;startTime&quot;: &quot;Date&quot;,   //创建时间
+  &quot;endTime&quot;: &quot;Date&quot;,
+  &quot;durationInMillis&quot;: &quot;Long&quot;, //持续时间
+  &quot;dueDate&quot;: &quot;Date&quot;,   //持续时间
+  &quot;deleteReason&quot;: &quot;string&quot;,       //待办删除原因，比如处理了，驳回了，终止了，转办了等
+  &quot;processInstance&quot;: &quot;ProcessInstance&quot;,//流程实例
+  &quot;assigneeParticipant&quot;: &quot;Participant&quot;,      //任务参与人信息
+  &quot;comment&quot;: &quot;Comment&quot;,   //评论
+  &quot;pcUrl&quot;: &quot;string&quot;,
+  &quot;mobileUrl&quot;: &quot;string&quot;       //移动审批Url    
+}
+</code></pre>
+
+<p><strong><span id="TaskTodo">m、TaskTodo</span></strong></p>
+<pre><code>{
+  &quot;id&quot;: &quot;string&quot;,  //任务id
+  &quot;name&quot;: &quot;string&quot;, //任务节点名称
+  &quot;createTime&quot;: &quot;Date&quot;,   //创建时间
+  &quot;dueDate&quot;: &quot;Date&quot;,   //持续时间
+  &quot;executionId&quot;: &quot;string&quot;,       //任务执行id
+  &quot;processInstance&quot;: &quot;ProcessInstance&quot;,//流程实例
+  &quot;operations&quot;: &quot;List&lt;Operation&gt;&quot;,      //任务可执行的操作
+  &quot;activity&quot;: &quot;Activity&quot;,   //任务对应节点的描述对象
+  &quot;pcUrl&quot;: &quot;string&quot;,
+  &quot;mobileUrl&quot;: &quot;string&quot;       //移动审批Url    
+}
+</code></pre>
+
+<p><strong><span id="OperationType">n、OperationType（枚举）</span></strong></p>
+<table>
+<tbody>
+<tr>
+	<td>按钮名称(默认名称)</td>
+	<td>code</td>
+	<td>流程设计图对应任务节点功能设置</td>
+	<td>描述</td>
+</tr>
+<tr>
+	<td>同意</td>
+	<td>agree</td>
+	<td>下一步</td>
+	<td>同意审批</td>
+</tr>
+<tr>
+	<td>拒绝</td>
+	<td>refuse</td>
+	<td></td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>驳回</td>
+	<td>reject</td>
+	<td>退回上一步</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>驳回到第一步</td>
+	<td>rejectToFirst</td>
+	<td>退回第一步</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>驳回到指定环节</td>
+	<td>rejectToSpecified</td>
+	<td>退回指定节点</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>改派</td>
+	<td>delegate</td>
+	<td>转发</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>加签</td>
+	<td>addSign</td>
+	<td>加签</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>指派</td>
+	<td>assign</td>
+	<td></td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>终止</td>
+	<td>terminate</td>
+	<td>终止流程</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>挂起</td>
+	<td>suspend</td>
+	<td>挂起流程</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>激活</td>
+	<td>activate</td>
+	<td>激活流程</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>减签</td>
+	<td>delSign</td>
+	<td>减签</td>
+	<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="bpm_8">3.3.8 异常说明</span></h4>
+<table>
+<tbody>
+<tr>
+	<td>错误码</td>
+	<td>错误提示</td>
+	<td>描述</td>
+</tr>
+<tr>
+	<td><strong>500</strong></td>
+	<td>查询待办发生异常</td>
+	<td>流程引擎内部错误，可能原因为：1、参数错误，2、流程引擎bug</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="bpm_9">3.3.9 同步模块说明</span></h4>
+<p>（待补充）</p>
+<h4><span id="bpm_10">3.3.10 接口使用统计</span></h4>
+<p>说明：竖列标识系统列表，横列标识对外接口，中间内容区域，<code>~</code>标识该系统未用对应接口</p>
+<table>
+<tbody>
+<tr>
+	<td>系统</td>
+	<td>startBpm</td>
+	<td>queryTransferDetail</td>
+	<td>getProcessVariables</td>
+	<td>queryProcessInstance</td>
+	<td>queryTaskTodo</td>
+	<td>getTaskTodo</td>
+	<td>queryDone</td>
+	<td>getTaskDone</td>
+	<td>&nbsp;</td>
+</tr>
+<tr>
+	<td>档案系统</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+	<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="bpm_11">3.3.11 版本变更历史</span></h4>
+<table>
+<tbody>
+<tr>
+	<td>SDK版本</td>
+	<td>发布时间</td>
+	<td>更新内容描述</td>
+</tr>
+<tr>
+	<td>0.0.1SNAPSHOT</td>
+	<td></td>
+	<td>新建项目</td>
+</tr>
+</tbody>
+</table>
+<h4><span id="bpm_12">3.3.12 工作流平台架构图</span></h4>
+<p><img src="https://i.imgur.com/ImuJSR1.jpg" alt="流程引擎架构图" /></p>
+<p>流程引擎采用中心部署的模式，作为开发平台的子模块提供服务。业务系统可以:</p>
+<ul>
+<li>1、通过统一管理台设计发布流程，跟踪流程（实例），并维护人员、机构和角色等数据；</li>
+<li>2、通过开发平台流程引擎模块（chamc--boot-starter-bpm，简称BPM模块）SDK的方式引入项目并控制流程及任务，如发起流程、同意审批、加签等。</li>
+</ul>
+<p>BPM模块封装了统一的流程服务，能够提供流程执行与控制、任务执行与管理、流程定义、流程历史控制及自由流等服务。业务系统可调用开发平台SDK服务与统一流程服务层交互。<br />
+流程服务通过流程引擎的驱动与数据进行交互。在数据管理方面，流程引擎进行统一的数据管理控制，如统一的人员基本信息管理、组织机构基本信息管理以及人员-机构信息管理等，并通过异步的数据同步服务维护基本数据。<br />
+流程数据和机构数据分租户隔离，对于机构数据来说，不同租户间的数据隔离通过关联关系确定，因此机构的基本数据是统一一致的，流程定义、实例信息等数据分离，避免各个系统间的流程混乱。<br />
+统一管理平台提供了流程定义管理、流程实例管理、用户机构和角色等的管理，使用时在改平台下完成流程的定义和部署，并能够进行流程的追踪。管理平台可进行简单的人员、机构和角色等的维护，批量的数据则通过数据同步服务进行处理。<br />
+各个组件之间的有机协作，为业务系统提供提供使用简单、管理方便的流程引擎服务。</p>
+<blockquote>
+<p><span id="fz"><strong>附注：</strong></span></p>
+<p>技术支持，座机：010-57326502，邮件：<a href="m&#x61;&#x69;&#108;&#116;&#111;:&#109;&#x69;&#x61;&#x6f;&#115;&#104;&#x69;&#112;&#101;&#x6e;&#x67;&#64;c&#x68;&#97;&#x6d;&#x63;&#46;&#99;&#x6f;&#x6d;&#46;&#99;&#x6e;">&#x6d;&#x69;&#x61;&#111;&#x73;h&#105;&#112;&#101;n&#103;&#64;&#99;&#104;&#x61;&#x6d;&#x63;&#x2e;&#x63;&#x6f;&#x6d;&#x2e;&#x63;&#x6e;</a></p>
+<p>流程设计器试用地址：<a href="http://10.1.8.117:8080/workflow-console">http://10.1.8.117:8080/workflow-console</a>，账号：请与我们联系申请！</p>
+</blockquote>
+
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
