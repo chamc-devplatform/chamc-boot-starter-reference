@@ -163,7 +163,7 @@ finish，新建成功后，如图所示：
 	spring.datasource.username=root
 	spring.datasource.password=1111
 
-2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，并且auto_increment）**例如：  
+2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，数据类型为Decimal(18,0)）**例如：  
 
 - 新建数据库test
 
@@ -172,22 +172,22 @@ finish，新建成功后，如图所示：
 - 新建表t_user
 
 		CREATE TABLE `t_user` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `id` decimal(18,0) NOT NULL,
 		  `username` varchar(50) DEFAULT NULL,
 		  `password` varchar(50) DEFAULT NULL,
 		  `userdetail_id` int(11) DEFAULT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 - 新建表t_userdetail
 
 		CREATE TABLE `t_userdetail` (
-		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `id` decimal(18,0) NOT NULL,
 		  `name` varchar(45) DEFAULT NULL,
 		  `birthday` date DEFAULT NULL,
 		  `age` int(11) DEFAULT NULL,
 		  PRIMARY KEY (`id`)
-		) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 <span id="codegenerate">3） 生成代码，使用CodeGenerator.generate(……)方法。例如：  </span>
 
@@ -299,7 +299,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 （GET） http://localhost:8080/user/page 分页查询（可添加@GlobalSearch） 例如：http://localhost:8080/user/page?search=1&page=0&size=10
 </pre>
 
-添加@GlobalSearch：在实体类中，添加需要查询的字段名称，如下（配置按username查询）
+添加@GlobalSearch，@GlobalSearch接受一个字符串数组，添加需要查询的字段名称，如下（配置按username查询）
 
 	@Entity
 	@Table(name = "t_user")
@@ -316,7 +316,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 	
 	}
 
-访问`http://localhost:8080/user/page?search=1&page=0&size=10`，结果如下
+查询username中包含1的用户，访问`http://localhost:8080/user/page?search=1&page=0&size=10`，search为匹配字段，即查询（select * from t_user where username like '%1%'），结果如下
 
 	{
 	    "content": [
@@ -666,6 +666,14 @@ sql语句只打印了一条
 
  - @Id注释指定表的主键。
  - @GeneratedValue注释定义了标识字段生成方式。
+ - @GenericGenerator注释是hibernate所提供的自定义主键生成策略生成器，由@GenericGenerator实现多定义的策略。  
+   
+			使用CodeGenerator生成的entity使用snowflake策略生成主键，使主键全局唯一：
+            @Id
+	        @GeneratedValue(generator = "snowflake")
+	        @GenericGenerator(name = "snowflake",strategy = "com.chamc.boot.web.support.SnowflakeIdGenerator")
+	        private Long id;
+   
  - @Temporal注释用来指定java.util.Date或java.util.Calender属性与数据库类型date、time或timestamp中的那一种类型进行映射。
  - @JoinColumn用来标明映射中的关系。
 
@@ -917,7 +925,9 @@ test由自己定义，可再使用不同的命名继续增加数据源
 1. 当一个controller中需要使用多个数据源的数据，应该在controller中调用多个service方法，而不是在service中调用service  
 2. 使用哪一个数据源进行操作，取决于第一次进入service中指定的数据源  
 3. 不指定数据源时，均使用默认数据源  
-4. 错误示例  
+4. 错误示例：controller调用service中的processBookOrUsers2Bussiness()方法后，数据源已经指定为默认数据源，在 processBookOrUsers2Bussiness()中再调用service的findBooks()方法，findBooks()上配置的test数据源将不起作用。数据源已第一次进入service时指定的数据源为准。 
+
+controller中：
 
 		@GetMapping("test")
 		public ResponseEntity<?> bookOrUsers2(@RequestParam Long type){
@@ -925,6 +935,8 @@ test由自己定义，可再使用不同的命名继续增加数据源
 			return result;
 		}
 	
+service中：
+
 		public ResponseEntity<?> processBookOrUsers2Bussiness(Long type) {
 			if (type.equals(0L)){
 				List<User> users = this.findUsers();
@@ -933,6 +945,15 @@ test由自己定义，可再使用不同的命名继续增加数据源
 				List<Book> books = this.findBooks();
 				return ResponseEntity.ok(books);
 			}
+		}
+
+        public List<User> findUsers() {
+			return repository.findAll();
+		}
+	
+		@TargetDataSource("test")
+		public List<Book> findBooks() {
+			return bookRepository.findAll();
 		}
 
 #### 3.1.2 安全相关功能及其使用说明
@@ -1451,9 +1472,9 @@ public String list(int size) {
 
 ### <span id="bpm">3.3 工作流组件</span>
 
-详情请参考网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
-
-或查看git项目下docs -> 开发平台后端框架参考指南-流程引擎模块.md；
+详情请参考
+- [开发平台后端框架参考指南-流程引擎模块.html](docs/开发平台后端框架参考指南-流程引擎模块.html)
+- 网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
 
 ## <span id="how-to">4 “How-to”指南</span>
 
