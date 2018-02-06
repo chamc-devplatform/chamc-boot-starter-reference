@@ -1295,6 +1295,9 @@ public String list(int size) {
 		List<com.chamc.boot.web.support.sys.model.Org> getConcurrentOrgs(); //用户兼职机构
 		List<com.chamc.boot.web.support.sys.model.Org> getOrgs(); //用户的所有机构
 		Optional<com.chamc.boot.web.support.sys.model.Org> getMainOrg(); //用户的主机构（可为空）
+        Optional<Org> getCurrentOrg();  //获取当前机构
+        Optional<List<Role>> getCurrentRoles(); //获取当前角色
+        Optional<List<Role>> getRoles();    //获取所有角色
 
 #### 3.1.3 配置日志打印及其使用说明
 
