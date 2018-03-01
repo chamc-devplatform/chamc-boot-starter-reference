@@ -29,7 +29,7 @@
 
 ### 1.4 开发平台后端框架组件
 
-如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么[这章](#component)将为你详细介绍开发平台后端框架的各个组件：[web组件](#web)、[swagger组件](#swagger)、[工作流组件](#bpm)。
+如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么[这章](#component)将为你详细介绍开发平台后端框架的各个组件：[web组件](#web)、[swagger组件](#swagger)、[工作流组件](#bpm)、[service组件](#starter-service)。
 
 ### 1.5 高级功能
 
@@ -1475,6 +1475,174 @@ public String list(int size) {
 详情请参考
 - [开发平台后端框架参考指南-流程引擎模块.html](docs/开发平台后端框架参考指南-流程引擎模块.html)
 - 网盘文件[http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214](http://hq-spsdocument/_layouts/15/DocIdRedir.aspx?ID=C2A742TNNUZA-1797567310-1214)
+
+### <span id="starter-service">3.4 service组件</span>
+
+#### 3.4.1 简介
+
+使用service组件，可以将你的服务注册到注册中心，使得其他应用可以调用你的服务（即REST接口）。同时你的应用也可以通过service组件调用其他应用提供的服务（即REST接口）。
+
+#### 3.4.2 配置
+
+1） 添加依赖  
+
+在pom.xml文件中引入chamc-boot-starter-service的依赖：
+
+	<dependency>
+		<groupId>com.chamc.boot</groupId>
+		<artifactId>chamc-boot-starter-service</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>
+
+2） 配置文件配置
+
+在application.properties文件中添加配置：
+
+	spring.application.name=                 //自定义应用名
+	chamc.service.registry.token=            //应用对应token
+
+token获取：将应用名发给[唐红石](mailto:tanghongshi@chamc.com.cn)获取。
+
+#### 3.4.3 使用
+
+1） 如何注册服务
+
+按照以上的配置进行配置后，运行项目，如果日志打印如下，则注册成功
+
+	INFO 3484 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SERVICE-CLIENT1/XXXXXX.chamc.com.cn:service-client1:8899: registering service...
+	INFO 3484 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SERVICE-CLIENT1/XXXXXX.chamc.com.cn:service-client1:8899 - registration status: 204
+
+2） 如何调用已注册的服务
+
+假设已将service-client1注册，现在service-client2需要调用service-client1中的接口。
+
+1. 按照以上配置对service-client2进行配置。
+
+2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient`，其中的参数name必须与需要调用的应用的应用名(即配置文件中的`spring.application.name`)相同；并按照写REST接口的方法书写方法。    
+假设service-client2要调用service-client1的hello接口：
+		
+		@FeignClient(name = "service-client1")
+		public interface Client1RemoteService {
+		
+			@GetMapping("hello")
+			public String hello();
+			
+		}
+
+    service-client1中的接口：
+
+		@GetMapping("hello")
+		public ResponseEntity<String> hello() {
+			return ResponseEntity.ok("Hello world!");
+		}
+
+3. 在需要使用service-client1服务的地方，注入Client1RemoteService即可，如下：
+
+		private @Autowired Client1RemoteService client1;
+
+3） Feign的使用
+
+整体来说，提供方接口这么定义，消费方的接口也就怎么定义。
+
+之前的demo只调用了简单的无参接口，下面将介绍几个复杂的出入参接口例子。
+
+1. 带参接口
+
+	假设服务提供方有如下接口：
+
+		@PostMapping("person")
+		public ResponseEntity<String> create(String name, int age) {
+			……
+		}
+
+	则服务消费者应这样调用：
+
+	    @PostMapping("/person")
+		public String create(@RequestParam("name") String name, @RequestParam("age") int age);
+
+	【注意】消费者必须在参数上增加`@RequestParam("xxx")`注解，其中xxx必须与提供方的参数名一致。
+
+2. 带`@PathVariable`参数接口
+
+	假设服务提供方有如下接口：
+
+		@GetMapping("/person/{id}")
+		public ResponseEntity<String> get(@PathVariable("id") int id) {
+			……
+		}
+
+	则服务消费者应这样调用：
+
+	    @GetMapping("/person/{id}")
+		public String getPerson(@PathVariable("id") int id);
+
+3. 返回Json接口
+
+	假设服务提供方有如下接口：
+
+		@GetMapping("/person/{id}")
+		public ResponseEntity<Person> get(@PathVariable("id") int id) {
+			……
+		}
+
+	Person：
+
+		public @Data class Person {
+			private Long id;
+			private String name;
+			private int age;
+			
+			@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.S Z", timezone = "GMT+8")
+			private Date birthday;
+			private Address address;
+		}
+		
+	Address：
+
+		public @Data class Address {
+			private String street;
+			private int no;
+		}
+
+	则服务消费者应这样调用：
+
+		@GetMapping("/person/{id}")
+		public User user(@PathVariable("id") Long id);
+
+	User：
+
+		public @Data class User {
+			private String name;
+			private int age;
+			
+			@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.S Z", timezone = "GMT+8")
+			private Date birthday;
+			private Address address;
+		}
+		
+		public @Data class Address {
+			private String street;
+			private int no;
+			private String city;
+		}
+
+	【注意】消费方可以只接收自己需要的数据，与提供方属性名一致即可。
+
+4. 接收Json参数接口
+
+	假设服务提供方有如下接口：
+
+		@PostMapping("")
+		public ResponseEntity<Person> create(@RequestBody Person person){
+			return ResponseEntity.ok(person);
+		}
+
+	则服务消费者应这样调用：
+
+		@PostMapping("")
+		public User create(@RequestBody User user);
+
+
 
 ## <span id="how-to">4 “How-to”指南</span>
 
