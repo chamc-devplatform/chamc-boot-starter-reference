@@ -1480,9 +1480,13 @@ public String list(int size) {
 
 #### 3.4.1 简介
 
-使用service组件，可以将你的服务注册到注册中心，使得其他应用可以调用你的服务（即REST接口）。同时你的应用也可以通过service组件调用其他应用提供的服务（即REST接口）。
+使用service组件，你可以：  
+1. 将你的服务注册到注册中心，使得其他应用可以调用你的服务（即REST接口）。  
+2. 你的应用也可以通过service组件调用其他应用提供的服务（即REST接口）。
 
-#### 3.4.2 配置
+#### 3.4.2 使用
+
+##### 3.4.2.1 如何注册服务
 
 1） 添加依赖  
 
@@ -1501,26 +1505,27 @@ public String list(int size) {
 	spring.application.name=                 //自定义应用名
 	chamc.service.registry.token=            //应用对应token
 
-token获取：将应用名发给[唐红石](mailto:tanghongshi@chamc.com.cn)获取。
+【注】token获取：将应用名发给[唐红石](mailto:tanghongshi@chamc.com.cn)获取。
 
-#### 3.4.3 使用
+这样你的应用就注册到了注册中心，其他应用可以通过注册中心发现你的服务，从而调用你的服务。
 
-1） 如何注册服务
+##### 3.4.2.2 如何调用已注册的服务
 
-按照以上的配置进行配置后，运行项目，如果日志打印如下，则注册成功
-
-	INFO 3484 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SERVICE-CLIENT1/XXXXXX.chamc.com.cn:service-client1:8899: registering service...
-	INFO 3484 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_SERVICE-CLIENT1/XXXXXX.chamc.com.cn:service-client1:8899 - registration status: 204
-
-2） 如何调用已注册的服务
-
-假设已将service-client1注册，现在service-client2需要调用service-client1中的接口。
+假设已将应用service-client1注册，现在应用service-client2需要调用service-client1中的服务。那么，在service-client2中进行如下操作即可。
 
 1. 按照以上配置对service-client2进行配置。
 
-2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient`，其中的参数name必须与需要调用的应用的应用名(即配置文件中的`spring.application.name`)相同；并按照写REST接口的方法书写方法。    
-假设service-client2要调用service-client1的hello接口：
+2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：    
+
+	假设服务提供方service-client1有如下接口：
 		
+		@GetMapping("hello")
+		public ResponseEntity<String> hello() {
+			return ResponseEntity.ok("Hello world!");
+		}
+
+    则服务消费者service-client2应这样调用：
+
 		@FeignClient(name = "service-client1")
 		public interface Client1RemoteService {
 		
@@ -1528,19 +1533,19 @@ token获取：将应用名发给[唐红石](mailto:tanghongshi@chamc.com.cn)获�
 			public String hello();
 			
 		}
+		
 
-    service-client1中的接口：
-
-		@GetMapping("hello")
-		public ResponseEntity<String> hello() {
-			return ResponseEntity.ok("Hello world!");
-		}
-
-3. 在需要使用service-client1服务的地方，注入Client1RemoteService即可，如下：
+3. 在需要使用service-client1服务的地方，注入上一步新建的接口Client1RemoteService即可，如下：
 
 		private @Autowired Client1RemoteService client1;
 
-3） Feign的使用
+4. 在application.properties里新增如下配置：
+
+		chamc.service.feign.scan=com.chamc.xxx
+
+	其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
+
+#### 3.4.3 Feign的使用
 
 整体来说，提供方接口这么定义，消费方的接口也就怎么定义。
 
