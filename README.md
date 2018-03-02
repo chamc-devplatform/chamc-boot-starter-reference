@@ -1515,7 +1515,7 @@ public String list(int size) {
 
 1. 按照以上配置对service-client2进行配置。
 
-2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：    
+2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient(name = "xxx")`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：    
 
 	假设服务提供方service-client1有如下接口：
 		
@@ -1647,7 +1647,28 @@ public String list(int size) {
 		@PostMapping("")
 		public User create(@RequestBody User user);
 
+#### 3.4.4 其他配置介绍
 
+1. `chamc.service.feign.log-level`：设置消费方调用提供方服务时的日志打印级别，有none、headers、basic、full四个级别。
+
+	full级别日志打印示例：
+
+		[Client1RemoteService2#create] ---> POST http://service-client1/create HTTP/1.1       
+		[Client1RemoteService2#create] Content-Type: application/json;charset=UTF-8
+		[Client1RemoteService2#create] Content-Length: 86
+		[Client1RemoteService2#create]
+		[Client1RemoteService2#create] {"name":"abc","age":12,"birthday":null,"address":{"street":null,"no":123,"city":"BJ"}}
+		[Client1RemoteService2#create] ---> END HTTP (86-byte body)
+        ......// 以上是发送请求时的日志，以下是接收到返回结果的日志
+		[Client1RemoteService2#create] <--- HTTP/1.1 200 (660ms)
+		[Client1RemoteService2#create] content-type: application/json;charset=UTF-8
+		[Client1RemoteService2#create] date: Fri, 02 Mar 2018 07:05:40 GMT
+		[Client1RemoteService2#create] transfer-encoding: chunked
+		[Client1RemoteService2#create] x-application-context: service-client1:8899
+		[Client1RemoteService2#create] 
+		[Client1RemoteService2#create] {"id":null,"name":"abc","age":12,"birthday":null,"address":{"street":null,"no":123}}
+		[Client1RemoteService2#create] <--- END HTTP (84-byte body)
+		
 
 ## <span id="how-to">4 “How-to”指南</span>
 
