@@ -1669,6 +1669,45 @@ public String list(int size) {
 		[Client1RemoteService2#create] {"id":null,"name":"abc","age":12,"birthday":null,"address":{"street":null,"no":123}}
 		[Client1RemoteService2#create] <--- END HTTP (84-byte body)
 		
+#### 3.4.5 异常处理
+
+REST接口推荐使用ResponseEntity<?>作为返回值，下面将介绍ResponseEntity的一些异常处理。
+
+1. `ResponseEntity.accepted()`：创建一个具有ACCEPTED（202）状态的构建器，表示请求已被接受。
+2. `ResponseEntity.badRequest()`：创建一个具有BAD_REQUEST（400）状态的构建器，表示服务器未能识别请求。
+3. `ResponseEntity.noContent()`：创建一个NO_CONTENT（204）状态的构建器，表示已成功处理请求并且响应已被设定为无内容。
+4. `ResponseEntity.notFound()`：创建一个NOT_FOUND（404）状态的构建器，表示请求的资源不在服务器上。 
+5. `ResponseEntity.unprocessableEntity()`：创建一个UNPROCESSABLE_ENTITY（422）状态的构建器，表示语义错误，无法响应请求。
+6. `ResponseEntity.status(HttpStatus status)|ResponseEntity.status(int status)`：创建一个具有给定状态的构建器。
+
+示例如下：
+
+	@GetMapping("/person/{id}")
+	public ResponseEntity<Person> person(@PathVariable("id") Long id) {
+		if(100 < id && id < 200) {
+			return ResponseEntity.accepted().body(null);
+		}
+		if(200 < id && id < 300) {
+			return ResponseEntity.badRequest().body(null);
+		}
+		if(300 < id && id < 400) {
+			return ResponseEntity.noContent().build();
+		}
+		if(400 < id && id < 500) {
+			return ResponseEntity.notFound().build();
+		}
+		if(500 < id && id < 600) {
+			return ResponseEntity.unprocessableEntity().body(null);
+		}
+		if(600 < id && id < 700) {
+			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(null);
+		}
+		if(id > 700) {
+			throw new RuntimeException("出错了。");
+		}
+		Person p = new Person();
+		return ResponseEntity.ok(p);
+	}
 
 ## <span id="how-to">4 “How-to”指南</span>
 
