@@ -1649,7 +1649,7 @@ public String list(int size) {
 
 #### 3.4.4 其他配置介绍
 
-1. `chamc.service.feign.log-level`：设置消费方调用提供方服务时的日志打印级别，有none、headers、basic、full四个级别。
+1. `chamc.service.feign.log-level`：在消费方设置，用于指定消费方调用提供方服务时打印日志的级别，包括none、headers、basic、full四个级别。默认为none。
 
 	full级别日志打印示例：
 
