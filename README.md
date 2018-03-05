@@ -1212,10 +1212,16 @@ ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加s
 
     /**
      * beforeOrg方法：方法体中可以修改org，该org为直接写入到数据库的org，如果需要过滤掉该org返回false，否则需要返回true
-     * beforeUser方法：同beforeOrg
+     * beforeUser方法：同beforeOrg，order为监听顺序
     **/
     //listener
     public class SyncListener extends SyncOperationListenerAdapter {
+
+        //顺序默认为999，从小到大排列
+    	@Override
+    	public int order() {
+    		return super.order();
+    	}
 
     	@Override
     	public boolean beforeOrg(Org org) {
@@ -1230,6 +1236,12 @@ ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加s
 
     //listener1
     public class SyncListener1 implements SyncOperationListener {
+
+        
+    	@Override
+    	public int order() {
+    		return 0;
+    	}
 
     	@Override
     	public boolean beforeUser(User user) {
