@@ -1578,22 +1578,22 @@ public String list(int size) {
 
 ##### 3.4.2.2 如何调用已注册的服务
 
-假设已将应用service-client1注册，现在应用service-client2需要调用service-client1中的服务。那么，在service-client2中进行如下操作即可。
+假设已将应用provider注册，现在应用consumer需要调用provider中的服务。那么，在consumer中进行如下操作即可。
 
-1. 按照以上配置对service-client2进行配置。
+1. 按照以上配置对consumer进行配置。
 
 2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient(name = "xxx")`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：    
 
-	假设服务提供方service-client1有如下接口：
+	假设服务提供方provider有如下接口：
 		
 		@GetMapping("hello")
 		public ResponseEntity<String> hello() {
 			return ResponseEntity.ok("Hello world!");
 		}
 
-    则服务消费者service-client2应这样调用：
+    则服务消费者consumer应这样调用：
 
-		@FeignClient(name = "service-client1")
+		@FeignClient(name = "provider")
 		public interface Client1RemoteService {
 		
 			@GetMapping("hello")
@@ -1602,7 +1602,7 @@ public String list(int size) {
 		}
 		
 
-3. 在需要使用service-client1服务的地方，注入上一步新建的接口Client1RemoteService即可，如下：
+3. 在需要使用provider服务的地方，注入上一步新建的接口Client1RemoteService即可，如下：
 
 		private @Autowired Client1RemoteService client1;
 
@@ -1720,7 +1720,7 @@ public String list(int size) {
 
 	full级别日志打印示例：
 
-		[Client1RemoteService2#create] ---> POST http://service-client1/create HTTP/1.1       
+		[Client1RemoteService2#create] ---> POST http://provider/create HTTP/1.1       
 		[Client1RemoteService2#create] Content-Type: application/json;charset=UTF-8
 		[Client1RemoteService2#create] Content-Length: 86
 		[Client1RemoteService2#create]
@@ -1731,50 +1731,11 @@ public String list(int size) {
 		[Client1RemoteService2#create] content-type: application/json;charset=UTF-8
 		[Client1RemoteService2#create] date: Fri, 02 Mar 2018 07:05:40 GMT
 		[Client1RemoteService2#create] transfer-encoding: chunked
-		[Client1RemoteService2#create] x-application-context: service-client1:8899
+		[Client1RemoteService2#create] x-application-context: provider:8899
 		[Client1RemoteService2#create] 
 		[Client1RemoteService2#create] {"id":null,"name":"abc","age":12,"birthday":null,"address":{"street":null,"no":123}}
 		[Client1RemoteService2#create] <--- END HTTP (84-byte body)
-		
-#### 3.4.5 异常处理
 
-REST接口推荐使用ResponseEntity<?>作为返回值，下面将介绍ResponseEntity的一些异常处理。
-
-1. `ResponseEntity.accepted()`：创建一个具有ACCEPTED（202）状态的构建器，表示请求已被接受。
-2. `ResponseEntity.badRequest()`：创建一个具有BAD_REQUEST（400）状态的构建器，表示服务器未能识别请求。
-3. `ResponseEntity.noContent()`：创建一个NO_CONTENT（204）状态的构建器，表示已成功处理请求并且响应已被设定为无内容。
-4. `ResponseEntity.notFound()`：创建一个NOT_FOUND（404）状态的构建器，表示请求的资源不在服务器上。 
-5. `ResponseEntity.unprocessableEntity()`：创建一个UNPROCESSABLE_ENTITY（422）状态的构建器，表示语义错误，无法响应请求。
-6. `ResponseEntity.status(HttpStatus status)|ResponseEntity.status(int status)`：创建一个具有给定状态的构建器。
-
-示例如下：
-
-	@GetMapping("/person/{id}")
-	public ResponseEntity<Person> person(@PathVariable("id") Long id) {
-		if(100 < id && id < 200) {
-			return ResponseEntity.accepted().body(null);
-		}
-		if(200 < id && id < 300) {
-			return ResponseEntity.badRequest().body(null);
-		}
-		if(300 < id && id < 400) {
-			return ResponseEntity.noContent().build();
-		}
-		if(400 < id && id < 500) {
-			return ResponseEntity.notFound().build();
-		}
-		if(500 < id && id < 600) {
-			return ResponseEntity.unprocessableEntity().body(null);
-		}
-		if(600 < id && id < 700) {
-			return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(null);
-		}
-		if(id > 700) {
-			throw new RuntimeException("出错了。");
-		}
-		Person p = new Person();
-		return ResponseEntity.ok(p);
-	}
 
 ## <span id="how-to">4 “How-to”指南</span>
 
