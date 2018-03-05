@@ -1112,6 +1112,7 @@ service中：
 - 同步模块可配置使用或关闭，如下“使用demo”中的配置项所示；
 - 同步程序以两种方式提供服务，定时任务+service调用；
 - 同步程序使用多线程处理，相对来说效率较高，线程池可配置，如下“使用demo”中的配置项所示，多线程处理后会等待处理结果，然后再继续执行下一步逻辑；
+- 同步程序可以添加干预listener，只需要继承`SyncOperationListenerAdapter`或者实现`SyncOperationListener`即可；
 - 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行，
 
 ![entuserdb ER图](https://i.imgur.com/IS2yDal.jpg)
@@ -1199,6 +1200,72 @@ ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加s
     		service.syncThread();
     	}
     }
+
+如果需要对同步程序进行干预，可采用以下方式添加bean并注入到系统中，可以有多个listener共存，共同起作用：
+
+    - 方法1：继承`SyncOperationListenerAdapter`实现需要的方法
+    - 方法2：继承`SyncOperationListener`并实现其中的方法
+
+示例：
+
+    /**
+     * beforeOrg方法：方法体中可以修改org，该org为直接写入到数据库的org，如果需要过滤掉该org返回false，否则需要返回true
+     * beforeUser方法：同beforeOrg
+    **/
+    //listener
+    public class SyncListener extends SyncOperationListenerAdapter {
+
+    	@Override
+    	public boolean beforeOrg(Org org) {
+    		return super.beforeOrg(org);
+    	}
+    
+    	@Override
+    	public boolean beforeUser(User user) {
+    		return super.beforeUser(user);
+    	}
+    }
+
+    //listener1
+    public class SyncListener1 implements SyncOperationListener {
+
+    	@Override
+    	public boolean beforeUser(User user) {
+    		if(user.getAccount().equals("xiaojia@chamc.com.cn@4869")) {
+    			log.info("syncListener1");
+    			return true;
+    		}
+    		return false;
+    	}
+    
+    	@Override
+    	public boolean beforeOrg(Org org) {
+    		if(org.getCode().equals("ORG100000012")) {
+    			return true;
+    		}
+    		return false;
+    	}
+    
+    	@Override
+    	public void afterThrowing(Object obj, Throwable t) {
+    	}
+    }
+
+
+    //注入 listener（**仅供参考**）
+    @Configuration
+    public class SyncAutoConfig {
+
+    	public @Bean SyncListener syncListener() {
+    		return new SyncListener();
+    	}
+    	
+    	public @Bean SyncListener1 syncListener1() {
+    		return new SyncListener1();
+    	}
+    }
+    
+
 
 **【3】**<span id="cron">cron简单示例</span>
 
