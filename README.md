@@ -849,6 +849,8 @@ sql语句只打印了一条
 		chamc.ds.compose.data-sources.test.username=root
 		chamc.ds.compose.data-sources.test.password=1111
 
+- 除了以上配置，还有一个配置chamc.ds.compose.pointcut，表示对于@TargetDataSource注解的解析应用在哪些地方，默认是继承BaseService的类中@TargetDataSource生效。若不想继承BaseService也想使其生效，则需通过aspectJ配置方式进行配置。
+
 test由自己定义，可再使用不同的命名继续增加数据源
 
 3） demo
