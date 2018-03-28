@@ -157,11 +157,23 @@ finish，新建成功后，如图所示：
 
 #### 2.3.3 开始编码
 
-1） 在application.properties中添加数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
+1） 在application.properties中添加以下配置。
 
-	spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
-	spring.datasource.username=root
-	spring.datasource.password=1111
+- 数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
+
+		spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+		spring.datasource.username=root
+		spring.datasource.password=1111
+
+- repository、entity扫描路径
+
+		chamc.web.scan.repository=com.chamc.demo
+		chamc.web.scan.entity=com.chamc.demo
+
+- radis
+
+		spring.redis.host=10.1.8.119
+		spring.session.store-type=hash-map
 
 2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，数据类型为Decimal(18,0)）**例如：  
 
@@ -257,12 +269,6 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 5） 打开BaseRestController可见已实现一些接口：如增删改查。
 
 6） 右键项目，选择Run as —》 Spring boot app，选择DemoDocApplication，OK.  
-
-启动之后，可能报错
-	
-	Caused by: java.lang.IllegalArgumentException: No Spring Session store is configured: set the 'spring.session.store-type' property
-
-session store type使用来存放session的存储方式，目前Spring boot中只支持redis方式。由于本应用暂无需将session放入redis的需求，故这里就可以将session store type设置为none，在application.properties文件中添加`spring.session.store-type=none`，重启应用
 
 控制台打印如下，则启动成功  
 
