@@ -438,7 +438,7 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 
 1. 简介： controller层负责具体的业务模块流程的控制，controller层主要调用service层里面的方法控制具体的业务流程。
 
-2. controller书写规范
+2. controller书写
 
  - 对于Rest接口，Controller请求方法返回类型应为ResponseEntity<T>类型
  
@@ -451,7 +451,11 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 		@GetMapping("/findByUsername")
 		public ResponseEntity findOrgByUsername(String username) {
 			processFindOrgByUsernameParam(username);//校验入参数据并组装业务处理需要的数据
-			Org org = service.processFindOrgByUsernameBussiness(username);//调用业务处理方法
+
+			Org org = processFindOrgByUsernameBussiness(username);
+                   //调用业务处理方法，在processXXXBussiness中调用多个service方法
+                   //例如：service.findByOrgByUsername(..)
+
 			ResponseEntity result = processFindOrgByUsernameResult(org);//根据业务处理返回值组装返回给客户端的结果
 			return result;
 		}
