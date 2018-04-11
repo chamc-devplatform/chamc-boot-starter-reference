@@ -454,7 +454,7 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 
 			Org org = processFindOrgByUsernameBussiness(username);
                    //调用业务处理方法，在processXXXBussiness中调用多个service方法
-                   //例如：service.findByOrgByUsername(..)
+                   //如果业务逻辑比较简单，则可以直接调用service方法，例如：service.findByOrgByUsername(..)
 
 			ResponseEntity result = processFindOrgByUsernameResult(org);//根据业务处理返回值组装返回给客户端的结果
 			return result;
