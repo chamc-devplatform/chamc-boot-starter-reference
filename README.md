@@ -1060,11 +1060,6 @@ service中：
 
 步骤1：在项目的`application.propertis`中添加配置项，如下所示：
 
-    chamc.ds.compose.enable=true    #启用多数据源
-    chamc.ds.compose.data-sources.entuserdb.url=jdbc:sqlserver://bak-kmssql1.chamc.com.cn;DatabaseName=EntUserDb #entuserdb的数据源地址
-    chamc.ds.compose.data-sources.entuserdb.username=xxxxxx
-    chamc.ds.compose.data-sources.entuserdb.password=xxxxxx
-    
     chamc.security.permission.enable=true   #是否启用permission模块
     chamc.web.permission.sync.operatorId=1  #同步的操作人id
     #chamc.web.permission.sync.timer.enable=true     #（可选）是否启用定时同步任务，默认为false
