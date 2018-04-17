@@ -979,19 +979,17 @@ service中：
 - 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
 
 		chamc.security.enable=true
-		chamc.security.addtional-none-filter-urls=/home-page,/recordSort,/pdfjs-dist,/webjars/**,/index.html
-		chamc.security.addtional-none-login-urls=/file/download,/ajaxLogin,/loginUrl,/syncArchive/**
-		chamc.security.ma.enable-token-filter=false
-		chamc.security.sso.enable-token-filter=false
+		chamc.security.permission.enable=true
+		chamc.security.addtional-none-login-urls=/loginUrl
 
 - 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
- - ajax类型，以档案系统为例，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
+ - ajax类型，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
  
 			#ajax
-			chamc.security.ad.login-type=ajax 
+			chamc.security.ad.login-type=ajax
 			chamc.security.ad.url=http://10.1.8.81/ChamcSSO/LoginWin.ashx
 			chamc.security.ad.app-name=TestApp
-			chamc.security.ad.ret-url=http://localhost:8080/api/index%23/login
+			chamc.security.ad.ret-url=http://localhost:8080/ajaxLogin
 
  - normal类型，需配置验证成功的跳转地址。
 
@@ -1005,87 +1003,16 @@ service中：
 
 3） 域登陆demo
 
-下面以档案系统的域登陆（ajax类型）为例，详细介绍使用方法：
+- 新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
-- 注入bean：UserDetailsService
+- 在库中插入数据，包括用户、角色、权限等。以下是可用的几个域用户，角色、机构、权限请自行插入：
 
-		@Configuration
-		public class ArchiveConfig {
-			
-			public @Bean UserDetailsService userDetailsService() {
-				return new UserService();
-			}
-		}
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (1,'user1@kmdev.com.cn','用户1',NULL,'user1@dev.com',NULL,'dev\\user1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (2,'leader1@kmdev.com.cn','领导1',NULL,'leader1@dev.com',NULL,'dev\\leader1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (3,'user2@kmdev.com.cn','用户2',NULL,'user2@dev.com',NULL,'dev\\user2',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
-- 实现UserDetails
 
-		public class LoginUser implements UserDetails {
-			private static final long serialVersionUID = -3992617548497168965L;
-			private @Getter User user;
-			
-			private List<GrantedAuthority> gs;
-			
-			public LoginUser(User user) {
-				this.user = user;
-				this.gs = new ArrayList<>(this.user.getRoles().size());
-				this.user.getRoles().forEach(r -> this.gs.add(new SimpleGrantedAuthority("ROLE_" + r.getRoleCode())));
-			}
-		
-			@Override
-			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return this.gs;
-			}
-		
-			@Override
-			public String getPassword() {
-				return "";
-			}
-		
-			@Override
-			public String getUsername() {
-				return this.user.getUserName();
-			}
-		
-			@Override
-			public boolean isAccountNonExpired() {
-				return true;
-			}
-		
-			@Override
-			public boolean isAccountNonLocked() {
-				return true;
-			}
-		
-			@Override
-			public boolean isCredentialsNonExpired() {
-				return true;
-			}
-		
-			@Override
-			public boolean isEnabled() {
-				return !this.user.getIsDeleted();
-			}
-		
-		}
-
-- 实现UserDetailsService
-
-		public class UserService implements UserDetailsService {
-		
-			private @Autowired UserRepository userRepository;
-			
-			@Override @Transactional
-			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				User user = this.userRepository.findByUserId(username);
-				if(user == null) {
-					throw new UsernameNotFoundException(username);
-				}
-				return new LoginUser(user);
-			}
-		
-		}
-
-- 写一个接口返回ad登录地址
+- 写一个接口获取ad登录地址
 
 		@GetMapping("loginUrl")
 		public String loginUrl(){
@@ -1094,15 +1021,7 @@ service中：
 			return loginUrl;	
 		}
 
-- 访问档案系统首页，若系统中不存在用户信息（即用户不处于登录状态），将返回无权限错误提示（状态码为401），前端收到401错误信息后，将向后端请求AD登录地址，前端重定向到AD登录地址（需要带上retUrl），若用户AD登录状态为已登录（电脑已登录域），则带着用户信息重定向到retUrl，否则，弹出登录框，输入用户名、密码进行验证，验证通过则带着用户信息重定向到retUrl。流程图如下：
-
-![](https://i.imgur.com/YcV3rjA.png)
-
-- 前端实现（vue）
-
-![](https://i.imgur.com/qAqJQ6V.png)
-
-![](https://i.imgur.com/eCtDAFF.png)
+- 请求该接口，获取登录地址进行登录。
 
 4） 权限控制
 
