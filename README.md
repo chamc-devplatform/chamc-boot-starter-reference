@@ -1072,15 +1072,6 @@ service中：
 
 如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
 
-ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加sqlserver依赖，如下所示：
-
-    <dependency>
-    	<groupId>com.microsoft.sqlserver</groupId>
-    	<artifactId>sqljdbc4</artifactId>
-    	<version>4.0</version>
-        <scope>runtime</scope>
-    </dependency>
-
 如果需要手动调用同步程序，只需要在业务系统代码中注入对应的`syncService`并调用同步方法即可，如下所示：
 
     @RestController
