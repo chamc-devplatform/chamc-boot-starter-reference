@@ -1386,11 +1386,7 @@ public String list(int size) {
 
 #### 3.2.2 配置
 
-1） 获取swagger组件
-
-同[2.3.4 获取组件](get-web)，将chamc-boot-starter-swagger、chamc-boot-starter-parent下载到本地，并导入。
-
-2） 添加依赖
+1） 添加依赖
 
 在pom.xml中的`<dependencies>`标签中添加依赖
 
@@ -1400,7 +1396,7 @@ public String list(int size) {
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 
-3） 修改配置文件
+2） 修改配置文件
 
 在application.properties文件中，增加配置，例如：
 
