@@ -157,11 +157,23 @@ finish，新建成功后，如图所示：
 
 #### 2.3.3 开始编码
 
-1） 在application.properties中添加数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
+1） 在application.properties中添加以下配置。
 
-	spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
-	spring.datasource.username=root
-	spring.datasource.password=1111
+- 数据库信息（MySQL数据库安装包可通过[公司网盘](http://hq-spsdocument/Documents/Forms/AllItems.aspx?RootFolder=%2FDocuments%2F4-%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E9%83%A8%2F%E5%9F%B9%E8%AE%AD%2F171013-SpringMVC%E5%92%8CJPA%E5%9F%BA%E7%A1%80-%E7%BD%97%E6%98%8E%E5%BC%BA%2F%E8%BD%AF%E4%BB%B6)获得）  
+
+		spring.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf8&useSSL=true
+		spring.datasource.username=root
+		spring.datasource.password=1111
+
+- repository、entity扫描路径
+
+		chamc.web.scan.repository=com.chamc.demo
+		chamc.web.scan.entity=com.chamc.demo
+
+- radis
+
+		spring.redis.host=10.1.8.119
+		spring.session.store-type=hash-map
 
 2） 在mysql中建一个数据库**（注意：如果要使用代码生成功能，建表时，每个表必须有一个主键id，数据类型为Decimal(18,0)）**例如：  
 
@@ -257,12 +269,6 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 5） 打开BaseRestController可见已实现一些接口：如增删改查。
 
 6） 右键项目，选择Run as —》 Spring boot app，选择DemoDocApplication，OK.  
-
-启动之后，可能报错
-	
-	Caused by: java.lang.IllegalArgumentException: No Spring Session store is configured: set the 'spring.session.store-type' property
-
-session store type使用来存放session的存储方式，目前Spring boot中只支持redis方式。由于本应用暂无需将session放入redis的需求，故这里就可以将session store type设置为none，在application.properties文件中添加`spring.session.store-type=none`，重启应用
 
 控制台打印如下，则启动成功  
 
@@ -432,7 +438,7 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 
 1. 简介： controller层负责具体的业务模块流程的控制，controller层主要调用service层里面的方法控制具体的业务流程。
 
-2. controller书写规范
+2. controller书写
 
  - 对于Rest接口，Controller请求方法返回类型应为ResponseEntity<T>类型
  
@@ -445,7 +451,11 @@ session store type使用来存放session的存储方式，目前Spring boot中�
 		@GetMapping("/findByUsername")
 		public ResponseEntity findOrgByUsername(String username) {
 			processFindOrgByUsernameParam(username);//校验入参数据并组装业务处理需要的数据
-			Org org = service.processFindOrgByUsernameBussiness(username);//调用业务处理方法
+
+			Org org = processFindOrgByUsernameBussiness(username);
+                   //调用业务处理方法，在processXXXBussiness中调用多个service方法
+                   //如果业务逻辑比较简单，则可以直接调用service方法，例如：service.findByOrgByUsername(..)
+
 			ResponseEntity result = processFindOrgByUsernameResult(org);//根据业务处理返回值组装返回给客户端的结果
 			return result;
 		}
@@ -969,19 +979,17 @@ service中：
 - 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
 
 		chamc.security.enable=true
-		chamc.security.addtional-none-filter-urls=/home-page,/recordSort,/pdfjs-dist,/webjars/**,/index.html
-		chamc.security.addtional-none-login-urls=/file/download,/ajaxLogin,/loginUrl,/syncArchive/**
-		chamc.security.ma.enable-token-filter=false
-		chamc.security.sso.enable-token-filter=false
+		chamc.security.permission.enable=true
+		chamc.security.addtional-none-login-urls=/loginUrl
 
 - 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
- - ajax类型，以档案系统为例，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
+ - ajax类型，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
  
 			#ajax
-			chamc.security.ad.login-type=ajax 
+			chamc.security.ad.login-type=ajax
 			chamc.security.ad.url=http://10.1.8.81/ChamcSSO/LoginWin.ashx
 			chamc.security.ad.app-name=TestApp
-			chamc.security.ad.ret-url=http://localhost:8080/api/index%23/login
+			chamc.security.ad.ret-url=http://localhost:8080/ajaxLogin
 
  - normal类型，需配置验证成功的跳转地址。
 
@@ -995,87 +1003,16 @@ service中：
 
 3） 域登陆demo
 
-下面以档案系统的域登陆（ajax类型）为例，详细介绍使用方法：
+- 新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
-- 注入bean：UserDetailsService
+- 在库中插入数据，包括用户、角色、权限等。以下是可用的几个域用户，角色、机构、权限请自行插入：
 
-		@Configuration
-		public class ArchiveConfig {
-			
-			public @Bean UserDetailsService userDetailsService() {
-				return new UserService();
-			}
-		}
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (1,'user1@kmdev.com.cn','用户1',NULL,'user1@dev.com',NULL,'dev\\user1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (2,'leader1@kmdev.com.cn','领导1',NULL,'leader1@dev.com',NULL,'dev\\leader1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (3,'user2@kmdev.com.cn','用户2',NULL,'user2@dev.com',NULL,'dev\\user2',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 
-- 实现UserDetails
 
-		public class LoginUser implements UserDetails {
-			private static final long serialVersionUID = -3992617548497168965L;
-			private @Getter User user;
-			
-			private List<GrantedAuthority> gs;
-			
-			public LoginUser(User user) {
-				this.user = user;
-				this.gs = new ArrayList<>(this.user.getRoles().size());
-				this.user.getRoles().forEach(r -> this.gs.add(new SimpleGrantedAuthority("ROLE_" + r.getRoleCode())));
-			}
-		
-			@Override
-			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return this.gs;
-			}
-		
-			@Override
-			public String getPassword() {
-				return "";
-			}
-		
-			@Override
-			public String getUsername() {
-				return this.user.getUserName();
-			}
-		
-			@Override
-			public boolean isAccountNonExpired() {
-				return true;
-			}
-		
-			@Override
-			public boolean isAccountNonLocked() {
-				return true;
-			}
-		
-			@Override
-			public boolean isCredentialsNonExpired() {
-				return true;
-			}
-		
-			@Override
-			public boolean isEnabled() {
-				return !this.user.getIsDeleted();
-			}
-		
-		}
-
-- 实现UserDetailsService
-
-		public class UserService implements UserDetailsService {
-		
-			private @Autowired UserRepository userRepository;
-			
-			@Override @Transactional
-			public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-				User user = this.userRepository.findByUserId(username);
-				if(user == null) {
-					throw new UsernameNotFoundException(username);
-				}
-				return new LoginUser(user);
-			}
-		
-		}
-
-- 写一个接口返回ad登录地址
+- 写一个接口获取ad登录地址
 
 		@GetMapping("loginUrl")
 		public String loginUrl(){
@@ -1084,15 +1021,7 @@ service中：
 			return loginUrl;	
 		}
 
-- 访问档案系统首页，若系统中不存在用户信息（即用户不处于登录状态），将返回无权限错误提示（状态码为401），前端收到401错误信息后，将向后端请求AD登录地址，前端重定向到AD登录地址（需要带上retUrl），若用户AD登录状态为已登录（电脑已登录域），则带着用户信息重定向到retUrl，否则，弹出登录框，输入用户名、密码进行验证，验证通过则带着用户信息重定向到retUrl。流程图如下：
-
-![](https://i.imgur.com/YcV3rjA.png)
-
-- 前端实现（vue）
-
-![](https://i.imgur.com/qAqJQ6V.png)
-
-![](https://i.imgur.com/eCtDAFF.png)
+- 请求该接口，获取登录地址进行登录。
 
 4） 权限控制
 
@@ -1131,11 +1060,6 @@ service中：
 
 步骤1：在项目的`application.propertis`中添加配置项，如下所示：
 
-    chamc.ds.compose.enable=true    #启用多数据源
-    chamc.ds.compose.data-sources.entuserdb.url=jdbc:sqlserver://bak-kmssql1.chamc.com.cn;DatabaseName=EntUserDb #entuserdb的数据源地址
-    chamc.ds.compose.data-sources.entuserdb.username=xxxxxx
-    chamc.ds.compose.data-sources.entuserdb.password=xxxxxx
-    
     chamc.security.permission.enable=true   #是否启用permission模块
     chamc.web.permission.sync.operatorId=1  #同步的操作人id
     #chamc.web.permission.sync.timer.enable=true     #（可选）是否启用定时同步任务，默认为false
@@ -1147,15 +1071,6 @@ service中：
 步骤2：运行同步程序
 
 如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
-
-ps：enteruserdb数据源为sqlserver数据库，请注意为业务系统添加sqlserver依赖，如下所示：
-
-    <dependency>
-    	<groupId>com.microsoft.sqlserver</groupId>
-    	<artifactId>sqljdbc4</artifactId>
-    	<version>4.0</version>
-        <scope>runtime</scope>
-    </dependency>
 
 如果需要手动调用同步程序，只需要在业务系统代码中注入对应的`syncService`并调用同步方法即可，如下所示：
 
@@ -1471,11 +1386,7 @@ public String list(int size) {
 
 #### 3.2.2 配置
 
-1） 获取swagger组件
-
-同[2.3.4 获取组件](get-web)，将chamc-boot-starter-swagger、chamc-boot-starter-parent下载到本地，并导入。
-
-2） 添加依赖
+1） 添加依赖
 
 在pom.xml中的`<dependencies>`标签中添加依赖
 
@@ -1485,7 +1396,7 @@ public String list(int size) {
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 
-3） 修改配置文件
+2） 修改配置文件
 
 在application.properties文件中，增加配置，例如：
 
