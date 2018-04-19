@@ -453,9 +453,11 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |编号|方法|入参|出参|描述|
 |1|queryTodo|userId,pageable|`Page<TaskTodo>`|分页查询待办列表|
 |1|queryTodo|userId,processDefineKey,pageable|`Page<TaskTodo>`|~|
+|1|queryTodo|QueryTaskParam,pageable|`Page<TaskTodo>`|QueryTaskParam对象通过instance静态方法构造，用流式api设置值，如QueryTaskParam param = QueryTaskParam.instance().userId(userId).processDefineKey(processKey);
 |2|getTaskTodo|taskId|`TaskTodo`|按照taskId查询待办任务|
 |3|queryDone|userId,pageable|`Page<TaskDone>`|分页查询已办列表|
 |3|queryDone|userId,processDefineKey,pageable|`Page<TaskDone>`|~|
+|3|queryDone|QueryTaskParam,pageable|`Page<TaskDone>`|
 |4|getTaskDone|taskId|`TaskDone`|根据taskId查询已办任务|
 |5|countTask|userId|`TaskCount`|查询待办任务总数和各个流程定义下的待办总数|
 |6|completeTask|taskId,userId|~|同意审批/完成任务|
