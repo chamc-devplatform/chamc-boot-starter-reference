@@ -655,6 +655,16 @@ sql语句只打印了一条
 
 	JPQLQuery<User> jpqlQuery = query.select(qUser).from(qUser).join(qUser.roles).fetchJoin().where(qUser.roles.contains(role));
 
+    //多级关联
+	JPQLQuery<Child> query = q.select(qchild).from(qchild)
+			.leftJoin(qchild.parent, qparent).fetchJoin()
+			.leftJoin(qparent.grand, qgrand).fetchJoin()
+			.leftJoin(qgrand.ancestor, qancestor).fetchJoin()
+			.where(qparent.id.eq(parentId)
+					.and(qgrand.id.eq(grandId))
+					.and(qancestor.id.eq(ancestorId)));
+
+
 3） querydsl学习资料请参考[Querydsl Reference Guide](http://www.querydsl.com/static/querydsl/4.1.3/reference/html_single/)
 
 #### <span id="entity">2.4.4 关于entity</span>
