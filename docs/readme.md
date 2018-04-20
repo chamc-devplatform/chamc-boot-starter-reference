@@ -380,13 +380,15 @@ BPM模块使用前需要在项目的`application.properties`中配置流程信�
 
 #### <span id="bpm_6">3.3.6 添加自定义逻辑</span>
 
-1）、针对每个流程新建listener类并实现`com.chamc.boot.bpm.controller.listener.BpmOperateListener`（局部）接口即可，须实现该接口的`String processKey();`方法，并且在`before`方法中需要setOperatorId（操作人用户id），如下代码所示；
+1）、Listener支持全局配置与局部的配置。1）、全局的listener配置对业务系统中所有的流程都生效，也就是说所有的流程只要发生操作事件就会调用的方法，比如前端通过`operation`的`url`请求操作任务时，是不带有`operator（操作人）`的参数的，但是按照逻辑来说，每个操作都需要操作人，因此可以添加全局的`listener`，并在`before`方法中给`BpmOperateParam`对象设置`operatorId`，注意：全局监听的配置，需要实现`com.chamc.boot.bpm.controller.listener.GlobalBpmOperateListener`接口，或者继承`com.chamc.boot.bpm.controller.listener.support.GlobalBpmOperateAdapter`类并按需实现方法。2）、局部的listener配置只针对特定processKey的流程，流程在流转过程中，可能需要特定的业务逻辑处理，比如对于档案系统的文书整理流程来说，发生任务操作事件时要同步的修改档案状态，这个修改逻辑只针对文书整理流程，对于其他的借阅续借流程都不需要，因此可以通过配置局部listener来为该业务添加逻辑，注意：局部监听的配置，需要实现`com.chamc.boot.bpm.controller.listener.BpmOperateListener`接口，或者继承`com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter`类并按需实现方法。
 
-2）、BpmOperateListener中有`before、after、afterThrowing`三个时间段的方法，如果只需要其中一个或者几个的话，新建listener类并继承`com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter`（局部listener）即可，重载的方法同BpmOperateListener中所述方法。
+2）、listener需要注册到spring中生效，示例如下（注内容之后）（该config类要能够扫描到）：
 
-3）、BpmOperateListener的before方法支持自动化的事务，后台自动判断在before方法中是否需要事务。添加listener后任务操作的执行顺序为`before -> taskOperation -> after`，如果在before中有需要事务的方法调用，那么当taskOperation）任务操作）发生异常时，会自动回滚before方法中的方法。
+3）、针对每个流程新建listener类并实现`com.chamc.boot.bpm.controller.listener.BpmOperateListener`（局部）接口即可，须实现该接口的`String processKey();`方法，并且在`before`方法中需要setOperatorId（操作人用户id），如下代码所示；
 
-4）、Listener支持全局配置与局部的配置。1）、全局的listener配置对业务系统中所有的流程都生效，也就是说所有的流程只要发生操作事件就会调用的方法，比如前端通过`operation`的`url`请求操作任务时，是不带有`operator（操作人）`的参数的，但是按照逻辑来说，每个操作都需要操作人，因此可以添加全局的`listener`，并在`before`方法中给`BpmOperateParam`对象设置`operatorId`，注意：全局监听的配置，需要实现`com.chamc.boot.bpm.controller.listener.GlobalBpmOperateListener`接口，或者继承`com.chamc.boot.bpm.controller.listener.support.GlobalBpmOperateAdapter`类并按需实现方法。2）、局部的listener配置只针对特定processKey的流程，流程在流转过程中，可能需要特定的业务逻辑处理，比如对于档案系统的文书整理流程来说，发生任务操作事件时要同步的修改档案状态，这个修改逻辑只针对文书整理流程，对于其他的借阅续借流程都不需要，因此可以通过配置局部listener来为该业务添加逻辑，注意：局部监听的配置，需要实现`com.chamc.boot.bpm.controller.listener.BpmOperateListener`接口，或者继承`com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter`类并按需实现方法。
+4）、BpmOperateListener中有`before、after、afterThrowing`三个时间段的方法，如果只需要其中一个或者几个的话，新建listener类并继承`com.chamc.boot.bpm.controller.listener.support.BpmOperateAdapter`（局部listener）即可，重载的方法同BpmOperateListener中所述方法。
+
+5）、BpmOperateListener的before方法支持自动化的事务，后台自动判断在before方法中是否需要事务。添加listener后任务操作的执行顺序为`before -> taskOperation -> after`，如果在before中有需要事务的方法调用，那么当taskOperation）任务操作）发生异常时，会自动回滚before方法中的方法。
 
 注：before方法中需要设置操作人ID，如`param.setOperatorId(UserUtil.getUserId());`，在任务操作时，通过待办任务返回的`operation`对象中的操作任务url是没有操作人参数的，一般来说需要后端获取登录人信息并设置属性值，因此如果是为了方便使用的话，需要一个全局的listener，用来设置操作人id，避免每个流程都需要添加局部listener并`setOperatorId`。
 
@@ -414,6 +416,19 @@ BPM模块使用前需要在项目的`application.properties`中配置流程信�
     	@Override
     	public String processKey() {
     		return processKey;
+    	}
+    }
+
+****
+
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    
+    @Configuration
+    public class ListenerAutoConfig {
+    
+    	public @Bean AdminArchivingAuditListener adminArchivingAuditListener() {
+    		return new AdminArchivingAuditListener();
     	}
     }
 
@@ -453,9 +468,11 @@ SDK接口能够让开发人员快速的开发应用，进行灵活的流程应�
 |编号|方法|入参|出参|描述|
 |1|queryTodo|userId,pageable|`Page<TaskTodo>`|分页查询待办列表|
 |1|queryTodo|userId,processDefineKey,pageable|`Page<TaskTodo>`|~|
+|1|queryTodo|QueryTaskParam,pageable|`Page<TaskTodo>`|QueryTaskParam对象通过instance静态方法构造，用流式api设置值，如QueryTaskParam param = QueryTaskParam.instance().userId(userId).processDefineKey(processKey);
 |2|getTaskTodo|taskId|`TaskTodo`|按照taskId查询待办任务|
 |3|queryDone|userId,pageable|`Page<TaskDone>`|分页查询已办列表|
 |3|queryDone|userId,processDefineKey,pageable|`Page<TaskDone>`|~|
+|3|queryDone|QueryTaskParam,pageable|`Page<TaskDone>`|
 |4|getTaskDone|taskId|`TaskDone`|根据taskId查询已办任务|
 |5|countTask|userId|`TaskCount`|查询待办任务总数和各个流程定义下的待办总数|
 |6|completeTask|taskId,userId|~|同意审批/完成任务|
