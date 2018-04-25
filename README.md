@@ -462,8 +462,8 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 	
 	}
     </pre>
- - 建议对入参和出参进行封装，在controller包下新建param和result包，param存放入参，result存放出参，类的命名为：（入参）请求方法+controller方法名+param、（出参）请求方法+controller方法名+result，例如
-   
+ - 实体类不能直接返回，需对入参和出参进行封装，在controller包下新建dto、param、result包，dto存放实体类的dto（可作为入参和出参），param存放入参，result存放出参，类的命名为：（入参）请求方法+controller方法名+param、（出参）请求方法+controller方法名+result，例如
+ 	
 			@GetMapping("relatedList")
 			public ResponseEntity<GetRelatedArchiveListResult> relatedArchiveList(Pageable pageable,GetRelatedArchiveListParam param){		
 				processRelatedArchiveListParam(param.getArchiveDeptId(),param.getArchiveTypeId());
@@ -471,6 +471,43 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 				ResponseEntity<GetRelatedArchiveListResult> result = processRelatedArchiveListResult(baseDocs);
 				return result;
 			}
+
+		dto与param&result的区别在于：dto是实体类的子类，如果入参（或出参）是某一实体类或其子类则新建一个DTO，例如：
+
+			//实体类
+			@Entity
+			@Table(name = "t_user")
+			public @Data class User {
+
+				@Id
+				@GeneratedValue(generator = "snowflake")
+				@GenericGenerator(name = "snowflake", strategy = "com.chamc.boot.web.support.SnowflakeIdGenerator")
+				@Column(name = "ID_")
+				private Long id;
+
+				@Column(name = "ACCOUNT_")
+				private String account;
+
+				@Column(name = "NAME_")
+				private String name;
+
+				@Column(name = "PASSWORD_")
+				private String password;
+
+				@Column(name = "MOBILE_")
+				private String mobile;
+
+			}
+
+			//DTO
+			public @Data class UserDTO {
+
+				private Long id;
+				private String name;
+				private String mobile;
+	
+			}
+
  - 建议controller里不要调用controller，调用service
  - 当入参的类中存在List里嵌套List，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`，例如
 
