@@ -472,7 +472,7 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 				return result;
 			}
 
-		dto与param&result的区别在于：dto是实体类的子类，如果入参（或出参）是某一实体类或其子类则新建一个DTO，例如：
+		dto与param&result的区别在于：dto是实体类的对应类，如果入参（或出参）是某一实体的对应类则新建一个DTO，例如：
 
 			//实体类
 			@Entity
@@ -507,6 +507,8 @@ entity是实体，详细介绍请见[2.4.4 关于entity](#entity)
 				private String mobile;
 	
 			}
+
+		使用DTO必然会遇到将实体类转换成DTO的情况，可使用工具类`org.springframework.beans.BeanUtils`的`copyProperties(Object source, Object target)`方法，该类的`copyProperties(Object source, Object target, String... ignoreProperties)`可以设置需要忽略的属性。
 
  - 建议controller里不要调用controller，调用service
  - 当入参的类中存在List里嵌套List，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`，例如
