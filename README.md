@@ -1109,13 +1109,13 @@ service中：
 
 步骤1：在项目的`application.propertis`中添加配置项，如下所示：
 
-    chamc.security.permission.enable=true   #是否启用permission模块
-    chamc.web.permission.sync.operatorId=1  #同步的操作人id
-    #chamc.web.permission.sync.timer.enable=true     #（可选）是否启用定时同步任务，默认为false
-    #chamc.web.permission.sync.timer.cron=0 27 11 17 1 ?    #（可选）定时任务的任务计划，为cron表达式，默认值为每天晚上九点同步（0 0 21 * * *），corn说明参考[3、cron简单示例]
-    #chamc.web.permission.sync.thread.core-pool-size=50     #（可选）同步程序线程池配置，实例中数字为默认值
-    #chamc.web.permission.sync.thread.max-pool-size=200     #（可选）
-    #chamc.web.permission.sync.thread.queue-capacity=500        #（可选）
+    chamc.web.sync.enable=true   #是否启用同步模块
+    chamc.web.sync.operatorId=1  #同步的操作人id
+    #chamc.web.sync.timer.enable=true     #（可选）是否启用定时同步任务，默认为false
+    #chamc.web.sync.timer.cron=0 27 11 17 1 ?    #（可选）定时任务的任务计划，为cron表达式，默认值为每天晚上九点同步（0 0 21 * * *），corn说明参考[3、cron简单示例]
+    #chamc.web.sync.thread.core-pool-size=50     #（可选）同步程序线程池配置，实例中数字为默认值
+    #chamc.web.sync.thread.max-pool-size=200     #（可选）
+    #chamc.web.sync.thread.queue-capacity=500        #（可选）
 
 步骤2：运行同步程序
 
@@ -1722,6 +1722,177 @@ public String list(int size) {
 		[Client1RemoteService2#create] {"id":null,"name":"abc","age":12,"birthday":null,"address":{"street":null,"no":123}}
 		[Client1RemoteService2#create] <--- END HTTP (84-byte body)
 
+
+### <span id="starter-Quartz"> 3.5 定时任务模块</span>
+【定时任务模块设计说明】
+
+- 定时任务模块使用开源作业调度框架Quartz实现，简化业务系统配置和使用
+- 业务系统可以方便地添加任务，并使用Quartz管理用户组织机构同步任务
+- 默认使用内存单应用模式，无需业务系统在数据库建表，可配置为使用数据库和集群模式
+- 提供Quartz默认配置，业务系统可在配置文件中覆盖
+- 提供对Scheduler注入监听器的功能
+
+【传送门】
+
+[Quartz-2.2.x-官方教程](http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/ "Quartz-2.2.x-官方教程")
+
+[Quartz基本使用](https://blog.csdn.net/gjb724332682/article/details/53019953 "Quartz基本使用")
+
+【配置】
+
+（1）Quartz相关配置说明
+
+- 集群模式下必须且默认使用数据库存储
+- **集群所有节点应使用时间同步服务，时间误差应在1s内**
+<pre>
+chamc.quartz.mode=monomer    	        #Quartz模式  单应用(MONOMER)、集群(CLUSTER)
+chamc.quartz.store-type=jdbc            #存储模式   内存(MEMORY)、数据库(JDBC)
+
+#（可选）Quartz数据库名称，使用Spring数据源的时候不用配置，在使用多数据源时默认使用缺省数据源，可以指定为任意数据源名称
+chamc.quartz.data-source-name=test     
+
+#（可选）覆盖默认配置样例，其他可覆盖配置详见下面配置文件
+#覆盖方式为“chamc.quartz.properties” 加 Quartz配置
+chamc.quartz.properties.org.quartz.scheduler.instanceName=ChamcQuartzScheduler
+
+</pre>
+
+（2）可支持覆盖的Quartz配置及默认值
+
+<pre>
+# 可为任何值,用在jdbc jobstrore中来唯一标识实例，但是在所有集群中必须相同
+org.quartz.scheduler.instanceName=ChamcScheduler
+
+# Configure ThreadPool  执行任务线程池配置
+#============================================================================
+#线程池类型，执行任务的线程
+org.quartz.threadPool.class=org.quartz.simpl.SimpleThreadPool
+#线程数量
+org.quartz.threadPool.threadCount=10
+#线程优先级
+org.quartz.threadPool.threadPriority=5
+org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread=true 
+
+#任务被判定为错失的超时时间
+org.quartz.jobStore.misfireThreshold: 60000
+
+#数据库表前缀
+org.quartz.jobStore.tablePrefix=T_QRTZ_
+
+#属性定义了Scheduler实例检入到数据库中的频率(单位：毫秒)。默认值是 15000 (即15 秒)。
+org.quartz.jobStore.clusterCheckinInterval=15000
+
+#是否打开RMI支持
+org.quartz.scheduler.rmi.export=false
+#是否打开RMI代理
+org.quartz.scheduler.rmi.proxy=false
+
+</pre>
+
+
+（3）使用
+
+【简易使用——直接注入任务和对应触发器】
+
+- 定时任务模块对注入的Trigger和对应的Job进行提交，因此Trigger注入时**必须使用.forJob（）方法**
+- 任务类应实现Job或继承QuartzJobBean
+<pre>
+// 注入任务Bean，storeDurably()使任务在没有对应触发器时不会被删除
+// Job建议设置名称和组 .withIdentity([name], [group])
+public @Bean JobDetail job() {
+	return JobBuilder.newJob(SampleJob.class).storeDurably().build();
+}
+
+// 注入触发器Bean，使用forJob与任务关联
+// Trigger建议设置名称和组 .withIdentity([name], [group])
+public @Bean Trigger trigger() {
+	return TriggerBuilder.newTrigger().forJob(job()).startNow()
+		.withSchedul(DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule().withIntervalInSeconds(5))
+		.withIdentity([name], [group]).build();
+}
+
+//任务类	
+@Slf4j
+public static class SampleJob extends QuartzJobBean {
+
+	@Override
+	protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
+		log.info("样例任务");
+	}
+
+}
+</pre>
+
+
+【基本使用——使用JobDataMap传参、更多触发器种类】
+
+- 触发器构建与启动计划任务
+<pre>
+//注入Scheduler
+private @Autowired Scheduler scheduler;
+
+JobDataMap data = new JobDataMap();
+//示例内容，对应下面Job类中的属性
+data.put("from", from);
+data.put("target", target);
+data.put("content", content);
+
+JobDetail job = JobBuilder.newJob(PushAppJob.class)
+		.withIdentity([name], [group])
+		.setJobData(data).build();
+
+//基本触发器
+Trigger trigger = TriggerBuilder.newTrigger().startAt([StartTime])
+		.endAt([EndTime])
+		.withSchedule(DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule()
+			.withInterval([间隔类别], [时间间隔]))
+		.withIdentity([name], [group]).build();
+
+//Cron表达式触发器
+CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule([cron表达式]);
+CronTrigger cronTrigger = TriggerBuilder.newTrigger().startAt([StartTime])
+		.endAt([EndTime]).withSchedule(cronScheduleBuilder)
+		.withIdentity([name], [group]).build();
+
+//提交计划任务
+scheduler.scheduleJob(job, trigger);
+</pre>
+
+- 任务（Job）
+<pre>
+//未注入此Bean
+public class PushAppJob implements Job {
+	
+	使用Setter对应JobDataMap中的参数
+	private @Setter From from;
+	private @Setter Target target;
+	private @Setter AppContent content;
+
+	@Override
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		//由于未注入该Bean，使用此方法调用其他已注入Service
+		//TestService service = SpringUtils.getBean(TestService.class);
+		
+		System.out.println("-----样例任务----");
+	}
+}
+</pre>
+
+【监听器】
+
+- 继承SchedulerListenerSupport并注入后即可增加监听器,亦可选择实现SchedulerListener
+<pre>
+@Order(1)
+@Component
+public class FinishScheduleListener extends SchedulerListenerSupport {
+
+	//样例，在Trigger最后一次执行的时候监听
+	@Override
+	public void triggerFinalized(Trigger trigger) {
+		System.out.println("-------正常结束-------");
+	}
+}
+</pre>
 
 ## <span id="how-to">4 “How-to”指南</span>
 
