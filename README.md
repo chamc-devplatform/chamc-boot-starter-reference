@@ -1018,10 +1018,17 @@ service中：
 		}
 
 
-#### 3.1.2 同步用户组织机构数据功能使用说明
+#### 3.1.2 安全相关功能及其使用说明
+
+1） 简介
+
+该组件提供用户组织机构数据同步、域登陆、权限控制等安全相关功能，详细使用方法如下。
+
+2） 同步用户组织机构数据功能使用说明
+
 **【准备工作】**
 
- - 第一步：建表，新建以下3张表：t_sys_org，t_sys_role，t_sys_user，t_sys_user_org。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
+ - 第一步：建表，新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
  - 第二步：同步用户、组织数据。
 
@@ -1221,14 +1228,7 @@ cron表达式为6位的、用空格分隔的字符串
 \30 0 21 * * *：表示每天晚上九点的第一分钟，每隔30秒执行一次任务  
 0 0-30 21,22 * * *:表示每天晚上九点到九点半、十点到十点半都执行任务
 
-
-#### 3.1.3 安全相关功能及其使用说明
-
-1） 简介
-
-该组件提供域登陆、权限控制、用户组织机构数据同步等安全相关功能，详细使用方法如下。
-
-2） 域登陆配置
+3） 域登陆配置
 
 - 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
 
@@ -1255,7 +1255,7 @@ cron表达式为6位的、用空格分隔的字符串
 
 			spring.redis.host=10.1.8.119
 
-3） 域登陆demo
+4） 域登陆demo
 
 - 新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
@@ -1277,23 +1277,14 @@ cron表达式为6位的、用空格分隔的字符串
 
 - 请求该接口，获取登录地址进行登录。
 
-4） 权限控制
+5） 权限控制
 
 开启security之后，可使用注解进行权限控制，目前仅支持前后端不分离的模式，前端模板使用thymeleaf。
 
 有三种安全注解可供使用：`@Secured`注解、`@RolesAllowed`注解以及表达式驱动的注解（`@PreAuthorize`、`@PostAuthorize`、`@PreFilter`和`@PostFilter`）。推荐使用表达式驱动的注解。
 
-**【准备工作】**
-
- - 第一步：**确保**已启用用户组织机构数据同步服务，同步用户、组织数据。
-
- - 第二步：建表，新建以下4张表：t_sys_permission，t_sys_role_permission，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
-
- - 第三步：插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
- 
-![t_sys_er图](https://i.imgur.com/IhZMUbt.jpg)
-
-<center>图：sys_ ER图</center>
+ - **建议**启用用户组织机构数据同步服务，此时应已执行建表脚本:`init_sys_[mysql|oracle].sql`。
+插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
  
 **【后端权限控制】**
 
@@ -1390,7 +1381,7 @@ public String list(int size) {
         Optional<List<Role>> getCurrentRoles(); //获取当前角色
         Optional<List<Role>> getRoles();    //获取所有角色
 
-#### 3.1.4 配置日志打印及其使用说明
+#### 3.1.3 配置日志打印及其使用说明
 
 1） 简介  
 
@@ -1452,7 +1443,7 @@ public String list(int size) {
 		2017-12-27 16:22:33.135 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserController.bookOrUsers, took 71ms
 
 
-#### 3.1.5 定时任务模块
+#### 3.1.4 定时任务模块
 【定时任务模块设计说明】
 
 - 定时任务模块使用开源作业调度框架Quartz实现，简化业务系统配置和使用
