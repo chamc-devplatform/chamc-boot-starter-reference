@@ -1017,67 +1017,8 @@ service中：
 			return bookRepository.findAll();
 		}
 
-#### 3.1.2 安全相关功能及其使用说明
 
-1） 简介
-
-该组件提供域登陆、权限控制、用户组织机构数据同步等安全相关功能，详细使用方法如下。
-
-2） 域登陆配置
-
-- 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
-
-		chamc.security.enable=true
-		chamc.security.permission.enable=true
-		chamc.security.addtional-none-login-urls=/loginUrl
-
-- 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
- - ajax类型，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
- 
-			#ajax
-			chamc.security.ad.login-type=ajax
-			chamc.security.ad.url=http://10.1.8.81/ChamcSSO/LoginWin.ashx
-			chamc.security.ad.app-name=TestApp
-			chamc.security.ad.ret-url=http://localhost:8080/ajaxLogin
-
- - normal类型，需配置验证成功的跳转地址。
-
-            #normal
-			chamc.security.ad.login-type=normal
-			chamc.security.ad.success-url=/index
-
-- 用户信息会放入redis缓存里，所以也要设置redis地址：
-
-			spring.redis.host=10.1.8.119
-
-3） 域登陆demo
-
-- 新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
-
-- 在库中插入数据，包括用户、角色、权限等。以下是可用的几个域用户，角色、机构、权限请自行插入：
-
-		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (1,'user1@kmdev.com.cn','用户1',NULL,'user1@dev.com',NULL,'dev\\user1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (2,'leader1@kmdev.com.cn','领导1',NULL,'leader1@dev.com',NULL,'dev\\leader1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (3,'user2@kmdev.com.cn','用户2',NULL,'user2@dev.com',NULL,'dev\\user2',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-
-
-- 写一个接口获取ad登录地址
-
-		@GetMapping("loginUrl")
-		public String loginUrl(){
-			String loginUrl = securityProperties.getAd().getUrl() + "?appName=" + securityProperties.getAd().getAppName() 
-		    + "&retUrl=" + securityProperties.getAd().getRetUrl();
-			return loginUrl;	
-		}
-
-- 请求该接口，获取登录地址进行登录。
-
-4） 权限控制
-
-开启security之后，可使用注解进行权限控制，目前仅支持前后端不分离的模式，前端模板使用thymeleaf。
-
-有三种安全注解可供使用：`@Secured`注解、`@RolesAllowed`注解以及表达式驱动的注解（`@PreAuthorize`、`@PostAuthorize`、`@PreFilter`和`@PostFilter`）。推荐使用表达式驱动的注解。
-
+#### 3.1.2 同步用户组织机构数据功能使用说明
 **【准备工作】**
 
  - 第一步：建表，新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
@@ -1280,6 +1221,76 @@ cron表达式为6位的、用空格分隔的字符串
 \30 0 21 * * *：表示每天晚上九点的第一分钟，每隔30秒执行一次任务  
 0 0-30 21,22 * * *:表示每天晚上九点到九点半、十点到十点半都执行任务
 
+
+#### 3.1.3 安全相关功能及其使用说明
+
+1） 简介
+
+该组件提供域登陆、权限控制、用户组织机构数据同步等安全相关功能，详细使用方法如下。
+
+2） 域登陆配置
+
+- 在application.properties文件中开启security，并配置不需要验证的url和不需要做验证登录的url，例如：
+
+		chamc.security.enable=true
+		chamc.security.permission.enable=true
+		chamc.security.addtional-none-login-urls=/loginUrl
+
+- 登录请求分为两种类型：ajax（rest请求，前后端分离）和normal（前后端不分离），配置如下：
+ - ajax类型，url是ad登陆的服务url，appName为与系统标识名称，retUrl为回调地址。
+ 
+			#ajax
+			chamc.security.ad.login-type=ajax
+			chamc.security.ad.url=http://10.1.8.81/ChamcSSO/LoginWin.ashx
+			chamc.security.ad.app-name=TestApp
+			chamc.security.ad.ret-url=http://localhost:8080/ajaxLogin
+
+ - normal类型，需配置验证成功的跳转地址。
+
+            #normal
+			chamc.security.ad.login-type=normal
+			chamc.security.ad.success-url=/index
+
+- 用户信息会放入redis缓存里，所以也要设置redis地址：
+
+			spring.redis.host=10.1.8.119
+
+3） 域登陆demo
+
+- 新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
+
+- 在库中插入数据，包括用户、角色、权限等。以下是可用的几个域用户，角色、机构、权限请自行插入：
+
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (1,'user1@kmdev.com.cn','用户1',NULL,'user1@dev.com',NULL,'dev\\user1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (2,'leader1@kmdev.com.cn','领导1',NULL,'leader1@dev.com',NULL,'dev\\leader1',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+		INSERT INTO `t_sys_user` (`id_`,`account_`,`name_`,`password_`,`email_`,`sort_order_`,`domain_account_`,`account_name_with_domain_`,`is_domain_account_`,`mobile_`,`home_phone_`,`room_no_`,`office_phone_`,`office_short_phone_`,`status_`,`gmt_create_`,`create_user_`,`gmt_update_`,`update_user_`,`gmt_status_up_`,`status_up_user_`,`gmt_status_down_`,`status_down_user_`) VALUES (3,'user2@kmdev.com.cn','用户2',NULL,'user2@dev.com',NULL,'dev\\user2',NULL,'1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+
+
+- 写一个接口获取ad登录地址
+
+		@GetMapping("loginUrl")
+		public String loginUrl(){
+			String loginUrl = securityProperties.getAd().getUrl() + "?appName=" + securityProperties.getAd().getAppName() 
+		    + "&retUrl=" + securityProperties.getAd().getRetUrl();
+			return loginUrl;	
+		}
+
+- 请求该接口，获取登录地址进行登录。
+
+4） 权限控制
+
+开启security之后，可使用注解进行权限控制，目前仅支持前后端不分离的模式，前端模板使用thymeleaf。
+
+有三种安全注解可供使用：`@Secured`注解、`@RolesAllowed`注解以及表达式驱动的注解（`@PreAuthorize`、`@PostAuthorize`、`@PreFilter`和`@PostFilter`）。推荐使用表达式驱动的注解。
+
+**【准备工作】**
+
+ - 第一步：**确保**已启用用户组织机构数据同步服务，同步用户、组织数据。
+
+ - 第二步：建表，新建以下4张表：t_sys_permission，t_sys_role_permission，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
+
+ - 第三步：插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+ 
 **【后端权限控制】**
 
 在方法上加注解来控制方法的权限。 
@@ -1375,7 +1386,7 @@ public String list(int size) {
         Optional<List<Role>> getCurrentRoles(); //获取当前角色
         Optional<List<Role>> getRoles();    //获取所有角色
 
-#### 3.1.3 配置日志打印及其使用说明
+#### 3.1.4 配置日志打印及其使用说明
 
 1） 简介  
 
@@ -1437,7 +1448,7 @@ public String list(int size) {
 		2017-12-27 16:22:33.135 TRACE 988 --- [io-8080-exec-10] c.c.b.w.config.log.TraceLogInterceptor   : Leaving  UserController.bookOrUsers, took 71ms
 
 
-#### 3.1.4 定时任务模块
+#### 3.1.5 定时任务模块
 【定时任务模块设计说明】
 
 - 定时任务模块使用开源作业调度框架Quartz实现，简化业务系统配置和使用
