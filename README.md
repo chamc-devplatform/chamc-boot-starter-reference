@@ -1021,9 +1021,9 @@ service中：
 #### 3.1.2 同步用户组织机构数据功能使用说明
 **【准备工作】**
 
- - 第一步：建表，新建以下7张表：t_sys_org，t_sys_permission，t_sys_role，t_sys_role_permission，t_sys_user，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
+ - 第一步：建表，新建以下3张表：t_sys_org，t_sys_role，t_sys_user，t_sys_user_org。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
- - 第二步：同步用户、组织数据，插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+ - 第二步：同步用户、组织数据。
 
 **【同步用户-组织机构数据】**
 
@@ -1290,6 +1290,10 @@ cron表达式为6位的、用空格分隔的字符串
  - 第二步：建表，新建以下4张表：t_sys_permission，t_sys_role_permission，t_sys_user_org，t_sys_user_role。在jar包中获取建表脚本:`init_sys_[mysql|oracle].sql`。
 
  - 第三步：插入角色、权限等数据。注意：权限表和角色表中的`status_`为1时，表示该权限或角色启用。
+ 
+![t_sys_er图](https://i.imgur.com/IhZMUbt.jpg)
+
+<center>图：sys_ ER图</center>
  
 **【后端权限控制】**
 
