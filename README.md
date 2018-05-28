@@ -1047,7 +1047,7 @@ service中：
 
 <center>图：EntUserDb ER图</center>
 
-![t_sys_er图](https://i.imgur.com/IhZMUbt.jpg)
+![权限模块数据库模型图](https://i.imgur.com/iZKWdRN.jpg)
 
 <center>图：sys_ ER图</center>
 
