@@ -748,6 +748,19 @@ sql语句只打印了一条
 			inverseJoinColumns = {@JoinColumn(name = "role_id",referencedColumnName = "id")})
 	    private List<Role> roles;
 
+#### 2.4.5 关于配置文件(application.properties)
+
+1. 项目启动时，会默认读配置文件`application.properties`，可在文件中配置`spring.profiles.active`指定配置文件，要求不同环境新建一个配置文件。
+
+2. 关于配置文件命名规范如下：
+
+		开发环境配置文件:application-dev.properties   在application.properties配置spring.profiles.active=dev使其生效
+		测试环境配置文件:application-test.properties  在application.properties配置spring.profiles.active=test使其生效
+		仿真环境配置文件:application-bak.properties   在application.properties配置spring.profiles.active=bak使其生效
+		生产环境配置文件:application-prod.properties  在application.properties配置spring.profiles.active=prod使其生效
+
+### 2.5 参数验证
+
 #### 2.5.1 参数验证的使用
 
 - spring和web组件实现了一些简单的参数验证的方法，使得接口免去了一些重复的冗余的验证代码。常用的validation有：
