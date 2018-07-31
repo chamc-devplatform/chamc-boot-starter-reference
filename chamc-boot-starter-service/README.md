@@ -1,12 +1,12 @@
-### 3.4 service组件
+# 服务组件
 
-#### 3.4.1 简介
+### 3.4.1 简介
 
 使用service组件，你可以：  
 1. 将你的服务注册到注册中心，使得其他应用可以调用你的服务（即REST接口）。  
 2. 你的应用也可以通过service组件调用其他应用提供的服务（即REST接口）。
 
-#### 3.4.2 使用
+### 3.4.2 使用
 
 **3.4.2.1 如何注册服务**
 
@@ -74,7 +74,7 @@ chamc.service.registry.token=            //应用对应token
 
    其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
 
-#### 3.4.3 Feign的使用
+### 3.4.3 Feign的使用
 
 整体来说，提供方接口怎么定义，消费方的接口也就怎么定义。
 
@@ -198,7 +198,7 @@ chamc.service.registry.token=            //应用对应token
     public User create(@RequestBody User user);
    ```
 
-#### 3.4.4 其他配置介绍
+### 3.4.4 其他配置介绍
 
 1. `chamc.service.feign.log-level`：在消费方设置，用于指定消费方调用提供方服务时打印日志的级别，包括none、headers、basic、full四个级别。默认为none。
 

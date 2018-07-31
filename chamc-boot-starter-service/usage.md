@@ -65,3 +65,4 @@ chamc.service.registry.token=            //应用对应token
    ```
 
    其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
+

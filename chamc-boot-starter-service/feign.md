@@ -1,4 +1,4 @@
-#### 3.4.3 Feign的使用
+# Feign
 
 整体来说，提供方接口怎么定义，消费方的接口也就怎么定义。
 
@@ -121,3 +121,4 @@
     @PostMapping("")
     public User create(@RequestBody User user);
    ```
+
