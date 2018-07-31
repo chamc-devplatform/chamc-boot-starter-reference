@@ -6,7 +6,6 @@
 * [chamc-boot-starter-bpm](chamc-boot-starter-bpm.md)
 * [服务组件](chamc-boot-starter-service/README.md)
   * [简介](chamc-boot-starter-service/intruduce.md)
-  * [简介](chamc-boot-starter-service/jian-jie.md)
   * [使用](chamc-boot-starter-service/usage.md)
   * [Feign](chamc-boot-starter-service/feign.md)
   * [其他配置](chamc-boot-starter-service/other-config.md)
