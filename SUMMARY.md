@@ -18,7 +18,7 @@
 * [web组件](chamc-boot-starter-web/README.md)
     * [基础使用](chamc-boot-starter-web/base.md)
         * [基础信息配置](chamc-boot-starter-web/base-config.md)
-        * [coontroller](chamc-boot-starter-web/base-controller.md)
+        * [controller](chamc-boot-starter-web/base-controller.md)
         * [service](chamc-boot-starter-web/base-service.md)
         * [repository](chamc-boot-starter-web/base-repository.md)
         * [entity](chamc-boot-starter-web/base-entity.md)
