@@ -61,7 +61,7 @@
         * [调用已注册的服务](chamc-boot-starter-service/usage-call-regist.md)
         * [调用未注册的服务](chamc-boot-starter-service/usage-call-noregist.md)
     * [Feign的使用](chamc-boot-starter-service/feign.md)
-    * [其他配置](chamc-boot-starter-service/other-config.md)
+    * [其他配置]()
         * [日志打印](chamc-boot-starter-service/other-config-log.md)
 * [swagger组件](chamc-boot-starter-swagger/README.md)
     * [简介](chamc-boot-starter-swagger/introduce.md)
