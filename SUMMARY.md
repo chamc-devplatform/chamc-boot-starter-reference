@@ -34,7 +34,7 @@
         * [高级使用](chamc-boot-starter-web/cache-advance.md)
     * [多数据源](chamc-boot-starter-web/datasource)
         * [基本使用](chamc-boot-starter-web/datasource-base.md)
-        * [基本使用](chamc-boot-starter-web/datasource-advance.md)
+        * [高级使用](chamc-boot-starter-web/datasource-advance.md)
     * [定时任务](chamc-boot-starter-web/timer.md)
         * [单体式](chamc-boot-starter-web/timer-single.md)
         * [集群式](chamc-boot-starter-web/timer-quartz.md)
