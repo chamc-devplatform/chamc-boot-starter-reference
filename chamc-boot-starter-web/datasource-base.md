@@ -1,143 +1,137 @@
-### 2.5 参数验证
+# 基本使用
 
-#### 2.5.1 参数验证的使用
+1. 配置
 
-* spring和web组件实现了一些简单的参数验证的方法，使得接口免去了一些重复的冗余的验证代码。常用的validation有：
+	1) 在`pom.xml`中添加web组件依赖，详见[基础信息配置](./base-config.md)。
 
-  ```text
-    Bean Validation 中内置的 constraint         
-    @Null   被注释的元素必须为 null    
-    @NotNull    被注释的元素必须不为 null    
-    @AssertTrue     被注释的元素必须为 true    
-    @AssertFalse    被注释的元素必须为 false    
-    @Min(value)     被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
-    @Max(value)     被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
-    @DecimalMin(value)  被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
-    @DecimalMax(value)  被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
-    @Size(max=, min=)   被注释的元素的大小必须在指定的范围内    
-    @Digits (integer, fraction)     被注释的元素必须是一个数字，其值必须在可接受的范围内    
-    @Past   被注释的元素必须是一个过去的日期    
-    @Future     被注释的元素必须是一个将来的日期    
-    @Pattern(regex=,flag=)  被注释的元素必须符合指定的正则表达式    
+	2) 在配置文件`application.properties`中添加以下配置：
 
-    Hibernate Validator 附加的 constraint    
-    @NotBlank(message =)   验证字符串非null，且长度必须大于0    
-    @Email  被注释的元素必须是电子邮箱地址    
-    @Length(min=,max=)  被注释的字符串的大小必须在指定的范围内    
-    @NotEmpty   被注释的字符串的必须非空    
-    @Range(min=,max=,message=)  被注释的元素必须在合适的范围内 
-  ```
+	- 开启多数据源
 
-* 示例：
+			chamc.em.multi.enable=true
 
-在入参的类里为需要验证的属性添加validation：
+	- 不使用jta事务（使用jta事务见下节[高级使用](./datasource-advance.md)）
 
-```text
-public @Data class GetLoginParam {
+			spring.jta.enabled=false
 
-    private @NotBlank String username;
-    private @Length(min = 6,max = 16)String password;
-}
-```
+	- 配置默认数据源
 
-在controller方法的参数处添加`@Valid`：
+			chamc.em.multi.def.ds.url=jdbc:mysql://127.0.0.1:3306/demo-ds-multi 
+			chamc.em.multi.def.ds.username=root
+			chamc.em.multi.def.ds.password=123456
+			chamc.em.multi.def.em.entity.base-packages=com.chamc.boot.demo.ds.book.entity  //该数据源的entity所对应的包
+			chamc.em.multi.def.em.repository.base-packages=com.chamc.boot.demo.ds.book.repository //该数据源的repository所对应的包
+	 
+	- 配置其他数据源名字，例如将另一个数据源命名为order
 
-```text
-@GetMapping("login")
-public ResponseEntity<User> login(@Valid GetLoginParam param){
+			chamc.em.multi.names=order // 可配多个，已逗号分隔
 
-    return null;
-}
-```
+	- 配置其他数据源，需与上一步配置的数据源名相对应（配几个名字即可配几个数据源），例如
 
-请求时，参数未通过验证就会报错：
+			chamc.em.multi.ems.order.ds.url=jdbc:mysql://127.0.0.1:3306/demo-ds-multi-order
+			chamc.em.multi.ems.order.ds.username=root
+			chamc.em.multi.ems.order.ds.password=123456
+			chamc.em.multi.ems.order.em.entity.base-packages=com.chamc.boot.demo.ds.order.entity //其他数据源（本例为order数据源）所对应的entity
+			chamc.em.multi.ems.order.em.repository.base-packages=com.chamc.boot.demo.ds.order.repository //其他数据源（本例为order数据源）所对应的repository
 
-```text
-{
-    "timestamp": "2017-12-27 15:13",
-    "status": 400,
-    "error": "Bad Request",
-    "exception": "org.springframework.validation.BindException",
-    "errors": [
-        {
-            "codes": [
-                "Length.getLoginParam.password",
-                "Length.password",
-                "Length.java.lang.String",
-                "Length"
-            ],
-            "arguments": [
-                {
-                    "codes": [
-                        "getLoginParam.password",
-                        "password"
-                    ],
-                    "arguments": null,
-                    "defaultMessage": "password",
-                    "code": "password"
-                },
-                16,
-                6
-            ],
-            "defaultMessage": "长度需要在6和16之间",
-            "objectName": "getLoginParam",
-            "field": "password",
-            "rejectedValue": "123",
-            "bindingFailure": false,
-            "code": "Length"
-        }
-    ],
-    "message": "Validation failed for object='getLoginParam'. Error count: 1",
-    "path": "/user/login"
-}
-```
+	- 数据源配置还有很多其他属性可根据需要自行配置
 
-#### 2.5.2 参数验证的扩展
+2. 使用
 
-* 示例：写一个验证，验证参数必须不为空且都为大写字母。如下：
+	1) 有以下方式进行数据库操作：
 
-1） 先写一个注解：
+	- 直接使用repository，例如
 
-```text
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UppercaseValidator.class)
-@Documented
-public @interface Uppercase {
+			private @Autowired BookRepository repository;
 
-    String message() default "必须不为空且全为大写";
+			public Book findOne(Long id) {
+				return repository.findOne(id);
+			}
 
-    Class<?>[] groups() default { };
+	- 通过@PersistenceContext注入指定的EntityManager，使用EntityManager进行数据库操作，例如
 
-    Class<? extends Payload>[] payload() default { };
+			@PersistenceContext(unitName = "order")
+			private EntityManager orderEm;
 
-}
-```
+			public List<Order> findAll() {
+				return orderEm.createQuery("from Order", Order.class).getResultList();
+			}
 
-2） 再写一个类实现ConstraintValidator：
+	- 注入EntityManagerHolderService，并通过它获取需要的EntityManager，再使用EntityManager进行数据库操作，例如
 
-```text
-public class UppercaseValidator implements ConstraintValidator<Uppercase,String>{
+			private @Autowired EntityManagerHolderService emHolder;
 
-    @Override
-    public void initialize(Uppercase constraintAnnotation) {
-        // TODO Auto-generated method stub
+			public Object method() {
+				EntityManager orderEm = emHolder.getEntityManager("order"); // 获取order的EntityManager
+				EntityManager defEm = emHolder.getDefaultEm(); // 获取默认的EntityManager
+				... ...
+			}
 
-    }
+	2) 使用事务控制(此处介绍的是非jta事务，使用jta事务见[高级使用](./datasource-advance.md))
 
-    @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value != null && value.length() > 0){
-            for(int i = 0; i < value.length(); i++){
-                if (Character.isUpperCase(value.charAt(i))) continue;
-                else return false;
-            }
-            return true;
-        }
-        return false;
-    }
+	- 默认数据源使用事务，只需在方法上加`@Transactional`注解
 
-}
-```
+	- 其他数据源使用事务需要指定事务管理器，在方法上加`@Transactional("xxxTransactionManager")`注解，xxx为数据源名称。若不指定则使用默认事务管理器，对于该方法的事务控制将不起作用。
 
-3） 按照上一点的使用方法使用即可。
+	- 一般的查询方法都不需要加事务控制，但如果你在你的方法里要获取操作配置了懒加载的属性，则需要事务管理，告诉懒加载器使用哪个EntityManger去加载属性。例如：
+	
+			// 为了提升效率，如果确认只有查询查询操作，则可以设置readOnly = true
+			@Transactional(value = "productTransactionManager", readOnly = true)
+			public List<Product> findAll() {
+				// 由于配置了懒加载，所以这里查出来的product的supplier属性都还没有值
+				List<Product> products = this.repository.findAll();
+				
+				for(Product product : products) {
+					// 如果整个方法没有加事务管理，则这里会报错；
+					// 因为懒加载在真正去查数据库的时候会用当前的EntityManager去查，但我们整个应用里有多个EntityManager了，所以会报错
+					log.info(product.getSupplier().toString());
+				}
+				return products;
+			}
+
+			// Product类
+			@Entity @Table(name = "t_product")
+			@EqualsAndHashCode(callSuper = true)
+			public @Data class Product extends BaseEntity {
+			
+				@Id @GeneratedValue(generator = "snowflake")
+				@GenericGenerator(name = "snowflake", strategy = "com.chamc.boot.web.support.SnowflakeIdGenerator")
+				private Long id;
+				private String name;
+				private Float price;
+				
+				@ManyToOne(fetch = FetchType.LAZY)
+				private Supplier supplier;
+			}
+
+		**所以最好按照规范来做，如果我们需要使用关联对象，查询时将其fetch出来**，例如：
+
+			public List<Product> findAllAndFetchSupplier() {
+				JPAQueryFactory qf = this.repository.getQueryFactory();
+				// 在查询product的时候直接将supplier也fetch出来，所以就不存在lazy的问题，就不需要加事务
+				JPAQuery<Product> fetchQuery = qf.select(product).from(product).leftJoin(product.supplier, supplier).fetchJoin();
+				return fetchQuery.fetch();
+			}
+
+	- 当一个方法操作多个数据源并需要使用事务时，应使用jta事务，详见下一节[高级使用](./datasource-advance.md)，下面将举一反例：
+
+			/**
+			 * 该方法操作了三个数据源，但由于没有使用jta事务，所以该方法不需要事务管理；<br/>
+			 * 应该在具体的操作某个数据源的方法上进行事务管理，如：CustomerService.save。<br/>
+			 * 就算在该方法加了事务也没用，他只对其管理的数据源有效，对其他数据源没有效果。<br/>
+			 * 比如该方法加了@Transactional，并指定了事务管理器-customerTransactionManager，则对customer数据源的操作会在同一个事务里面。
+			 */
+			@Transactional(value = "customerTransactionManager")
+			public void order(ComposeModel compose) {
+				if(Objects.isNull(compose.getOrder().getId())) {
+					this.orderService.save(compose.getOrder());
+				}
+				if(Objects.isNull(compose.getProduct().getId())) {
+					this.productService.save(compose.getProduct());
+				}
+				if(Objects.isNull(compose.getCustomer().getId())) {
+					this.customerService.save(compose.getCustomer());
+				}
+				// 这里抛异常，只有对customer数据源的操作会回滚，order和product都会插入
+				throw new BussinessException("customer插入操作回滚。");
+			}
