@@ -47,7 +47,7 @@
         * [任务操作](chamc-boot-starter-bpm/3.4.first-demo-operator.md)
     * [功能详述](chamc-boot-starter-bpm/4.information.md)
         * [流程管理控制台](chamc-boot-starter-bpm/4.1information-platform.md)
-        * [流程设计器](chamc-boot-starter-bpm/4.2information-design.md)
+        * [流程设计器](chamc-boot-starter-bpm/4.2information-disign.md)
         * [流程图](chamc-boot-starter-bpm/4.2information-diagram.md)
     * [SDK说明](chamc-boot-starter-bpm/6.interface.md)
         * [ITaskService](chamc-boot-starter-bpm/6.interface-task.md)
