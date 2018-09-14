@@ -1,4 +1,4 @@
-### 2.2 Controller层
+### Controller层
 
 1. 简介：controller层负责具体的业务模块流程的控制，controller层主要调用service层里面的方法控制具体的业务流程。
 
