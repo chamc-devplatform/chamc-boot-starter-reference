@@ -29,7 +29,7 @@
 
 - **线程池**：Scheduler使用一个线程池作为任务运行的基础设施，任务通过共享线程池中的线程提高运行效率，可在配置文件修改相关配置。
 
-	更多细节请参考：[Quartz 2.2官方教程](http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/ "Quartz 2.2官方教程")
+> 更多细节请参考：[Quartz 2.2官方教程](http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/ "Quartz 2.2官方教程")
 
 ####【定时任务模块设计说明】
 
