@@ -3,7 +3,7 @@
 > 本文档摘要重构了[JPA官方文档](https://docs.spring.io/spring-data/jpa/docs/1.11.6.RELEASE/reference/html/ "JPA官方文档")的部分内容，引用了部分代码
 
 - Spring Data JPA是Spring基于Hibernate开发的一个对象关系映射JPA框架。
-- Spring Data repository抽象的目标是显着减少为各种持久性框架实现数据访问层的样板代码。
+- Spring Data repository抽象的目标是显著减少为各种持久性框架实现数据访问层的样板代码。
 
 ###2 基础知识
 - 本章节简要介绍Spring Data JPA的核心接口、技术
