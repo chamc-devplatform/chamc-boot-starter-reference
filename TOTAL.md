@@ -4,7 +4,7 @@
 
 ### 作者
 
-苗世鹏、唐红石、罗明强
+开发平台组
 
 ### 版本
 
@@ -16,25 +16,16 @@
 
 ### 1.1 关于本文档
 
-开发平台后端框架参考指南最新版本发布地址：[https://chamc-devplatform.github.io/chamc-boot-starter-reference/](https://chamc-devplatform.github.io/chamc-boot-starter-reference/) ，本文档的副本你可以随便下载或分享给他人。
+本文档的副本你可以随便下载或分享给他人。
 
-### 1.2 获取帮助
-
-关于开发平台后端框架的任何问题，我们都乐于提供帮助！
-
-* 查看[How-to](chamc-boot-starter-web.md#how-to)章节，你可以找到大部分问题的答案；
-* 发送邮件给[我](mailto:luomingqiang@chamc.com.cn)、[苗世鹏](mailto:miaoshipeng@chamc.com.cn) 或 [唐红石](mailto:tanghongshi@chamc.com.cn)；
-* 电话给我、苗世鹏或唐红石，电话号码可在公司通讯录里查询，具体路径：华融资产-子公司-华融融通-软件开发部。
-
-### 1.3 开始步骤
+### 1.2 开始步骤
 
 如果你刚开始使用开发平台后端框架，那么[这章](chamc-boot-starter-web.md#get-start)应该对你很有帮助！
 
-### 1.4 开发平台后端框架组件
+### 1.3 开发平台后端框架组件
 
 如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么[这章](chamc-boot-starter-web.md#component)将为你详细介绍开发平台后端框架的各个组件：[web组件](chamc-boot-starter-web.md#web)、[swagger组件](chamc-boot-starter-web.md#swagger)、[工作流组件](chamc-boot-starter-web.md#bpm)、[service组件](chamc-boot-starter-web.md#starter-service)。
 
-### 1.5 高级功能
 
 ## 2 入门
 

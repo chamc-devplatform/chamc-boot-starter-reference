@@ -1,143 +1,50 @@
-### 2.5 参数验证
+# 高级使用
 
-#### 2.5.1 参数验证的使用
+## 说明
 
-* spring和web组件实现了一些简单的参数验证的方法，使得接口免去了一些重复的冗余的验证代码。常用的validation有：
+目前开发平台支持多缓存，即配置不同的cache使用不同的缓存
 
-  ```text
-    Bean Validation 中内置的 constraint         
-    @Null   被注释的元素必须为 null    
-    @NotNull    被注释的元素必须不为 null    
-    @AssertTrue     被注释的元素必须为 true    
-    @AssertFalse    被注释的元素必须为 false    
-    @Min(value)     被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
-    @Max(value)     被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
-    @DecimalMin(value)  被注释的元素必须是一个数字，其值必须大于等于指定的最小值    
-    @DecimalMax(value)  被注释的元素必须是一个数字，其值必须小于等于指定的最大值    
-    @Size(max=, min=)   被注释的元素的大小必须在指定的范围内    
-    @Digits (integer, fraction)     被注释的元素必须是一个数字，其值必须在可接受的范围内    
-    @Past   被注释的元素必须是一个过去的日期    
-    @Future     被注释的元素必须是一个将来的日期    
-    @Pattern(regex=,flag=)  被注释的元素必须符合指定的正则表达式    
+## 配置示例
 
-    Hibernate Validator 附加的 constraint    
-    @NotBlank(message =)   验证字符串非null，且长度必须大于0    
-    @Email  被注释的元素必须是电子邮箱地址    
-    @Length(min=,max=)  被注释的字符串的大小必须在指定的范围内    
-    @NotEmpty   被注释的字符串的必须非空    
-    @Range(min=,max=,message=)  被注释的元素必须在合适的范围内 
-  ```
+如下示例，默认缓存用了simple，另外一个缓存用了redis
 
-* 示例：
+要注意的是：
 
-在入参的类里为需要验证的属性添加validation：
+>type=simple的时候，其他属性（比如过期时间等）也能点出来，但是这些属性在simple的时候是不支持的，所以配置了也无效。  
+>各个缓存的cacheName不能相同，比如如下示例中默认缓存中有cacheName1的缓存的话，otherCache就不能再有cacheName1的缓存了。
 
-```text
-public @Data class GetLoginParam {
+    chamc.cache.multi.enable=true
 
-    private @NotBlank String username;
-    private @Length(min = 6,max = 16)String password;
-}
-```
+    chamc.cache.multi.def.type=simple
+    chamc.cache.multi.def.cache-null-value=true
+    chamc.cache.multi.def.cache-names=cacheName1
+    
+    #otherCache为另外一个缓存的别名，可以随意，符合java命名规范即可
+    chamc.cache.multi.caches.otherCache.type=redis
+    chamc.cache.multi.caches.otherCache.cache-null-value=true
+    chamc.cache.multi.caches.otherCache.cache-names=cacheName2
+    chamc.cache.multi.caches.otherCache.template=object
+    chamc.cache.multi.caches.otherCache.default-expiration=1000
+    chamc.cache.multi.caches.otherCache.expirations.cacheName1=1000
 
-在controller方法的参数处添加`@Valid`：
+## 示例
 
-```text
-@GetMapping("login")
-public ResponseEntity<User> login(@Valid GetLoginParam param){
+如上配置示例所示，配置了cacheName1、cacheName2的cache，然后在service中的方法上添加注解`@Cacheable（cacheName）`即可。
 
-    return null;
-}
-```
+下面两个方法，testCache1会查询simple的缓存，testCache2会查询名称为otherCache的缓存
 
-请求时，参数未通过验证就会报错：
-
-```text
-{
-    "timestamp": "2017-12-27 15:13",
-    "status": 400,
-    "error": "Bad Request",
-    "exception": "org.springframework.validation.BindException",
-    "errors": [
-        {
-            "codes": [
-                "Length.getLoginParam.password",
-                "Length.password",
-                "Length.java.lang.String",
-                "Length"
-            ],
-            "arguments": [
-                {
-                    "codes": [
-                        "getLoginParam.password",
-                        "password"
-                    ],
-                    "arguments": null,
-                    "defaultMessage": "password",
-                    "code": "password"
-                },
-                16,
-                6
-            ],
-            "defaultMessage": "长度需要在6和16之间",
-            "objectName": "getLoginParam",
-            "field": "password",
-            "rejectedValue": "123",
-            "bindingFailure": false,
-            "code": "Length"
-        }
-    ],
-    "message": "Validation failed for object='getLoginParam'. Error count: 1",
-    "path": "/user/login"
-}
-```
-
-#### 2.5.2 参数验证的扩展
-
-* 示例：写一个验证，验证参数必须不为空且都为大写字母。如下：
-
-1） 先写一个注解：
-
-```text
-@Target({ ElementType.FIELD, ElementType.PARAMETER })
-@Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = UppercaseValidator.class)
-@Documented
-public @interface Uppercase {
-
-    String message() default "必须不为空且全为大写";
-
-    Class<?>[] groups() default { };
-
-    Class<? extends Payload>[] payload() default { };
-
-}
-```
-
-2） 再写一个类实现ConstraintValidator：
-
-```text
-public class UppercaseValidator implements ConstraintValidator<Uppercase,String>{
-
-    @Override
-    public void initialize(Uppercase constraintAnnotation) {
-        // TODO Auto-generated method stub
-
+    public class TestCacheService {
+    
+    	@org.springframework.cache.annotation.Cacheable("cacheName1")
+    	public Dictionary testCache1() {
+    		System.out.println("testing");
+    		return new Dictionary("sex", "body", "男");
+    	}
+    	
+    	@org.springframework.cache.annotation.Cacheable("cacheName2")
+    	public Dictionary testCache2() {
+    		System.out.println("testing");
+    		return new Dictionary("class", "fly", "飞翔班");
+    	}
+    	
     }
-
-    @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value != null && value.length() > 0){
-            for(int i = 0; i < value.length(); i++){
-                if (Character.isUpperCase(value.charAt(i))) continue;
-                else return false;
-            }
-            return true;
-        }
-        return false;
-    }
-
-}
-```
-
-3） 按照上一点的使用方法使用即可。
