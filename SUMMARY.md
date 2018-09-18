@@ -32,7 +32,7 @@
         * [用户数据同步](chamc-boot-starter-web/security-userorg.md)
         * [ad域登陆](chamc-boot-starter-web/security-ad.md)
         * [权限控制](chamc-boot-starter-web/security-permission.md)
-    * [缓存](chamc-boot-starter-web/cache.md)
+    * [缓存](#)
         * [基本使用](chamc-boot-starter-web/cache-base.md)
         * [高级使用](chamc-boot-starter-web/cache-advance.md)
     * [多数据源](chamc-boot-starter-web/datasource)
