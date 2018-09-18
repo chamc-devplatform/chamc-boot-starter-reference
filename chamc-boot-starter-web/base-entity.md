@@ -82,6 +82,8 @@
 		
 	}
 
+- **以下所说的`添加`均为在如上实体的前提下的修改，每个示例相互独立**
+
 #####1.3.2 一对一关系
 
 > - 假设用户与机构为单向一对一关系，关系拥有方为用户。示例：在`t_user`表添加字段`org_id_`，在User实体添加如下属性
@@ -125,12 +127,30 @@
 - MappedBy表示声明自己不是一对多的关系维护端，由对方来维护。一定是定义在被拥有方的，他指向拥有方。
 - 只有OneToOne，OneToMany，ManyToMany上才有MappedBy属性，ManyToOne不存在该属性。
 - MappedBy的含义为，拥有方能够自动维护跟被拥有方的关系，当然，如果从被拥有方，通过手工强行来维护拥有方的关系也是可以做到的。
-- 
+- 双向关联关系包括双向一对一，双向多一和双向多对多关系，其中双向多一关系所有方为`ManyToOne`注解的一方，在被拥有方配置`OneToMany`和`MappedBy`
+
+【双向多一示例】
+> - 假设机构与用户为双向多一关系。示例：在`t_user`表添加字段`org_id_`。
+> - User中添加如下属性和注解
+
+	@JsonIgnoreProperties("users")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "org_id_")
+	private Org org;
+
+> - Org中添加如下属性和注解
+
+	@JsonIgnoreProperties("org")
+	@OneToMany(mappedBy = "org")
+	private List<User> users;
+
+- MappedBy是在一的一方进行声明的，MappedBy的值应该为关系拥有方(此例为多方)中含被拥有方(一方)的属性名
+- 双向关联关系在**JSON转化**时会发生**循环关联**，推荐使用`@JsonIgnoreProperties`避免。注解的值注明该变量中的哪个属性不被序列化，从而允许在双向访问上都不存在环或是缺失。
 
 
 #####1.3.6 多对多关系
 
-- 假设用户与机构为多对多关联关系，关联表如下所示，使用用户和机构两个表的主键作为联合主键。
+- 假设用户与机构为多对多关联关系，增加关联表如下所示，使用用户和机构两个表的主键作为联合主键。
 
 <pre>
 Table : t_user_org
@@ -141,7 +161,9 @@ Table : t_user_org
 | org_id_  |  bigint  |  No  |  PRI  |   Null  |
 +----------+----------+------+-------+---------+
 </pre>
-  
+ 
+> - 在Org中添加属性和注解如下：
+
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "t_user_org", joinColumns = { @JoinColumn(name = "org_id_") }, 
 	inverseJoinColumns = { @JoinColumn(name = "user_id_") })
