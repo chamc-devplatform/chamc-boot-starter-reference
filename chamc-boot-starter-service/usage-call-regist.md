@@ -2,34 +2,42 @@
 
 假设已将应用provider注册，现在应用consumer需要调用provider中的服务。那么，在consumer中进行如下操作即可。
 
-1. 按照上节配置对consumer进行配置。
-2. 新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient(name = "xxx")`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：
+## 步骤一
 
-	假设服务提供方provider有如下接口：
+按照上节配置对consumer进行配置。
 
+## 步骤二
+
+新建一个接口，并加注解`@org.springframework.cloud.netflix.feign.FeignClient(name = "xxx")`，其中的参数name必须与需要调用的应用的应用名（即配置文件中的`spring.application.name`）相同，并按照写REST接口的方法书写方法。例如：
+
+假设服务提供方provider有如下接口：
+
+	@GetMapping("hello")
+	public ResponseEntity<String> hello() {
+	    return ResponseEntity.ok("Hello world!");
+	}
+
+则服务消费者consumer应这样调用：
+
+	@FeignClient(name = "provider")
+	public interface Client1RemoteService {
+	
 	    @GetMapping("hello")
-	    public ResponseEntity<String> hello() {
-	        return ResponseEntity.ok("Hello world!");
-	    }
-
-	则服务消费者consumer应这样调用：
-
-	    @FeignClient(name = "provider")
-	    public interface Client1RemoteService {
+	    public String hello();
 	
-	        @GetMapping("hello")
-	        public String hello();
-	
-	    }
+	}
 
-3. 在需要使用provider服务的地方，注入上一步新建的接口Client1RemoteService即可，如下：
+## 步骤三
 
-		private @Autowired Client1RemoteService client1;
+在需要使用provider服务的地方，注入上一步新建的接口Client1RemoteService即可，如下：
 
+	private @Autowired Client1RemoteService client1;
 
-4. 在application.properties里新增如下配置：
+## 步骤四
 
-		chamc.service.feign.scan=com.chamc.xxx
+在application.properties里新增如下配置：
 
-	其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
+	chamc.service.feign.scan=com.chamc.xxx
+
+其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
 
