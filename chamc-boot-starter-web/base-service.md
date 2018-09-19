@@ -23,5 +23,5 @@ service负责实现业务逻辑，service调用repository中的方法，在servi
 
 ## 其他 ##
 
-- service中只做数据库服务相关的操作，判断操作结果为空应在controller中进行
-- param、result 和 dto尽量不要传入service中，service中只接收controller中处理好的参数或实体类。 
+- service中只做数据库服务相关的操作，controller中应保证传递给service的值正确；service处理得到返回结果后，判断操作结果为空应在controller中进行。
+- param、result 和 dto尽量不要传入service中，service中只接收controller中处理好的参数或实体类，如有必要，可以新建model用于service和controller之间的传参。 
