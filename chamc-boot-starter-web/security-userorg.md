@@ -27,16 +27,18 @@
 
 注：集群模式下的配置请参考[定时任务](chamc-boot-starter-web/timer.md)
 
-        chamc.security.permission.enable=true   //启用安全
-        chamc.web.permission.sync.operatorId=1 # 同步操作人的用户id
-        #chamc.quartz.store-type=jdbc   #集群模式下，需要配置
-        #chamc.web.permission.sync.timer.enable=true
-        #chamc.web.permission.sync.timer.cron=0 27 11 17 1 ?
+    chamc.security.permission.enable=true   //启用安全
+    chamc.web.permission.sync.operatorId=1 # 同步操作人的用户id
+    #chamc.quartz.store-type=jdbc   #集群模式下，需要配置
+    #是否启用定时同步，如下配置或chamc.web.sync.timer.enable=true
+    chamc.web.permission.sync.timer.enable=true
+    #cron为定时计划表达式，默认值为0 0 21 0 * *，即每天晚上九点运行
+    chamc.web.permission.sync.timer.cron=0 0 21 0 * *
 
 
 ### 运行同步程序
 
-如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
+如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.sync.timer.enable=true`或`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
 
 ### 同步接口调用
 

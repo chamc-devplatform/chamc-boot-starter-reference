@@ -58,30 +58,13 @@
 
 ### 使用示例2
 
-自己写登录，需要
+个性化登录：可以在登录的时候对LoginUser做个性化处理，使用方式如下：
 
-- 1、写一个类继承`UserDetails`并实现必要的方法，该类对应用户信息，包括权限等
-- 2、写一个类继承`UserDetailsService`并实现必要的方法，然后将该类注册为bean
-
-示例：
-
-    public class CustomUserDetail implements UserDetails {
-    
-    	private static final long serialVersionUID = 8032759389073091490L;
+     public class LoginCustomizer implements LoginUesrCustomizer {
     
     	@Override
-    	public Collection<? extends GrantedAuthority> getAuthorities() {
-    		return null;
-    	}
+    	public void customize(LoginUser loginUser) {
     
-        ......
-    }
-    
-    public class CustomUserDetailsService implements UserDetailsService {
-    
-    	@Override
-    	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    		return null;
     	}
     
     }
@@ -89,9 +72,9 @@
     @Configuration
     public class TestAutoConfig {
     	
-    	@Bean 
-    	public UserDetailsService customUserDetailsService() {
-    		return new CustomUserDetailsService();
+    	@Bean
+    	public LoginUesrCustomizer loginCustomizer() {
+    		return new LoginCustomizer();
     	}
     	
     }
