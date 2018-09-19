@@ -38,15 +38,14 @@ controller接收到客户端传来的参数后，首先进行参数校验，校�
 		private List<Org> processFindOrgByUsernameBussiness(getOrgListParam param){
 			//调用业务处理方法
 			List<Org> org = sercive.findByOrgByUsername(param.getUserName());
-			
 			//如果业务逻辑比较复杂，则可以在processXXXBussiness中调用多个service方法
-            return org;
+                        return org;
 		}
 		private OrgResult processFindOrgByUsernameResult(List<Org> org){
 			//将实体对象处理成封装的DTO或result并返回
-            //关于封装参数请见后续章节
+                        //关于封装参数请见后续章节
 		}
-		}
+	}
 
 service的注入可以通过上面的`@Autowired`方式注入，也可以通过构造器注入：
 	
@@ -54,7 +53,6 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 	@RequestMapping("user")  
 	@RequiredArgsConstructor(onConstructor_ = @Autowired)
 	public class UserController  {
-
 		private final @Getter TestService service;
 	}
 	
@@ -65,21 +63,21 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 
 	//DTO
 	public @Data class OrgDTO {
-		 	private Long id;
+		private Long id;
 		private String orgCode;
 		private String orgName;
 	}
 
 	//param
 	public @Data class getOrgListParam {
-			private Long userId;
+		private Long userId;
 		private String userName;
 		private String orgName;
 	}
 
 	//result
 	public @Data class OrgResult {
-		 	private List<OrgDTO> org;
+		private List<OrgDTO> org;
 		private long total;
 	}
 
@@ -87,7 +85,7 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 
 - 使用DTO必然会遇到将实体类转换成DTO的情况，可使用工具类 `org.springframework.beans.BeanUtils` 的 `copyProperties(Object source, Object target)` 方法，该类的 `copyProperties(Object source, Object target, String... ignoreProperties)` 可以设置需要忽略的属性
 
-		BeanUtils.copyProperties(org, orgDTO,"shortName","sortOrder");//将org的属性值拷贝到orgDTO中，忽略"shortName","sortOrder"字段
+       BeanUtils.copyProperties(org, orgDTO,"shortName","sortOrder");//将org的属性值拷贝到orgDTO中，忽略"shortName","sortOrder"字段
 
 -  注意：使用copyProperties时，只有命名完全相同的属性值才能相互拷贝。
 		
@@ -193,7 +191,7 @@ Hibernate Validator 附加的 constraint:
 		
 	@GetMapping("login")
 	public ResponseEntity<User> login(@Valid GetLoginParam param){
-			return null;
+		return null;
 	}
 
 请求时，参数未通过验证就会报400错误：
@@ -243,7 +241,6 @@ Hibernate Validator 附加的 constraint:
 
 示例：写一个验证，验证参数必须不为空且都为大写字母。
 
-
 1） 先写一个注解：
 
 	@Target({ ElementType.FIELD, ElementType.PARAMETER })
@@ -266,7 +263,7 @@ Target指定注解的出现位置：
 - ElementType.PARAMETER 用于验证方法参数符合要求；
 - ElementType.TYPE可以用在接口、类、枚举、注解上，验证传入的类符合要求。
 	
-Retention注解的保留位置
+Retention注解的保留位置:
 
 - RetentionPolicy.SOURCE 注解仅存在于源码中，在class字节码文件中不包含
 - RetentionPolicy.CLASS 默认的保留策略，注解会在class字节码文件中存在，但运行时无法获得
