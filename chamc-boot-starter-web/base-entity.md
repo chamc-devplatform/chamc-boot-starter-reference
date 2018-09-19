@@ -94,7 +94,6 @@
 	private Org org;
 
 > - `@OneToOne(fetch = FetchType.LAZY)`标识关联关系为一对一关联，加载策略为延迟加载(默认为EAGER)。                 
-> - `@JoinColumn(name = "org_id_")`标识关联关系为两个表的主键所维持，等同于使用注解`@PrimaryKeyJoinColumn`。
 > - 假设用户与机构非主键关联，示例：通过`org_no_`关联，在用户表新建字段`org_code_`，用于存储机构表`org_no_`的值形成关联关系。
 
 	@OneToOne(fetch = FetchType.LAZY)
