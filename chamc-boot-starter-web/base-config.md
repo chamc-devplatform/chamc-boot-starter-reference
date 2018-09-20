@@ -4,47 +4,49 @@
 
 父工程的版本为spring boot 1.5.4，最好将工程的spring boot版本改为1.5.4。
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.4.RELEASE</version>
-	</parent>
+```
+<parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>1.5.4.RELEASE</version>
+</parent>
+```
 
 开发平台web组件依赖
-	
-	<dependency>
-		<groupId>com.chamc.boot</groupId>
-		<artifactId>chamc-boot-starter-web</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-
+```	
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-web</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 swagger依赖
-
-    <dependency>
-		<groupId>com.chamc.boot</groupId>
-		<artifactId>chamc-boot-starter-swagger</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</dependency>
-
+```
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-swagger</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 Jpa查询插件配置
-
-	<plugin>
-		<groupId>com.mysema.maven</groupId>
-		<artifactId>apt-maven-plugin</artifactId>
-		<version>1.1.3</version>
-		<executions>
-			<execution>
-				<goals>
-					<goal>process</goal>
-				</goals>
-				<configuration>
-					<outputDirectory>src/main/querydsl</outputDirectory>
-					<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
-				</configuration>
-			</execution>
-		</executions>
-	</plugin>
-
+```
+<plugin>
+	<groupId>com.mysema.maven</groupId>
+	<artifactId>apt-maven-plugin</artifactId>
+	<version>1.1.3</version>
+	<executions>
+		<execution>
+			<goals>
+				<goal>process</goal>
+			</goals>
+			<configuration>
+				<outputDirectory>src/main/querydsl</outputDirectory>
+				<processor>com.querydsl.apt.jpa.JPAAnnotationProcessor</processor>
+			</configuration>
+		</execution>
+	</executions>
+</plugin>
+```
 ## application.properties配置 ##
 
 ### mysql数据库连接配置 ###
@@ -53,7 +55,7 @@ Jpa查询插件配置
 	spring.datasource.username=root
 	spring.datasource.password=1111
 
-如果不配置数据库了解信息，则会报错：  
+如果不配置数据库连接信息，则会报错：  
 
 	Cannot determine embedded database driver class for database type NONE
 
@@ -77,7 +79,7 @@ Jpa查询插件配置
 	spring.redis.host=127.0.0.1
 	spring.session.store-type=hash-map
 
-如果不进行redis配置，会抛异常：
+如果不进行redis的配置或未指定`store-type`，会抛异常：
 
 	org.springframework.beans.factory.BeanCreationException: 
 		Error creating bean with name 'org.springframework.boot.autoconfigure.session.SessionAutoConfiguration$SessionRepositoryValidator'
