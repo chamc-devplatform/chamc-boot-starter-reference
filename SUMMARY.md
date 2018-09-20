@@ -11,7 +11,7 @@
             * [构建entity](chamc-boot-starter-base/2.3.2.entity.md)
             * [构建repository](chamc-boot-starter-base/2.3.3.repository.md)
             * [构建service](chamc-boot-starter-base/2.3.4.service.md)
-            * [构建controller](chamc-boot-starter-base/2.3.5.controller.md
+            * [构建controller](chamc-boot-starter-base/2.3.5.controller.md)
             * [示例](chamc-boot-starter-base/2.3.6.example.md)
         * [接口测试](chamc-boot-starter-base/2.4.swagger-test.md)
 * [web组件](chamc-boot-starter-web/README.md)
