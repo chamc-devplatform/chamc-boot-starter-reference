@@ -14,12 +14,14 @@ Swagger UI官方解释：_The Swagger UI is an open source project to visually r
 
 在pom.xml中的`<dependencies>`标签中添加依赖
 
+```
 	<dependency>
-		<groupId>com.chamc.boot</groupId>
-		<artifactId>chamc-boot-starter-swagger</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-		<scope>compile</scope>
-	</dependency>
+      <groupId>com.chamc.boot</groupId>
+      <artifactId>chamc-boot-starter-swagger</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+```
 
 2） 修改配置文件
 
@@ -55,38 +57,6 @@ user为自定义表示一个group，可添加多个group的配置，命名不可
 ![](https://i.imgur.com/gOFF6H7.png)
 
 ### 注解说明 ###
-
-在swagger-annotations的包中有以下标签:
-
-- swagger-annotations-1.5.13.jar
-	- io.swagger.annotations
-		- Api.class
-		- ApiImplicitParam.class
-		- ApiImplicitParams.class
-		- ApiKeyAuthDefinition.class
-		- ApiModel.class
-		- ApiModelProperty.class
-		- ApiOperation.class
-		- ApiParam.class
-		- ApiResponse.class
-		- ApiResponses.class
-		- Authorization.class
-		- AuthorizationScope.class
-		- BasicAuthDefinition.class
-		- Contact.class
-		- Example.class
-		- ExampleProperty.class
-		- Extension.class
-		- ExtensionProperty.class
-		- ExternalDocs.class
-		- Info.class
-		- License.class
-		- OAuth2Definition.class
-		- ResponseHeader.class
-		- Scope.class
-		- SecurityDefinition.class
-		- SwaggerDefinition.class
-		- Tag.class
 
 常用的几个注解：
 
@@ -175,7 +145,7 @@ swagger是根据spring容器里注册的Docket对象来生成在线文档的，D
 
 新建Customize类，实现DocketCustomizer，并重写其中customize(Docket docket)方法。
 
-在调用api进行服务请求时，需要在header中加入token才可以通过验证。直接使用swagger调用参数，会出现403错误。这里我们可以实现DocketCustomizer，在全局的请求中加入一个X-SERVICE-ID-TOKEN的参数，这样每次请求时，swagger会帮助我们把填入的token放入header中，验证通过后即可获得正确的返回值。代码示例如下：
+在调用api进行服务请求时，需要在header中加入token才可以通过验证。直接使用swagger调用参数，会出现403错误。这里我们可以实现DocketCustomizer，在全局的请求中加入一个X-SERVICE-ID-TOKEN的参数，这样每次请求时，swagger会帮助我们把填入的token放入header中，验证通过后即可获得正确的返回值。代码示例及效果如下：
 
 	public class TokenDocketCustomize implements DocketCustomizer {
 		@Override
@@ -183,7 +153,6 @@ swagger是根据spring容器里注册的Docket对象来生成在线文档的，D
 			ParameterBuilder tokenParamBuilder = new ParameterBuilder();
 			Parameter tokenParam = tokenParamBuilder
 					.name("X-SERVICE-ID-TOKEN")
-					.description("token, 如果没有该信息，请到服务管理系统：http://10.80.37.133:8080/services/home 申请")
 					.modelRef(new ModelRef("string"))
 					.parameterType("header")
 					.required(true)
@@ -193,6 +162,7 @@ swagger是根据spring容器里注册的Docket对象来生成在线文档的，D
 	}
 
 
+![](https://i.imgur.com/AAE9wug.png)
 
 ## 参考网址 ##
 [https://github.com/swagger-api/swagger-core/wiki/Annotations\#apimodel](https://github.com/swagger-api/swagger-core/wiki/Annotations#apimodel)  
