@@ -12,12 +12,13 @@ public class UserService {
 	private @Autowired UserDetailRepository userDetailRepository;
 
 	@Transactional
-	public User save(User user){
+	public User save(User user) {
 		UserDetail detail = userDetailRepository.save(user.getUserDetail());
 		user.setUserDetail(detail);
 		user = userRepository.save(user);
 		return user;
 	}
+}
 ```
 
 注意，不推荐在service中调用service，这样做可能会让事务失效。
