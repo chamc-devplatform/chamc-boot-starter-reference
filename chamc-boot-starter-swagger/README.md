@@ -15,11 +15,11 @@ Swagger UI官方解释：_The Swagger UI is an open source project to visually r
 在pom.xml中的`<dependencies>`标签中添加依赖
 
 	<dependency>
-      <groupId>com.chamc.boot</groupId>
-      <artifactId>chamc-boot-starter-swagger</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
+		<groupId>com.chamc.boot</groupId>
+		<artifactId>chamc-boot-starter-swagger</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<scope>compile</scope>
+	</dependency>
 
 2） 修改配置文件
 
@@ -50,26 +50,61 @@ user为自定义表示一个group，可添加多个group的配置，命名不可
 
 展开各个接口，输入parameter，点击try it out进行请求。
 
-![](https://i.imgur.com/swqW04D.png) ![](https://i.imgur.com/gOFF6H7.png)
+![](https://i.imgur.com/swqW04D.png)
+
+![](https://i.imgur.com/gOFF6H7.png)
 
 ### 注解说明 ###
 
-在swagger-annotations的包中可见有以下标签    
+在swagger-annotations的包中有以下标签:
 
- ![](https://i.imgur.com/yxjd8Ie.png)
+- swagger-annotations-1.5.13.jar
+	- io.swagger.annotations
+		- Api.class
+		- ApiImplicitParam.class
+		- ApiImplicitParams.class
+		- ApiKeyAuthDefinition.class
+		- ApiModel.class
+		- ApiModelProperty.class
+		- ApiOperation.class
+		- ApiParam.class
+		- ApiResponse.class
+		- ApiResponses.class
+		- Authorization.class
+		- AuthorizationScope.class
+		- BasicAuthDefinition.class
+		- Contact.class
+		- Example.class
+		- ExampleProperty.class
+		- Extension.class
+		- ExtensionProperty.class
+		- ExternalDocs.class
+		- Info.class
+		- License.class
+		- OAuth2Definition.class
+		- ResponseHeader.class
+		- Scope.class
+		- SecurityDefinition.class
+		- SwaggerDefinition.class
+		- Tag.class
 
-最常用的5个注解：
+常用的几个注解：
+
+- @Api：将一个Controller（Class）标注为一个swagger资源（API）。在默认情况下，Swagger-Core只会扫描解析具有@Api注解的类，而会自动忽略其他类别资源（JAX-RS endpoints，Servlets等等）的注解，重要属性有：
+	- tags：API分组标签。具有相同标签的API将会被归并在一组内展示。
+	- value：如果tags没有定义，value将作为Api的tags使用
+    - description：API的详细描述，在1.5.X版本之后不再使用，但实际发现在2.0.0版本中仍然可以使用
 
 - @ApiOperation：描述一个类的一个方法，或者说一个接口 
 - @ApiParam：单个参数描述 
 - @ApiModel：用对象来接收参数 描述一个Model的信息（这种一般用在post创建的时候，使用@RequestBody这样的场景，请求参数无法使用@ApiImplicitParam注解进行描述的时候）表明这是一个被swagger框架管理的model，用于class上
-	- @ApiModelProperty：用对象接收参数时，描述对象的一个字段。表示对model属性的说明或者数据操作更改  
-	    - value–字段说明 
-	    - name–重写属性名字 
-		- dataType–重写属性类型 
-		- required–是否必填 
-		- example–举例说明 
-		- hidden–隐藏
+- @ApiModelProperty：用对象接收参数时，描述对象的一个字段。表示对model属性的说明或者数据操作更改  
+    - value–字段说明 
+    - name–重写属性名字 
+	- dataType–重写属性类型 
+	- required–是否必填 
+	- example–举例说明 
+	- hidden–隐藏
 - @ApiImplicitParams：用在方法上包含一组参数说明
 - @ApiResponses：用于表示一组响应
 	- @ApiResponse：用在@ApiResponses中，一般用于表达一个错误的响应信息
