@@ -62,8 +62,5 @@
     * [其他配置]()
         * [日志打印](chamc-boot-starter-service/other-config-log.md)
 * [swagger组件](chamc-boot-starter-swagger/README.md)
-    * [简介](chamc-boot-starter-swagger/introduce.md)
-    * [配置](chamc-boot-starter-swagger/config.md)
-        * [个性化定制](chamc-boot-starter-swagger/config-custom.md)
 * [其他说明](#)
     * [表格、代码等样式说明](REMARK.md)
