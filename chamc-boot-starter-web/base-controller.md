@@ -24,9 +24,12 @@ controller接收到客户端传来的参数后，首先进行参数校验，校�
 
 		@GetMapping("/org")
 		public ResponseEntity<OrgResult> findOrgList(getOrgListParam param) {
-			processFindOrgByUsernameParam(param);//校验入参数据并组装业务处理需要的数据
-			List<Org> org = processFindOrgByUsernameBussiness(param);//调用业务处理方法
-			OrgResult result = processFindOrgByUsernameResult(org);//根据业务处理返回值组装返回给客户端的结果
+			//校验入参数据并组装业务处理需要的数据
+			processFindOrgByUsernameParam(param);
+			//调用业务处理方法
+			List<Org> org = processFindOrgByUsernameBussiness(param);
+			//根据业务处理返回值组装返回给客户端的结果
+			OrgResult result = processFindOrgByUsernameResult(org);
 			return ResponseEntity.ok(result);
 		}
 
@@ -38,12 +41,13 @@ controller接收到客户端传来的参数后，首先进行参数校验，校�
 		private List<Org> processFindOrgByUsernameBussiness(getOrgListParam param){
 			//调用业务处理方法
 			List<Org> org = sercive.findByOrgByUsername(param.getUserName());
+			
 			//如果业务逻辑比较复杂，则可以在processXXXBussiness中调用多个service方法
-                        return org;
+			return org;
 		}
 		private OrgResult processFindOrgByUsernameResult(List<Org> org){
 			//将实体对象处理成封装的DTO或result并返回
-                        //关于封装参数请见后续章节
+			//关于封装参数请见后续章节
 		}
 	}
 
@@ -69,7 +73,7 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 	}
 
 	//param
-	public @Data class getOrgListParam {
+	public @Data class GetOrgListParam {
 		private Long userId;
 		private String userName;
 		private String orgName;
@@ -84,14 +88,15 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 - DTO（数据传输对象）与param & result的区别在于：DTO是实体类的对应类，如果入参（或出参）是某一实体的对应类则新建一个DTO，如上面的OrgDTO；  入参可以是param也可以是DTO，出参可以是result或DTO
 
 - 使用DTO必然会遇到将实体类转换成DTO的情况，可使用工具类 `org.springframework.beans.BeanUtils` 的 `copyProperties(Object source, Object target)` 方法，该类的 `copyProperties(Object source, Object target, String... ignoreProperties)` 可以设置需要忽略的属性
-
-       BeanUtils.copyProperties(org, orgDTO,"shortName","sortOrder");//将org的属性值拷贝到orgDTO中，忽略"shortName","sortOrder"字段
-
+```
+//将org的属性值拷贝到orgDTO中，忽略"shortName","sortOrder"字段
+BeanUtils.copyProperties(org, orgDTO,"shortName","sortOrder");
+```
 -  注意：使用copyProperties时，只有命名完全相同的属性值才能相互拷贝。
 		
 建议controller里不要调用controller，调用service
 	
-当入参的类中存在List里嵌套List，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`：
+当入参的类中存在List里嵌套List，且传输格式不是json时，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`：
 	
 	chamc.method.complex-argument-support-types=com.chamc.archives.archive.controller.param.PostDocArchiveDetailParam
 
