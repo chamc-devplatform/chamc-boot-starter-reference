@@ -74,7 +74,7 @@ Jpa查询插件配置
 	
 说明：使用域登陆，缓存等功能时必须指定redis配置，否则会报`Cannot get Jedis connection`错误。如果不配置host，默认为本地的redis,
 	
-	spring.redis.host=10.1.8.119
+	spring.redis.host=127.0.0.1
 	spring.session.store-type=hash-map
 
 如果不进行redis配置，会抛异常：
