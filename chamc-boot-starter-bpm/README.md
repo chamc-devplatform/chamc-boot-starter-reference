@@ -31,10 +31,8 @@
 
 ## 附注
 
-技术支持，座机：010-xxxxxxxx，邮件：[miaoshipeng@chamc.com.cn](mailto:miaoshipeng@chamc.com.cn)
+技术支持，座机：010-xxxxxxxx，邮件：xxx@xxx.com
 
 流程设计器试用地址如下，如需试用账号请于我们联系。
 
-- 开发环境 http://10.1.8.117:8080/workflow-console
-- 仿真环境 http://10.80.38.205/workflow-console
-- 生产环境 http://10.80.36.56/workflow-console
+- 访问地址 http://{ip}:{port}/workflow-console
