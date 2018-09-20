@@ -15,12 +15,12 @@ Swagger UI官方解释：_The Swagger UI is an open source project to visually r
 在pom.xml中的`<dependencies>`标签中添加依赖
 
 ```
-	<dependency>
-      <groupId>com.chamc.boot</groupId>
-      <artifactId>chamc-boot-starter-swagger</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-swagger</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<scope>compile</scope>
+</dependency>
 ```
 
 2） 修改配置文件
