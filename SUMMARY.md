@@ -15,7 +15,7 @@
             * [示例](chamc-boot-starter-base/2.3.6.example.md)
         * [接口测试](chamc-boot-starter-base/2.4.swagger-test.md)
 * [web组件](chamc-boot-starter-web/README.md)
-    * [基础使用](chamc-boot-starter-web/base.md)
+    * [基础使用](#)
         * [基础信息配置](chamc-boot-starter-web/base-config.md)
         * [controller](chamc-boot-starter-web/base-controller.md)
         * [service](chamc-boot-starter-web/base-service.md)
