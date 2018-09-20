@@ -9,12 +9,14 @@
     chamc.tracelog.enable=true 
 
 请求某个接口后，打印日志如下： 
+
 	2017-12-27 16:12:07.608 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Entering UserController.bookOrUsers(Long) 2017-12-27 16:12:07.612 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Entering UserService.findBooks() 
 	2017-12-27 16:12:07.620 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Entering .Proxy192.findAll() 
 	Hibernate: select book0_.id as id1_4_, book0_.name as name2_4_, book0_.price as price3_4_, book0_.writer as writer4_4_ from t_book book0_ 
 	2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Leaving .Proxy192.findAll, took 94ms 2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Leaving UserService.findBooks, took 102ms 2017-12-27 16:12:07.714 TRACE 988 --- [nio-8080-exec-9] c.c.b.w.config.log.TraceLogInterceptor : Leaving UserController.bookOrUsers, took 106ms 
 
-同时可以对各层进行配置： 
+同时可以对各层进行配置：
+
 ![](https://i.imgur.com/8e6mqVi.png)
 
 
