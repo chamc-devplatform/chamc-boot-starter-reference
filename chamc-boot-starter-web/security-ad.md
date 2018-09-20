@@ -26,7 +26,9 @@
 
 域登陆的控制需要与对权限的配置相结合使用，权限控制相关功能可参考[安全-权限控制](chamc-boot-starter-web/security-permission.md )
 
-对于登录类型（login-type），默认配置为combine、也支持配置为ajax或者是normal，他们的区别是：登录失败的时候，如果login-type=ajax，会抛出401异常，如果login-type是其他的话会跳转错误页面
+对于登录类型（login-type），默认配置为combine、也支持配置为ajax或者是normal，他们的区别是：
+- 登录失败的时候，如果login-type=ajax，会抛出401异常
+- 如果login-type是combine的话，会自动判断请求类型，是ajax请求则返回401错误，如果是普通请求则返回登录前的页面
 
 域服务器登录成功后，会根据retUrl重定向到业务系统做登录，web模块提供了`/login`和`/ajaxLogin`的mapping，参数`userInfo58914`为域登陆成功后自动附加到retUrl上的参数。
 

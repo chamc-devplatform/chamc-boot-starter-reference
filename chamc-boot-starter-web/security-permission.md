@@ -115,6 +115,8 @@
 
 在标签中加`sec:authorize`属性，其值也是SpEL表达式，例如：
 
-    <li sec:authorize="hasAuthority('project:view')">查看项目</li>
+```
+<li sec:authorize="hasAuthority('project:view')">查看项目</li>
+```
 
 只有有project:view权限的用户才能看到该菜单。
