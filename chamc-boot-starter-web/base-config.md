@@ -106,4 +106,4 @@ Jpa查询插件配置
 	chamc.swagger.apis.user.group=User
 	chamc.swagger.apis.user.path=/user/**,teacher/**
 
-swagger相关配置详见swagger组件的介绍
+swagger相关配置详见[Swagger组件](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-swagger)的介绍
