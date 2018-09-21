@@ -110,7 +110,7 @@ DTO（数据传输对象）与param & result的区别在于：DTO是实体类的
 - copyNotNullProperties(Object source, Object target, String... ignoreProperties)
 
 既可以拷贝源数据到对象，也可以拷贝源数据到目标类，还可以实现List对象的拷贝。  
-可以使用copyNotNullProperties来拷贝不为空的属性值。
+可以使用copyNotNullProperties来拷贝不为空的属性值。   
 拷贝属性时可以传入回调函数，当相同属性名赋值完成后工具类会调用callBack类进行进一步处理。   
 ignoreProperties为被忽略的属性，其中的属性不进行拷贝，可以接收多个值。
 
