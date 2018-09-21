@@ -12,12 +12,12 @@ Swagger UI官方解释：_The Swagger UI is an open source project to visually r
 
 在pom.xml中的`<dependencies>`标签中添加依赖
 ```
-	<dependency>
-      <groupId>com.chamc.boot</groupId>
-      <artifactId>chamc-boot-starter-swagger</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-swagger</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<scope>compile</scope>
+</dependency>
 ```
 2） 修改配置文件
 
@@ -85,40 +85,40 @@ controller配置示例：
 	@RestController
 	@RequestMapping("/user")
 	public class UserController extends BaseRestController<User> {
-
 		private @Autowired UserService service;
 
 		@GetMapping("ageLt")
 		@ApiOperation("查询年龄小于age的用户并按倒序排列")//如果不写，默认为接口的函数名
 		public ResponseEntity<List<User>> ageLt(@ApiParam(name = "age",value = "年龄",required = true) Long age){
-    		List<User> users = service.processAgeLtBusiness(age);
-    		return ResponseEntity.ok(users);
+			List<User> users = service.processAgeLtBusiness(age);
+			return ResponseEntity.ok(users);
 		}
 
 		@ApiOperation(value = "/addUser", notes = "添加一组用户")
 		@RequestMapping(value = "addUser", method = RequestMethod.POST)
-    	@ResponseBody
-    	public ResponseEntity<List<User>> addUser(@ApiParam List<User> user){
+		@ResponseBody
+		public ResponseEntity<List<User>> addUser(@ApiParam List<User> user){
 			//业务逻辑处理
 			return ResponseEntity.ok("OK");
-    	}
-
+		}
 	}
 
 DTO或param配置示例：
 
 	@ApiModel(value="Book", description="书")
 	public @Data class Book extends BaseEntity {
-
-    	@Id @GeneratedValue
-    	@ApiModelProperty(value = "ID",example = "1")
-    	private Long id;
-    	@ApiModelProperty(value = "书名",example = "这是一本书")
-    	private @NotBlank String name;
-    	@ApiModelProperty(value = "价格",example = "11")
-    	private @Min(0) Long price;
-    	@ApiModelProperty(value = "作者",example = "佚名")
-    	private @Length(max=100) String writer;
+    		@Id @GeneratedValue
+    		@ApiModelProperty(value = "ID",example = "1")
+		
+    		private Long id;
+    		@ApiModelProperty(value = "书名",example = "这是一本书")
+    		private @NotBlank String name;
+		
+    		@ApiModelProperty(value = "价格",example = "11")
+    		private @Min(0) Long price;
+		
+    		@ApiModelProperty(value = "作者",example = "佚名")
+    		private @Length(max=100) String writer;
 	} 
  
 提示：如果使用List传参时出现以下错误，可以在List参数上加注解。如果接收的是 `List<Entity>`，可以使用 `@RequestBody` 或 `@ApiParam` 接收；如果接收 `List<String>` 或其他类型的数组，则可以加上 `@RequestParam` 注解。
