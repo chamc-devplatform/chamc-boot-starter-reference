@@ -15,10 +15,10 @@
 > - ad登录（默认不弹登录框并自动使用win电脑域账户信息，可通过ie设置让弹出登录框）
 >   - ad登录失败：继续弹出登录框
 >   - ad登录成功，返回retUrl+userInfo参数
-> - 在retUrl对应的页面或请求中，处理userInfo并做后续登录及用户信息加载，将登录信息放入session中
+> - 在retUrl对应的页面或请求中，处理用户信息并做后续登录及用户信息加载，将登录信息放入session中
 > - 登录成功
 
-![域登陆](https://i.imgur.com/JrH2Ls2.png)
+![域登陆](https://i.imgur.com/iOSp5Kp.png)
 
 ## 使用
 
@@ -28,12 +28,11 @@
 
 对于登录类型（login-type），默认配置为combine、也支持配置为ajax或者是normal，他们的区别是：
 - 登录失败的时候，如果login-type=ajax，会抛出401异常
-- 如果login-type是combine的话，会自动判断请求类型，是ajax请求则返回401错误，如果是普通请求则返回登录前的页面
+- 如果login-type是combine的话，会自动判断请求类型，是ajax请求则返回401错误，如果是普通请求则返回登录成功前的页面
 
-域服务器登录成功后，会根据retUrl重定向到业务系统做登录，web模块提供了`/login`和`/ajaxLogin`的mapping，参数`userInfo58914`为域登陆成功后自动附加到retUrl上的参数。
+域服务器登录成功后，会根据retUrl重定向到业务系统做登录，web模块提供了`/login`和`/ajaxLogin`的mapping，所需参数为域登陆成功后自动附加到retUrl上的参数。
 
 域登陆成功后，如果配置了return-type为sucess-url，那么业务系统登录成功后会重定向到success-url。
-
 
 ### 配置
 
@@ -68,7 +67,6 @@
     	public void customize(LoginUser loginUser) {
     
     	}
-    
     }
     
     @Configuration
@@ -78,5 +76,4 @@
     	public LoginUesrCustomizer loginCustomizer() {
     		return new LoginCustomizer();
     	}
-    	
     }

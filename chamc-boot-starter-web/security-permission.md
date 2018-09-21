@@ -16,7 +16,7 @@
 
     chamc.security.enable=true
     spring.redis.host=localhost
-    spring.session.store-type=hash-map
+    spring.session.store-type=redis
 
     #不需要做验证的url，比如静态资源，登录页面等，默认"/js/**"，"/css/**"，"/image/**"，"/webjars/**"
     chamc.security.addtional-none-filter-urls=
@@ -26,7 +26,6 @@
     chamc.security.none-filter-urls=
     #增加不需要做登录过滤的url
     chamc.security.none-login-urls=
-    chamc.security.user-details-service=
     chamc.security.permission.enable=
     #数据源名称，即用户组织、角色权限表在哪个库里，多数据源情况下配置，不配的话取默认数据源
     chamc.security.permission.datesource=
@@ -50,13 +49,13 @@
 
     @Secured({"ROLE_ADD","ROLE_ADMIN"})
     public String add(){
-       ……
+       //……
        return "add";
     }
     
     @RolesAllowed({"ROLE_DELETE","ROLE_ADMIN"})
     public String delete(){
-       ……
+       //……
        return "delete";
     }
 

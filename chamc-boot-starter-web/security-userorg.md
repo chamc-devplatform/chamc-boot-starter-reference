@@ -6,14 +6,13 @@
 
 ## 同步程序设计说明
 
-* 数据源来自新版人力系统`EntUserDb`,目标数据库是业务系统数据库，entuserdb和sys的数据库er图如下所示；
+* 数据源来自新版人力系统`EntUserDb`,目标数据库是业务系统数据库
 
 *  同步模块可通过配置chamc.web.sync.enable开启或关闭，如下“使用demo”中的配置项所示；
 *  同步任务既可以直接配置定时任务，也可以直接通过service服务调用
 *  同步程序使用多线程处理，相对来说效率较高，线程池可配置，如下“使用demo”中的配置项所示，多线程处理后会等待处理结果，然后再继续执行下一步逻辑；
 * 同步程序可以添加干预listener，只需要继承`SyncOperationListenerAdapter`或者实现`SyncOperationListener`即可；
-* 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行，
-* 目标数据库（即业务系统权限表）的ER图如下所示
+* 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行
 
 ## 使用
 
@@ -24,12 +23,12 @@
 注：集群模式下的配置请参考[定时任务](chamc-boot-starter-web/timer.md)
 
     chamc.security.permission.enable=true   //启用安全
-    chamc.web.permission.sync.operatorId=1 # 同步操作人的用户id
+    chamc.web.sync.operatorId=1 # 同步操作人的用户id
     #chamc.quartz.store-type=jdbc   #集群模式下，需要配置
     #是否启用定时同步，如下配置或chamc.web.sync.timer.enable=true
-    chamc.web.permission.sync.timer.enable=true
+    chamc.web.sync.timer.enable=true
     #cron为定时计划表达式，默认值为0 0 21 0 * *，即每天晚上九点运行
-    chamc.web.permission.sync.timer.cron=0 0 21 0 * *
+    chamc.web.sync.timer.cron=0 0 21 0 * *
 
 
 ### 运行同步程序
@@ -121,7 +120,7 @@
     
         @Override
         public boolean beforeUser(User user) {
-            if(user.getAccount().equals("xiaojia@chamc.com.cn@4869")) {
+            if(user.getAccount().equals("test@test.com")) {
                 log.info("syncListener1");
                 return true;
             }
