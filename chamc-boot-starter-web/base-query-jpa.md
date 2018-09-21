@@ -215,6 +215,7 @@ JPA方法名查询所支持的关键字请参考 [JPA官方文档——方法名
 - 利用Optional可以使一些对于null的的处理更优雅，非必须，可跳过此小节。
 - Java 8 新特性 Optional 类是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象。
 - 应避免 `if(stu.isPresent()) { ... } else { ... }` 的应用方式。
+
 【在repository中】
 
 	Optional<Student> findById(Long id);

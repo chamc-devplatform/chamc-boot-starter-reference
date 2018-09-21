@@ -89,23 +89,8 @@
 
 > - 排序使用`orderBy()`,可使用多个字段排序，其中asc()代表升序，desc()代表降序
 > - 分页需要传入Pageable参数，并利用该参数实现分页，常用三种方式（推荐使用第一种方式）：
-> 	
-> - 方式一：（推荐）使用`BaseRepository`中的`findByQuerydsl`方法
 
-	AbstractJPAQuery<Student, JPAQuery<Student>> q = repository.createDslQuery();
-	JPQLQuery<Student> query = q.select(qStudent).from(qStudent)
-			.orderBy(qStudent.age.asc(), qStudent.no.desc());
-			
-	return repository.findByQuerydsl(query, pageable, Student.class);
-
-> - 方式二：使用`PageableExecutionUtils`获取分页结果，实际上findByQuerydsl就是使用的这种方式
-
-	Sort sort = new Sort(Direction.DESC,"age");
-	PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
-	JPQLQuery<Student> queryResult = repository.getQuerydsl().applyPagination(pageRequest, query);
-	Page<Student> result = PageableExecutionUtils.getPage(queryResult.fetch(), pageRequest, () -> query.fetchCount());
-	
-> - 方式三：根据分页参数获取查询结果再封装
+> - 方式一：（推荐）根据分页参数获取查询结果再封装
 
 	public Page<Student> pageExample(Pageable pageable) {
 		QStudent qStudent = QStudent.student;
@@ -122,6 +107,22 @@
 		
 		return new PageImpl<>(result, pageable, total);
 	}
+
+> - 方式二：使用`BaseRepository`中的`findByQuerydsl`方法
+
+	AbstractJPAQuery<Student, JPAQuery<Student>> q = repository.createDslQuery();
+	JPQLQuery<Student> query = q.select(qStudent).from(qStudent)
+			.orderBy(qStudent.age.asc(), qStudent.no.desc());
+			
+	return repository.findByQuerydsl(query, pageable, Student.class);
+
+> - 方式三：使用`PageableExecutionUtils`获取分页结果，实际上findByQuerydsl就是使用的这种方式
+
+	Sort sort = new Sort(Direction.DESC,"age");
+	PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+	JPQLQuery<Student> queryResult = repository.getQuerydsl().applyPagination(pageRequest, query);
+	Page<Student> result = PageableExecutionUtils.getPage(queryResult.fetch(), pageRequest, () -> query.fetchCount());
+	
 
 【子查询】
 
