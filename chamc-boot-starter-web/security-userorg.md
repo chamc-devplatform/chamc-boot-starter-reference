@@ -2,7 +2,7 @@
 
 ## 前置条件
 
-新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:\`init\_sys_\[mysql\|oracle\].sql\`
+新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:chamc-boot-starter-web.jar -> src/main/resources/sql -> \`init\_sys_\[mysql\|oracle\].sql\`
 
 ## 同步程序设计说明
 
