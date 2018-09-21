@@ -60,7 +60,15 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 		private final @Getter TestService service;
 	}
 	
+
+建议controller里不要调用controller，调用service
 	
+当入参的类中存在List里嵌套List，且传输格式不是json时，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`：
+	
+	chamc.method.complex-argument-support-types=com.chamc.archives.archive.controller.param.PostDocArchiveDetailParam	
+
+## controller参数封装 ##
+
 实体类不能直接返回，需对入参和出参进行封装：
 
 说明：在controller包下新建dto、param、result包，dto存放实体类对应的DTO（可作为入参和出参），param存放入参，result存放出参。  入参类命名为：请求方法+controller方法名+param；出参类命名为：请求方法+controller方法名+result。
@@ -85,21 +93,29 @@ service的注入可以通过上面的`@Autowired`方式注入，也可以通过�
 		private long total;
 	}
 
-- DTO（数据传输对象）与param & result的区别在于：DTO是实体类的对应类，如果入参（或出参）是某一实体的对应类则新建一个DTO，如上面的OrgDTO；  入参可以是param也可以是DTO，出参可以是result或DTO
+DTO（数据传输对象）与param & result的区别在于：DTO是实体类的对应类，如果入参（或出参）是某一实体的对应类则新建一个DTO，如上面的OrgDTO；  入参可以是param也可以是DTO，出参可以是result或DTO
 
-- 使用DTO必然会遇到将实体类转换成DTO的情况，可使用工具类 `org.springframework.beans.BeanUtils` 的 `copyProperties(Object source, Object target)` 方法，该类的 `copyProperties(Object source, Object target, String... ignoreProperties)` 可以设置需要忽略的属性
-```
-//将org的属性值拷贝到orgDTO中，忽略"shortName","sortOrder"字段
-BeanUtils.copyProperties(org, orgDTO,"shortName","sortOrder");
-```
--  注意：使用copyProperties时，只有命名完全相同的属性值才能相互拷贝。
+使用DTO必然会遇到将实体类转换成DTO的情况，可使用开发平台提供的工具类`com.chamc.utils.reflect.BeanUtils`来完成实体之间的属性值拷贝，其中提供的方法有：
+
+- copyProperties(Object source, Object target, CommonCallback callback, String... ignoreProperties)
+- copyProperties(Object source, Class<T> targetClass, CommonCallback callBack, String... ignoreProperties)
+- copyProperties(List<?> sources, Class<T> targetClass, CommonCallback callBack, String... ignoreProperties)
+
+
+- copyPropertiesWithClass(Object source, Class<T> targetClass, String... ignoreProperties)
+- copyPropertiesWithClass(List<?> sources, Class<T> targetClass, String... ignoreProperties)
+
+
+- copyNotNullProperties(Object source, Object target, CommonCallback callback, String... ignoreProperties)
+- copyNotNullProperties(Object source, Object target, String... ignoreProperties)
+
+既可以拷贝源数据到对象，也可以拷贝源数据到目标类，还可以实现List对象的拷贝。  
+可以使用copyNotNullProperties来拷贝不为空的属性值。
+拷贝属性时可以传入回调函数，当相同属性名赋值完成后工具类会调用callBack类进行进一步处理。   
+ignoreProperties为被忽略的属性，其中的属性不进行拷贝，可以接收多个值。
+
+注意：使用copyProperties时，只有命名完全相同的属性值才能相互拷贝。
 		
-建议controller里不要调用controller，调用service
-	
-当入参的类中存在List里嵌套List，且传输格式不是json时，传入参数解析可能会出现问题，可在配置文件application.properties中设置`chamc.method.complex-argument-support-types`：
-	
-	chamc.method.complex-argument-support-types=com.chamc.archives.archive.controller.param.PostDocArchiveDetailParam
-
 ## Rest接口url书写规范 ##
 
 单资源\( singular-resourceX \)
