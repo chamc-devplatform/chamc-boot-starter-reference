@@ -4,7 +4,13 @@
 
 在pom.xml文件中引入chamc-boot-starter-service的依赖：
 
-	com.chamc.bootchamc-boot-starter-service0.0.1-SNAPSHOT
+```
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 
 ## 配置文件配置
 
