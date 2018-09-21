@@ -8,16 +8,12 @@
 
 * 数据源来自新版人力系统`EntUserDb`,目标数据库是业务系统数据库，entuserdb和sys的数据库er图如下所示；
 
-![entuserdb](https://i.imgur.com/IS2yDal.jpg)
-
 *  同步模块可通过配置chamc.web.sync.enable开启或关闭，如下“使用demo”中的配置项所示；
 *  同步任务既可以直接配置定时任务，也可以直接通过service服务调用
 *  同步程序使用多线程处理，相对来说效率较高，线程池可配置，如下“使用demo”中的配置项所示，多线程处理后会等待处理结果，然后再继续执行下一步逻辑；
 * 同步程序可以添加干预listener，只需要继承`SyncOperationListenerAdapter`或者实现`SyncOperationListener`即可；
 * 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行，
 * 目标数据库（即业务系统权限表）的ER图如下所示
-
-![syspermission](https://i.imgur.com/iZKWdRN.jpg)
 
 ## 使用
 

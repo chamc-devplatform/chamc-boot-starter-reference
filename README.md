@@ -31,7 +31,3 @@
 ### 开发平台后端框架组件
 
 如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么这几章节将为你详细介绍开发平台后端框架的各个组件：[web组件](chamc-boot-starter-web/README.md)、[swagger组件](chamc-boot-starter-swagger/README.md)、[工作流组件](chamc-boot-starter-bpm/README.md)、[service组件](chamc-boot-starter-service/introduce.md)。
-
-### 高级功能
-
-
