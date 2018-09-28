@@ -32,8 +32,9 @@
     
 注2：EntUserDb配置：目前只有两个EntUserDb数据库，一个是仿真环境的，一个是生产环境的；
 
-    * 默认不做任何配置的情况下，会根据服务所在网段进行环境识别，只有"10.80.36"和"10.80.40"网段下会被识别为生产环境，同步数据时会同步生产环境数据，其他网段都会同步仿真环境数据；
-     * 可以通过如下配置指定EntUserDb配置数据源（数据源配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
+* 默认不做任何配置的情况下，会根据服务所在网段进行环境识别，只有"10.80.36"和"10.80.40"网段下会被识别为生产环境，同步数据时会同步生产环境数据，其他网段都会同步仿真环境数据；
+ 
+* 可以通过如下配置指定EntUserDb配置数据源（数据源配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
      
     chamc.web.sync.entuserdb.url=xxxxx
     chamc.web.sync.entuserdb.username=xxxx
