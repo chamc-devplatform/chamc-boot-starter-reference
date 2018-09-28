@@ -36,10 +36,11 @@
  
 * 可以通过如下配置指定EntUserDb配置数据源（数据源配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
      
-    chamc.web.sync.entuserdb.url=xxxxx
-    chamc.web.sync.entuserdb.username=xxxx
-    chamc.web.sync.entuserdb.password=xxxx
-     
+```
+chamc.web.sync.entuserdb.url=xxxxx
+chamc.web.sync.entuserdb.username=xxxx
+chamc.web.sync.entuserdb.password=xxxx
+```     
 
 ### 运行同步程序
 
