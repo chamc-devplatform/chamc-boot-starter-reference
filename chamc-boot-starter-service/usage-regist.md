@@ -4,7 +4,13 @@
 
 在pom.xml文件中引入chamc-boot-starter-service的依赖：
 
-	com.chamc.bootchamc-boot-starter-service0.0.1-SNAPSHOT
+```
+<dependency>
+	<groupId>com.chamc.boot</groupId>
+	<artifactId>chamc-boot-starter-service</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 
 ## 配置文件配置
 
@@ -25,4 +31,10 @@
 ## 注意
 
 * token获取：请到服务管理系统（请联系[唐红石](mailto:tanghongshi@chamc.com.cn)获取地址）申请。
-* 注册中心是根据网段（开发、测试、仿真、生产）来判断的，若应用服务器不在相应的网段上，需要手动配置（否则，注册到开发环境上），在配置文件中添加：`eureka.client.service-url.defaultZone=http://XXXXX:8761/eureka,http://XXXXX:8761/eureka`，如需配置地址请联系[唐红石](mailto:tanghongshi@chamc.com.cn)。
+* 注册中心是根据网段（开发、测试、仿真、生产）来判断的，若应用服务器不在相应的网段上，需要手动配置（否则，注册到开发环境上），在配置文件`application.properties`中添加：
+
+```
+eureka.client.service-url.defaultZone=http://XXXXX:8761/eureka,http://XXXXX:8761/eureka
+```
+
+如需配置地址请联系[唐红石](mailto:tanghongshi@chamc.com.cn)。

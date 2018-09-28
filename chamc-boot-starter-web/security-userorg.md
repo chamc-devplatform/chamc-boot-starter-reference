@@ -2,7 +2,7 @@
 
 ## 前置条件
 
-新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:\`init\_sys_\[mysql\|oracle\].sql\`
+新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:chamc-boot-starter-web.jar -> src/main/resources/sql -> \`init\_sys_\[mysql\|oracle\].sql\`
 
 ## 同步程序设计说明
 
@@ -29,7 +29,18 @@
     chamc.web.sync.timer.enable=true
     #cron为定时计划表达式，默认值为0 0 21 0 * *，即每天晚上九点运行
     chamc.web.sync.timer.cron=0 0 21 0 * *
+    
+注2：EntUserDb配置：目前只有两个EntUserDb数据库，一个是仿真环境的，一个是生产环境的；
 
+* 默认不做任何配置的情况下，会根据服务所在网段进行环境识别，只有"10.80.36"和"10.80.40"网段下会被识别为生产环境，同步数据时会同步生产环境数据，其他网段都会同步仿真环境数据；
+ 
+* 可以通过如下配置指定EntUserDb配置数据源（数据源相关配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
+     
+```
+chamc.web.sync.entuserdb.url=xxxxx
+chamc.web.sync.entuserdb.username=xxxx
+chamc.web.sync.entuserdb.password=xxxx
+```     
 
 ### 运行同步程序
 

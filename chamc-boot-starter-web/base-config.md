@@ -107,3 +107,45 @@ Jpa查询插件配置
 	chamc.swagger.apis.user.path=/user/**,teacher/**
 
 swagger相关配置详见[Swagger组件](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-swagger)的介绍
+
+### 配置文件加密 ###
+
+配置文件中的一些配置可能会包含个人信息，例如用户名、密码配置等，为了防止信息的泄露需要对配置文件的一些信息进行加密处理，步骤如下：
+
+* 1.配置文件配置：在配置文件中增加加解密使使用的密码配置，如下：
+
+```
+jasypt.encryptor.password="your password" 
+```
+
+* 2.生成密钥：构建测试类生成密钥
+
+以数据库用户名和密码加密为例，可构建如下测试类生成用户名和密码对应密钥：
+
+	@SpringBootTest
+	@RunWith(SpringRunner.class)
+	public class EncryptorConfigTest {
+
+		private @Autowired StringEncryptor encryptor;
+
+		@Test
+		public void getPass() {
+			String DBname = encryptor.encrypt("your DBname");
+			String DBpassword = encryptor.encrypt("your DBpassword");
+			System.out.println("DBname is " + DBname);
+			System.out.println("DBpassword is " + DBpassword);
+		}
+
+	}
+
+
+对应密钥如下：
+
+![](https://i.imgur.com/2i7TxYb.png)
+
+* 3.生成密钥写入配置文件：用上一步中生成的密钥替换配置文件中的相应信息**(密钥需写在ENC()的括号内)**，以数据库用户名和密码为例，修改配置文件如下：
+
+		spring.datasource.username=ENC(Pw77huIjS3pFeFhgA/N7UoB2q1+E+M1A)
+		spring.datasource.password=ENC(9qbeQj66mt+cnKIIZR8bX2A9L7wDtC+G)
+
+这样简单的三步就完成了配置文件加密操作。

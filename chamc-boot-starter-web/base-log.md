@@ -44,7 +44,11 @@
 	#日志切入点
 	chamc.tracelog.XXXX.pointcut
 	
+注意：继承了BaseController的controller，继承了BaseService的service，继承了BaseRepository的repository才会被日志拦截器拦截。普通的controller不会被拦截，需要手动配置日志切入点。
 
+日志切入点示例：
+
+	chamc.tracelog.controller.pointcut=execution(public * com.chamc.zong.devplatform.demotest.controller.TestDemoController+.*(..))
 
 ## demo ##
 

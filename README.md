@@ -22,7 +22,7 @@
 
 关于开发平台后端框架的任何问题，我们都乐于提供帮助！
 
-* 发送邮件给[罗明强](mailto:luomingqiang@chamc.com.cn)、[苗世鹏](mailto:miaoshipeng@chamc.com.cn)、[唐红石](mailto:tanghongshi@chamc.com.cn)、[王菲](mailto:wangfei@chamc.com.cn)、[宗颍风](mailto:zongyingfeng@chamc.com.cn) 或 [李钰彬](mailto:liyubin@chamc.com.cn)；
+* 发送邮件给[罗明强](mailto:luomingqiang@chamc.com.cn)、[苗世鹏](mailto:miaoshipeng@chamc.com.cn)、[唐红石](mailto:tanghongshi@chamc.com.cn)、[王菲](mailto:wangfeic@chamc.com.cn)、[宗颍风](mailto:zongyingfeng@chamc.com.cn) 或 [李钰彬](mailto:liyubin@chamc.com.cn)；
 
 ### 开始步骤
 
