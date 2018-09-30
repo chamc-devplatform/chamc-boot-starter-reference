@@ -46,7 +46,7 @@
 > - 存储方式分为内存存储和数据库存储两种方式
 	- 内存存储 ： Quartz在服务启动时在内存中存储调度任务，重启应用会丢失，不支持多实例部署。
 	- 数据库存储 : 使用开发平台jar包内的建表sql建立Quartz相关的数据表，可实现任务持久化，重启应用不会丢失且继续执行，支持多实例部署。
-> - 使用数据库存储时需要建表，建表sql位置为：用压缩文件打开maven仓库`.m2\repository\com\chamc\boot\chamc-boot-starter-web\0.0.1-SNAPSHOT`文件夹下的开发平台jar包，在`/sql/quartz`文件夹下找到建表sql，如mysql数据库为`tables_mysql.sql`。
+> - 使用数据库存储时需要建表，建表sql位置为：用压缩文件打开maven仓库`.m2\repository\com\chamc\boot\chamc-boot-starter-web\0.0.1-SNAPSHOT`文件夹下的开发平台jar包，在`/sql/quartz`文件夹下找到建表sql，如mysql数据库为`tables_mysql_innodb.sql`。
 > - 多实例情况下**必须**使用集群+JDBC模式,集群模式下**必须且默认**使用数据库存储
 > - 集群所有节点应使用时间同步服务，时间误差应在**1s内**
 
