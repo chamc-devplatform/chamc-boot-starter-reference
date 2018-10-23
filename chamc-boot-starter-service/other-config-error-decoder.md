@@ -11,7 +11,7 @@
 	// 处理Response返回一个异常
 	Exception decode(Response response);
 
-若返回`feign.RetryableException`异常，会重试，默认的重试机制为：最大尝试次数5，时间间隔100ms，最大时间间隔1s。
+若返回`feign.RetryableException`异常，会重试，默认的重试机制为：最大尝试次数5次（包括本次请求），初始重试间隔100ms，每次递增，最大间隔1000ms。
 
 ## 示例
 
@@ -28,7 +28,7 @@
 		@Override
 		public Exception decode(Response response) {
 			if (response.status() != 400) {			
-				return new RetryableException("报错啦,亲!处理一下", new Date());
+				return new RetryableException("报错啦,亲!重试一下", new Date());
 			}
 			return new BussinessException(response.reason());
 		}

@@ -4,7 +4,7 @@
 
 ## 使用说明
 
-实现`com.chamc.boot.service.config.feign.contract.IFeignClientCustomizer`接口并将其注册到spring容器中（可注册多个）。其中包括以下两个方法。
+实现`com.chamc.boot.service.config.feign.contract.IFeignClientCustomizer`接口并将其注册到spring容器中（可注册多个）。其中包括以下两个方法。此方法在构建FeignClient的时候被调用，请求时不会被调用。
 
 	// 是否需要个性化定制
 	boolean canCustomize(Class<?> targetType, Method method);

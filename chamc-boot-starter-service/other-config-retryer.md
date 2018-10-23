@@ -9,13 +9,13 @@
 	// 是否定制化重试策略
 	boolean canCustomize(Class<?> targetType, Method method);
 	// 重试策略参数
-	FeignRetryerProperties customize();
+	void customize(FeignRetryerProperties properties);
 
 `com.chamc.boot.service.config.feign.retryerFeignRetryerProperties`中包括三个属性：
 
-- maxAttempts ：最大重试次数，默认5
-- period ：重试时间间隔，默认100(ms)
-- maxPeriod ：最大时间间隔，默认1000(ms)
+- maxAttempts ：最大重试次数，默认5 （包括本次请求）
+- period ：初始重试时间间隔，默认100(ms) （每次重试，时间间隔会递增）
+- maxPeriod ：最大重试时间间隔，默认1000(ms)
 
 ## 示例
 
@@ -30,8 +30,10 @@
 		}
 	
 		@Override
-		public FeignRetryerProperties customize() {
-			return new FeignRetryerProperties(2, 1000L, 5000L);
+		public void customize(FeignRetryerProperties properties) {
+			properties.setMaxAttempts(2);
+			properties.setPeriod(1000L);
+			properties.setMaxPeriod(5000L);
 		}
 	
 	}
