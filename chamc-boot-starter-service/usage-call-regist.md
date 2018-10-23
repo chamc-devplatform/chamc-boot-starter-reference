@@ -37,7 +37,8 @@
 
 在application.properties里新增如下配置：
 
-	chamc.service.feign.scan=com.chamc.xxx
+	#可以配多个，逗号分隔
+	chamc.service.feign.scan=com.chamc.xxx,com.chamc.yyy
 
 其中com.chamc.xxx为Client1RemoteService接口所在的包路径。实际应用中，配置所有该类接口所在的包路径。
 
