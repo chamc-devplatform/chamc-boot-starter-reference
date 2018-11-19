@@ -14,7 +14,7 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 ![](https://i.imgur.com/2uVhWKW.png)
 
-##登录模块配置
+## 登录模块配置
 
 1.AD必要配置
 
