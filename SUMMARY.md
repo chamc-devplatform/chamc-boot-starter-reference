@@ -29,7 +29,7 @@
     * [安全相关](#)
         * [简介](chamc-boot-starter-web/security-readme.md)
         * [用户数据同步](chamc-boot-starter-web/security-userorg.md)
-        * [登陆](chamc-boot-starter-web/security-ad.md)
+        * [登录](chamc-boot-starter-web/security-ad.md)
         * [权限控制](chamc-boot-starter-web/security-permission.md)
     * [缓存](#)
         * [基本使用](chamc-boot-starter-web/cache-base.md)
