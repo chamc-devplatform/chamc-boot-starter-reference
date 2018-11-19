@@ -1,80 +1,141 @@
-# ad域登陆
+# 登陆
 
 ## 说明
 
-如下图所示，域登陆的处理流程：
+目前登录模块提供AD登录功能、SSOToken解析登录功能，并为用户名密码等自定义登录方式提供统一配置以及代码样例支持。下面将分别对两种登录方式的处理逻辑、登录模块的配置以及自定义登录方式的样例代码等进行介绍。
 
-> - 客户端向应用系统发送业务请求  
-> - 业务系统检测是否登录：
->   - 已登录：正常请求
->   - 未登录：
->       - json请求：返回401状态码
->       - 普通请求：直接重定向到域登陆地址
-> - 如果是json请求，则客户端收到401错误信息
->   - 客户端向应用系统请求ad登录地址
->   - 应用系统响应ad登录地址（通过配置的参数拼接登录地址，然后返回客户端）
-> - 跳转ad登录页面
-> - ad登录（默认不弹登录框并自动使用win电脑域账户信息，可通过ie设置让弹出登录框）
->   - ad登录失败：继续弹出登录框
->   - ad登录成功，根据retUrl返回并附上userInfo参数
-> - 在retUrl对应的页面或请求中，向后端请求用户登录验证
-> - 用户登录，将信息塞入session，然后根据returnType做页面跳转
-> - 返回
+## AD登录
+AD登录的处理逻辑如下图所示：
 
-![域登陆](https://i.imgur.com/iOSp5Kp.png)
+![](https://i.imgur.com/A6WNhM9.png)
 
-## 使用
+## SSOToken解析
+SSOToken解析登录的处理逻辑如下图所示：
 
-1、使用域登陆首先要开启web模块的security，并加必要的配置，如ad登录地址、应用名称等。
+![](https://i.imgur.com/2uVhWKW.png)
 
-2、域登陆的控制需要与对权限的配置相结合使用，权限控制相关功能可参考[安全-权限控制](chamc-boot-starter-web/security-permission.md )
+##登录模块配置
 
-3、对于登录类型（login-type），默认配置为combine、也支持配置为ajax或者是normal，登录类型在域登陆前（未登录 -> 域登陆 -> 业务系统登录验证 -> 成功登录）起作用
-- login-type如果是ajax，返回401 json错误
-- 组合（combine）的话，根据请求类型返回，ajax请求返回401 json错误，普通请求直接重定向到ad登录页面
+1.AD必要配置
 
-4、域登陆成功后到业务做登录验证，并根据returnType参数控制页面跳转
-- successurl：返回配置的成功页面，即chamc.security.ad.success-url=xxx的地址
-- originurl：返回登陆前的页面
+有了如下配置，就可以进行AD登录，但是仅支持页面请求登录类型，并且登录成功返回登录请求前页面的操作逻辑。
 
-5、域服务器登录成功后，会根据retUrl重定向到业务系统做登录验证，web模块提供了`/login`和`/ajaxLogin`的mapping，所需参数为域登陆成功后自动附加到retUrl上的参数。
+	#开启安全权限控制
+	chamc.security.enable=true
+	#AD域服务器地址
+	chamc.security.ad.url=XXXX
+	#本系统申请的在域登陆服务器中对应的应用名称，该app-name在域登陆的时候会作为参数传过去
+	chamc.security.ad.app-name=XXX
 
-### 配置
+2.AD登录其他配置
+	
+如果想处理返回Json数据的Ajax请求的登录，需要增加如下配置。
+	
+	#Ajax请求的AD登录地址
+    chamc.security.ad.ret-url=XXX
 
-    #开启安全权限控制
-    chamc.security.enable=true
-    #ad域服务器的地址
-    chamc.security.ad.url=  
-    #本系统申请的在域登陆服务器中对应的应用名称，该app-name在域登陆的时候会作为参数传过去  
-    chamc.security.ad.app-name=testApp
-    #域登陆成功后，重定向回业务系统的url，然后在该url对应的页面请求后端进行登录验证，登录验证结束再根据returnType做页面跳转
-    chamc.security.ad.ret-url=
-    #login-type:ajax normal combine，不配置的话为combine，登录类型的说明如上第三点所述
-    chamc.security.ad.login-type=ajax
-    #return-type:success-url origin-url，如上说明第四点所述
-    chamc.security.ad.return-type=success-url
+如果想处理返回页面的Ajax请求的登录，需要增加如下配置，**配置的地址需要以"/"开头**。
 
-    #是否支持同一账户多处登录
-    chamc.security.ad.multi-login=false
+	#Ajax请求，登录成功后返回的地址，默认为"/"
+	chamc.security.ad.success-url=xxx
 
-    #业务系统登陆成功后，重定向的url，该配置在return-type=success-url时生效
-    chamc.security.ad.success-url=
+3.SSOToken解析配置
 
-### 使用示例1
+有了如下配置，就可以进行SSOToken解析登录。
 
-如上配置说明所示，添加必要的配置后，系统启动后会自动判断是否登录，如果没有登录会自动做域登陆，并根据配置的ret-url自动跳转
+	#实际上该配置默认配置为true，即开启登录模块无需做任何配置就可以使用SSOToken解析功能模块，可以将如下配置设置为false，显示的关闭该功能。
+	security.sso.enable-token-filter=true
 
-### 使用示例2
+4.关于用户登录次数限制的配置
 
-个性化登录：可以在登录的时候对LoginUser做个性化处理，使用方式如下：
+可以通过如下配置限制用户的登录次数，实现逻辑为后面的登录踢掉前面的登录。
+	
+	#可以通过如下配置配置同一用户最大允许登录次数为N，默认配置为用户允许最大登录次数为1
+	chamc.security.maximum-sessions=N
+
+## 自定义登录方式
+
+目前登录模块支持对系统自定义的其他登录方式（如用户名密码登录等方式）的统一配置，只需要实现如下两个模块的代码就可以实现自定义登录方式。
+
+1）拦截处理登录请求的filter
+
+2）获取用户身份信息的UserDetailsLoader
+
+**下面以邮箱密码登录为例，介绍一下自定义登录方式的样例代码：**
+
+1）定义拦截处理邮箱密码登录的filter,并**继承web模块的AbstractAuthenticationFilter**：
+
+	public class EmailPasswordLoginFilter extends AbstractAuthenticationFilter {
+
+	public EmailPasswordLoginFilter() {
+		super(new AntPathRequestMatcher("/sys/login"));//配置拦截的登录请求URI,这里登录请求为"/sys/login"
+		AuthenticationSuccessHandler successHandler = this.getSuccessHandler();
+		if (successHandler instanceof SavedRequestAwareAuthenticationSuccessHandler) {
+			((SavedRequestAwareAuthenticationSuccessHandler) successHandler).setDefaultTargetUrl("/sys/index");
+		}//配置登录成功后的返回地址，如果不配置则默认为登录请求前的地址，这里配置登录成功后返回到"/sys/index"
+	}
+	
+	//重写该方法，获取你需要构造身份信息的参数并构造身份信息token，这里获取“email”和“password”构造身份信息
+	@Override
+	protected Authentication buildAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException, IOException, ServletException {
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		return new UsernamePasswordAuthenticationToken(email, password);
+	}
+	
+}
+
+2）定义获取身份信息的UserDetailsLoader，并**继承web模块的AbstractUserDetailsLoader**：
+
+	public class EmailUserDetailsLoader extends AbstractUserDetailsLoader {
+
+	public EmailUserDetailsLoader() {
+		super(new AntPathRequestMatcher("/sys/login"));//配置该UserDetailsLoader对应的登录请求，这里对应的登录请求为登录请求为"/sys/login"
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) {
+		//这里构造 UserDetails并将其返回
+	}
+	
+}
+
+3）将定义的filter和UserDetailsLoader以Bean的形式注册到Spring容器中，**注意给UserDetailsLoader一个order**。
+
+例如将（1）和（2）中定义的EmailPasswordLoginFilter和EmailUserDetailsLoader以Bean的形式注册到Spring容器中的的代码如下：
+
+    @Configuration
+    public class TestAutoConfig {
+    	
+		public @Bean AbstractAuthenticationFilter emailPasswordLoginFilter() {
+		return new EmailPasswordLoginFilter();
+		}
+
+		@Order(1)
+		public @Bean IUserDetailsLoader emailUserDetailsLoader() {
+		return new EmailUserDetailsLoader();
+		}
+    }
+
+
+通过以上三个步骤，就可以实现自定义的登录方式，并且用户登录次数限制的等配置对该登录方式同样有效。
+
+## 登录用户个性化处理
+
+目前登录模块提供了对登录用户的个性化处理接口，可以通过实现LoginUesrCustomizer接口中的customize（）方法实现对登录用户进行个性化处理，使用方法如下：
+
+（1）实现个性化处理逻辑：
 
      public class LoginCustomizer implements LoginUesrCustomizer {
     
     	@Override
     	public void customize(LoginUser loginUser) {
-    
+    		//登录用户个性化处理操作
     	}
     }
+
+（2）将个性化处理类以Bean的形式注册到Spring容器中。
     
     @Configuration
     public class TestAutoConfig {
