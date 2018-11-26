@@ -24,7 +24,7 @@ AD登录模块的功能主要包括对未登录请求的处理，登录认证过
 
 （1）首先判断是否配置了loginUrl，如果已配置，则跳转到配置的跳转页面；
 
-（2）如果没有配置了loginUrl，则直接跳转到Ad获取用户信息。
+（2）如果没有配置了loginUrl，则直接跳转到配置的Ad登录地址，并设置回调地址参数retUrl为“/login”。
 
 ![](https://i.imgur.com/BKfJ4tB.jpg)
 
@@ -56,13 +56,13 @@ AD登录模块的功能主要包括对未登录请求的处理，登录认证过
 ## SSOToken解析
 SSOToken解析登录的处理逻辑如下图所示：
 
-![](https://i.imgur.com/2kt2Ryl.jpg)
+![](https://i.imgur.com/kJrtTny.jpg)
 
 ## 登录模块配置
 
 1.AD必要配置
 
-有了如下配置，就可以进行AD登录，但是仅支持页面请求登录类型，并且默认的successUrl为“/”
+有了如下配置，就可以进行AD登录，默认的successUrl为“/”
 
 	#开启安全权限控制
 	chamc.security.enable=true
@@ -72,15 +72,10 @@ SSOToken解析登录的处理逻辑如下图所示：
 	chamc.security.ad.app-name=XXX
 
 2.AD登录其他配置
-	
-如果想处理返回Json数据的Ajax请求的登录，需要增加如下配置，并需要业务系统自行处理访问地址的拼接和处理逻辑。
-	
-	#Ajax请求的AD登录地址
-    chamc.security.ad.ret-url=XXX
 
-如果想配置自己的successUrl，**配置的地址需要以"/"开头**。
+配置登录成功后的返回地址，**配置的地址需要以"/"开头**
 
-	#Ajax请求，登录成功后返回的地址，默认为"/"
+	#登录成功后返回的地址，默认为"/"，登录前没有请求或者登录前请求是Ajax类型时会返回这个地址
 	chamc.security.ad.success-url=xxx
 
 3.SSOToken解析配置
@@ -97,18 +92,18 @@ SSOToken解析登录的处理逻辑如下图所示：
 	#可以通过如下配置配置同一用户最大允许登录次数为N，默认配置为用户允许最大登录次数为1
 	chamc.security.maximum-sessions=N
 
-5.关于自定义进行AD登录而仅使用自定义登录方式的配置
+5.自定义登录页面地址
 
-	#可以通过配置loginUrl地址，而控制系统直接跳转带到配置的登录地址进行登录而不进行AD登录。
+	#未登录的页面请求会跳转到该地址，如果不配置，默认会重定向到AD
 	chamc.security.login-url=xxx
 
 ## 自定义登录方式
 
 目前登录模块支持对系统自定义的其他登录方式（如用户名密码登录等方式）的统一配置，只需要实现如下两个模块的代码就可以实现自定义登录方式。
 
-1）拦截处理登录请求的filter
+1）拦截处理登录请求的AbstractAuthenticationFilter
 
-2）获取用户身份信息的UserDetailsLoader
+2）获取用户身份信息的IUserDetailsLoader
 
 **下面以邮箱密码登录为例，介绍一下自定义登录方式的样例代码：**
 
@@ -121,7 +116,7 @@ SSOToken解析登录的处理逻辑如下图所示：
 		AuthenticationSuccessHandler successHandler = this.getSuccessHandler();
 		if (successHandler instanceof SavedRequestAwareAuthenticationSuccessHandler) {
 			((SavedRequestAwareAuthenticationSuccessHandler) successHandler).setDefaultTargetUrl("/sys/index");
-		}//配置登录成功后的返回地址，如果不配置则默认为登录请求前的地址，这里配置登录成功后返回到"/sys/index"
+		}//登录成功后返回的地址，默认为"/"，登录前没有请求时会跳转到该地址
 	}
 	
 	//重写该方法，获取你需要构造身份信息的参数并构造身份信息token，这里获取“email”和“password”构造身份信息
@@ -137,8 +132,6 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 2）定义获取身份信息的UserDetailsLoader，并**继承web模块的AbstractUserDetailsLoader**：
 
-**注意：这里的UserDetails获取需要用户自己建立一张登录信息表，如果需要设置密码等信息不可以直接修改t_sys_user表中的密码字段。**
-
 	public class EmailUserDetailsLoader extends AbstractUserDetailsLoader {
 
 	public EmailUserDetailsLoader() {
@@ -152,20 +145,21 @@ SSOToken解析登录的处理逻辑如下图所示：
 	
 }
 
-3）将定义的filter和UserDetailsLoader以Bean的形式注册到Spring容器中，**注意给UserDetailsLoader一个order**。
+3）将定义的filter和UserDetailsLoader以Bean的形式注册到Spring容器中，**注意给UserDetailsLoader一个order**，因为系统提供一个默认的SysUserDetailsLoader，其order是最低的。
 
-例如将（1）和（2）中定义的EmailPasswordLoginFilter和EmailUserDetailsLoader以Bean的形式注册到Spring容器中的的代码如下：
+例如将（1）和（2）中定义的EmailPasswordLoginFilter和EmailUserDetailsLoader以Bean的形式注册到Spring容器中，**注意：注册的filter的类型必须是AbstractAuthenticationFilter**，代码如下：
 
     @Configuration
     public class TestAutoConfig {
     	
+		//注册的filter的类型必须是AbstractAuthenticationFilter
 		public @Bean AbstractAuthenticationFilter emailPasswordLoginFilter() {
-		return new EmailPasswordLoginFilter();
+			return new EmailPasswordLoginFilter();
 		}
 
 		@Order(1)
 		public @Bean IUserDetailsLoader emailUserDetailsLoader() {
-		return new EmailUserDetailsLoader();
+			return new EmailUserDetailsLoader();
 		}
     }
 
