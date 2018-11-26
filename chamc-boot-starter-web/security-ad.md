@@ -137,6 +137,8 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 2）定义获取身份信息的UserDetailsLoader，并**继承web模块的AbstractUserDetailsLoader**：
 
+**注意：这里的UserDetails获取需要用户自己建立一张登录信息表，如果需要设置密码等信息不可以直接修改t_sys_user表中的密码字段。**
+
 	public class EmailUserDetailsLoader extends AbstractUserDetailsLoader {
 
 	public EmailUserDetailsLoader() {
@@ -166,6 +168,5 @@ SSOToken解析登录的处理逻辑如下图所示：
 		return new EmailUserDetailsLoader();
 		}
     }
-
 
 通过以上三个步骤，就可以实现自定义的登录方式，并且用户登录次数限制的等配置对该登录方式同样有效。
