@@ -24,7 +24,7 @@ AD登录模块的功能主要包括对未登录请求的处理，登录认证过
 
 （1）首先判断是否配置了loginUrl，如果已配置，则跳转到配置的跳转页面；
 
-（2）如果没有配置了loginUrl，则直接跳转到Ad提供的其中一个登录地址“/login”获取用户信息。
+（2）如果没有配置了loginUrl，则直接跳转到Ad获取用户信息。
 
 ![](https://i.imgur.com/BKfJ4tB.jpg)
 
@@ -40,7 +40,7 @@ AD登录模块的功能主要包括对未登录请求的处理，登录认证过
 
 ![](https://i.imgur.com/zjnW4iu.jpg)
 
-2）对于Ajax请求，需要请求“/ajaxLogin”处理身份认证，我们提供了AdAjaxLoginFilter处理认证流程，具体的处理流程和页面请求相似。
+2）对于Ajax请求，需要请求“/ajaxLogin”处理身份认证，我们提供了AdAjaxLoginFilter处理认证流程，除了请求地址是“/ajaxLogin”不同于页面的“/login”之外，其他具体的处理流程和页面请求相似。
 
 **3.登录成功后的处理**
 
@@ -56,7 +56,7 @@ AD登录模块的功能主要包括对未登录请求的处理，登录认证过
 ## SSOToken解析
 SSOToken解析登录的处理逻辑如下图所示：
 
-![](https://i.imgur.com/2uVhWKW.png)
+![](https://i.imgur.com/2kt2Ryl.jpg)
 
 ## 登录模块配置
 
@@ -97,9 +97,9 @@ SSOToken解析登录的处理逻辑如下图所示：
 	#可以通过如下配置配置同一用户最大允许登录次数为N，默认配置为用户允许最大登录次数为1
 	chamc.security.maximum-sessions=N
 
-5.关于自定义登录方式的配置
+5.关于自定义进行AD登录而仅使用自定义登录方式的配置
 
-	#可以通过配置loginUrl地址，从而控制系统直接跳转到配置的登录地址进行登录而不进行AD登录。
+	#可以通过配置loginUrl地址，而控制系统直接跳转带到配置的登录地址进行登录而不进行AD登录。
 	chamc.security.login-url=xxx
 
 ## 自定义登录方式
