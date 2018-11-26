@@ -1,13 +1,57 @@
-# 登陆
+# 登录
 
 ## 说明
 
 目前登录模块提供AD登录功能、SSOToken解析登录功能，并为用户名密码等自定义登录方式提供统一配置以及代码样例支持。下面将分别对两种登录方式的处理逻辑、登录模块的配置以及自定义登录方式的样例代码等进行介绍。
 
 ## AD登录
-AD登录的处理逻辑如下图所示：
 
-![](https://i.imgur.com/A6WNhM9.png)
+AD登录模块的功能主要包括对未登录请求的处理，登录认证过程以及登录成功后的处理。
+
+1.**未登录请求的处理**
+
+对于未登录的请求，分别对Ajax请求和页面请求两种类型的请求做出处理，处理流程如下：
+
+1）Ajax请求
+
+当Ajax请求发现未登录时，系统将返回Json格式的401错误，其处理流程如下：
+
+![](https://i.imgur.com/IDM3m6m.jpg)
+
+2）页面请求
+
+当页面请求发现未登录时，系统将默认去做登录跳转，其处理流程如下：
+
+（1）首先判断是否配置了loginUrl，如果已配置，则跳转到配置的跳转页面；
+
+（2）如果没有配置了loginUrl，则直接跳转到Ad提供的其中一个登录地址“/login”获取用户信息。
+
+![](https://i.imgur.com/BKfJ4tB.jpg)
+
+2.**登录认证过程**：
+
+对于登录认证请求，我们针对页面请求和Ajax请求提供了两个filter处理两种情况的登录认证。
+
+1）对于页面请求，会请求“/login”处理认证身份认证，其处理流程如下：
+
+（1）AdLoginFilter负责拦截过滤“/login”的登录请求，提取用户信息,以及在身份信息验证成功后将身份信息存入session等。
+
+（2）SysUserDetailsLoader负责从数据表t_sys_user中查询用户信息，构建并返回UserDetails。
+
+![](https://i.imgur.com/zjnW4iu.jpg)
+
+2）对于Ajax请求，需要请求“/ajaxLogin”处理身份认证，我们提供了AdAjaxLoginFilter处理认证流程，具体的处理流程和页面请求相似。
+
+**3.登录成功后的处理**
+
+对于登录成功后的处理，同样会分为页面请求的处理和Ajax请求的处理，对于页面请求，会返回页面，对于Ajax请求，会返回Json格式的OK。
+
+1）页面请求，其具体处理流程如上图所示
+
+- 如果登录前无请求或者登陆前请求类型是Ajax请求，会重定向到successUrl.
+- 否则，会重定向到登陆前请求地址。
+
+2）Ajax请求，登录请求直接返回Json格式的OK。
 
 ## SSOToken解析
 SSOToken解析登录的处理逻辑如下图所示：
@@ -18,7 +62,7 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 1.AD必要配置
 
-有了如下配置，就可以进行AD登录，但是仅支持页面请求登录类型，并且登录成功返回登录请求前页面的操作逻辑。
+有了如下配置，就可以进行AD登录，但是仅支持页面请求登录类型，并且默认的successUrl为“/”
 
 	#开启安全权限控制
 	chamc.security.enable=true
@@ -29,12 +73,12 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 2.AD登录其他配置
 	
-如果想处理返回Json数据的Ajax请求的登录，需要增加如下配置。
+如果想处理返回Json数据的Ajax请求的登录，需要增加如下配置，并需要业务系统自行处理访问地址的拼接和处理逻辑。
 	
 	#Ajax请求的AD登录地址
     chamc.security.ad.ret-url=XXX
 
-如果想处理返回页面的Ajax请求的登录，需要增加如下配置，**配置的地址需要以"/"开头**。
+如果想配置自己的successUrl，**配置的地址需要以"/"开头**。
 
 	#Ajax请求，登录成功后返回的地址，默认为"/"
 	chamc.security.ad.success-url=xxx
@@ -52,6 +96,11 @@ SSOToken解析登录的处理逻辑如下图所示：
 	
 	#可以通过如下配置配置同一用户最大允许登录次数为N，默认配置为用户允许最大登录次数为1
 	chamc.security.maximum-sessions=N
+
+5.关于自定义进行AD登录而仅使用自定义登录方式的配置
+
+	#可以通过配置loginUrl地址，而控制系统直接跳转带到配置的登录地址进行登录而不进行AD登录。
+	chamc.security.login-url=xxx
 
 ## 自定义登录方式
 
@@ -120,28 +169,3 @@ SSOToken解析登录的处理逻辑如下图所示：
 
 
 通过以上三个步骤，就可以实现自定义的登录方式，并且用户登录次数限制的等配置对该登录方式同样有效。
-
-## 登录用户个性化处理
-
-目前登录模块提供了对登录用户的个性化处理接口，可以通过实现LoginUesrCustomizer接口中的customize（）方法实现对登录用户进行个性化处理，使用方法如下：
-
-（1）实现个性化处理逻辑：
-
-     public class LoginCustomizer implements LoginUesrCustomizer {
-    
-    	@Override
-    	public void customize(LoginUser loginUser) {
-    		//登录用户个性化处理操作
-    	}
-    }
-
-（2）将个性化处理类以Bean的形式注册到Spring容器中。
-    
-    @Configuration
-    public class TestAutoConfig {
-    	
-    	@Bean
-    	public LoginUesrCustomizer loginCustomizer() {
-    		return new LoginCustomizer();
-    	}
-    }
