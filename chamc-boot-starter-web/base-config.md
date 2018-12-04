@@ -85,6 +85,14 @@ Jpa查询插件配置
 		Error creating bean with name 'org.springframework.boot.autoconfigure.session.SessionAutoConfiguration$SessionRepositoryValidator'
 	java.lang.IllegalArgumentException: No Spring Session store is configured
 
+
+### 用户中心配置 ###
+
+如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
+
+	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home申请token
+
+
 ### 不同环境配置文件 ###
 
 说明：项目启动时，会默认读配置文件`application.properties`，但开发、测试、仿真、生产环境中的配置不同，频繁修改文件比较麻烦，我们可以提前配置好每个环境的配置文件，部署时只需指定用哪个配置文件即可。
@@ -107,12 +115,6 @@ Jpa查询插件配置
 	chamc.swagger.apis.user.path=/user/**,teacher/**
 
 swagger相关配置详见[Swagger组件](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-swagger)的介绍
-
-### 用户中心配置 ###
-
-如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
-
-	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home 申请token
 
 
 ### 配置文件加密 ###
