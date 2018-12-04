@@ -22,7 +22,7 @@
 
 如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
 
-	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home申请token
+	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统申请token
 
 通过服务管理系统申请token后，在配置文件中添加uc.token，或者也可以与其他服务使用同一个service.token：
 
