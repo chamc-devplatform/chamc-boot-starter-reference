@@ -92,6 +92,11 @@ Jpa查询插件配置
 
 	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home申请token
 
+通过服务管理系统申请token后，在配置文件中添加uc.token，或者也可以与其他服务使用同一个service.token：
+
+	chamc.service.uc.token=xxxxx
+	#或者
+	chamc.service.token=xxxxx
 
 ### 不同环境配置文件 ###
 
