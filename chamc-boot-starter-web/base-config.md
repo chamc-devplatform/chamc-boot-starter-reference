@@ -108,6 +108,13 @@ Jpa查询插件配置
 
 swagger相关配置详见[Swagger组件](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-swagger)的介绍
 
+### 用户中心配置 ###
+
+如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
+
+	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home 申请token
+
+
 ### 配置文件加密 ###
 
 配置文件中的一些配置可能会包含个人信息，例如用户名、密码配置等，为了防止信息的泄露需要对配置文件的一些信息进行加密处理，步骤如下：
