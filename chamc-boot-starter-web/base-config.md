@@ -97,6 +97,8 @@ Jpa查询插件配置
 	chamc.service.uc.token=xxxxx
 	#或者
 	chamc.service.token=xxxxx
+	
+更多信息请参照[用户数据同步](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-web/an-quan-xiang-guan/security-userorg)的介绍
 
 ### 不同环境配置文件 ###
 
