@@ -4,9 +4,11 @@
 
 新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:chamc-boot-starter-web.jar -> src/main/resources/sql -> \`init\_sys_\[mysql\|oracle\].sql\`
 
+
+
 ## 同步程序设计说明
 
-* 数据源来自新版人力系统`EntUserDb`,目标数据库是业务系统数据库
+*  目前web中用户数据同步有两种实现：一是从人力数据库直接查询（EntUserDbV1），二是从用户中心获取数据。
 
 *  同步模块可通过配置chamc.web.sync.enable开启或关闭，如下“使用demo”中的配置项所示；
 *  同步任务既可以直接配置定时任务，也可以直接通过service服务调用
@@ -16,7 +18,45 @@
 
 ## 使用
 
-### 添加配置项
+### 用户中心配置 ###
+
+如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
+
+	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统：http://10.80.37.133:8080/services/home申请token
+
+通过服务管理系统申请token后，在配置文件中添加uc.token，或者也可以与其他服务使用同一个service.token：
+
+	chamc.service.uc.token=xxxxx
+	#或者
+	chamc.service.token=xxxxx
+
+### 人力数据库配置 ###
+
+只有当程序不注册到注册中心时，才会使用人力数据库数据进行同步。
+
+人力数据库为sqlServer数据库，使用前需要在pom.xml中引入sqlServer：
+
+    <dependency>
+    	<groupId>com.microsoft.sqlserver</groupId>
+    	<artifactId>sqljdbc4</artifactId>
+    	<version>4.0</version>
+    	<scope>runtime</scope>
+    </dependency>
+
+
+EntUserDbV1配置：目前只有两个EntUserDb数据库，一个是仿真环境的，一个是生产环境的；
+
+* 默认不做任何配置的情况下，会根据服务所在网段进行环境识别，只有"10.80.36"和"10.80.40"网段下会被识别为生产环境，同步数据时会同步生产环境数据，其他网段都会同步仿真环境数据；
+ 
+* 可以通过如下配置指定EntUserDb配置数据源（数据源相关配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
+     
+```
+chamc.web.sync.entuserdb.url=xxxxx
+chamc.web.sync.entuserdb.username=xxxx
+chamc.web.sync.entuserdb.password=xxxx
+```     
+
+### 同步配置项
 
 在项目的`application.propertis`中添加配置项，如下所示：
 
@@ -30,18 +70,6 @@
     #cron为定时计划表达式，默认值为0 0 21 0 * *，即每天晚上九点运行
     chamc.web.sync.timer.cron=0 0 21 0 * *
     
-注2：EntUserDb配置：目前只有两个EntUserDb数据库，一个是仿真环境的，一个是生产环境的；
-
-* 默认不做任何配置的情况下，会根据服务所在网段进行环境识别，只有"10.80.36"和"10.80.40"网段下会被识别为生产环境，同步数据时会同步生产环境数据，其他网段都会同步仿真环境数据；
- 
-* 可以通过如下配置指定EntUserDb配置数据源（数据源相关配置请联系[罗明强](mailto:luomingqiang@chamc.com.cn)）。
-     
-```
-chamc.web.sync.entuserdb.url=xxxxx
-chamc.web.sync.entuserdb.username=xxxx
-chamc.web.sync.entuserdb.password=xxxx
-```     
-
 ### 运行同步程序
 
 如果添加配置项的时候，配置了启用定时同步任务（`chamc.web.sync.timer.enable=true`或`chamc.web.permission.sync.timer.enable=true`），则会自动按照定时任务计划（`cron`）运行同步程序，不需要再添加其他代码调用。
