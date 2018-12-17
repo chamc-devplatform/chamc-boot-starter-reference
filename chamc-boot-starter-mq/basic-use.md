@@ -12,9 +12,10 @@
 </dependency>
 ```
 
-#### mq环境配置(需要向舒心申请账号密码)
+#### mq环境配置
 
-在application.properties中添加配置
+在`application.properties`中添加配置
+配置用户名，密码，地址请联系[舒心](mailto:shuxin@chamc.com.cn)
 ```
 #broker地址
 chamc.mq.rabbit.addresses=xxxxxx
