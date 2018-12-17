@@ -12,7 +12,7 @@
 </dependency>
 ```
 
-#### mq环境配置(需要向管理员申请账号密码)
+#### mq环境配置(需要向舒心申请账号密码)
 
 在application.properties中添加配置
 ```
