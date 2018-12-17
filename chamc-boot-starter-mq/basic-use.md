@@ -1,13 +1,13 @@
 ## 基本使用
 在pom文件中引入后端框架mq组件即可使用mq
 
-'''
+`
 <dependency>
     <groupId>com.chamc.boot</groupId>
     <artifactId>chamc-boot-starter-mq</artifactId>
     <version>0.0.1.SNAPSHOT</version>
 </dependency>
-'''
+`
 
 ### 基本配置
 在application.properties中增加配置
