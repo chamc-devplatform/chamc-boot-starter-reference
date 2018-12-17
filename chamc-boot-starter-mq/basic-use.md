@@ -11,9 +11,10 @@
     <version>0.0.1.SNAPSHOT</version>
 </dependency>
 ```
-在application.properties中增加配置
 
 #### mq环境配置(需要向管理员申请账号密码)
+
+在application.properties中添加配置
 
 ```
 #broker地址
@@ -25,6 +26,7 @@ chamc.mq.rabbit.password=xxxxxx
 #vhost名称
 chamc.mq.rabbit.virtual-host=xxxxxx
 ```
+
 #### 客户端配置
 生产者与消费者名称配置，需要对系统中出现的消费者和生产者命名(在使用生产者和消费者功能时需要生产者与消费者的名称)
 
