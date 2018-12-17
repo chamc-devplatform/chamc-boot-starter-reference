@@ -1,28 +1,28 @@
 ## 基本使用
 在pom文件中引入后端框架mq组件即可使用mq
 
-
-    <dependency>
-        <groupId>com.chamc.boot</groupId>
-        <artifactId>chamc-boot-starter-mq</artifactId>
-        <version>0.0.1.SNAPSHOT</version>
-    </dependency>
+'''
+<dependency>
+    <groupId>com.chamc.boot</groupId>
+    <artifactId>chamc-boot-starter-mq</artifactId>
+    <version>0.0.1.SNAPSHOT</version>
+</dependency>
+'''
 
 ### 基本配置
 在application.properties中增加配置
 
 #### mq环境配置
-
-
-    #broker地址
-    chamc.mq.rabbit.addresses=127.0.0.1:5672
-    #用户名
-    chamc.mq.rabbit.username=username
-    #密码
-    chamc.mq.rabbit.password=password
-    #vhost名称
-    chamc.mq.rabbit.virtual-host=vhost_name
-
+'''
+#broker地址
+chamc.mq.rabbit.addresses=127.0.0.1:5672
+#用户名
+chamc.mq.rabbit.username=username
+#密码
+chamc.mq.rabbit.password=password
+#vhost名称
+chamc.mq.rabbit.virtual-host=vhost_name
+'''
 
 #### 客户端配置
 生产者与消费者名称配置，需要对系统中出现的消费者和生产者命名
