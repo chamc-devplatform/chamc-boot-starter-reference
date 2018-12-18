@@ -99,10 +99,10 @@ public class ProducerController {
 在消费消息的方法上增加注解@StreamListener，注解上指定消费者名称（与配置文件中的消费者名称对应）
 
 ```
-    @StreamListener("consumer-01")
-    public void handleMessage(User user) {
-        //对消息的处理
-    }
+@StreamListener("consumer-01")
+public void handleMessage(User user) {
+    // 对消息的处理
+}
 ```
 
 
