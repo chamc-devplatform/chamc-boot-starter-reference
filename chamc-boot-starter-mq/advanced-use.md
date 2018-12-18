@@ -53,5 +53,3 @@ public Message<User> returnMessage(User user) {
     return MessageBuilder.withPayload(user).build();
 }
 ```
-
-
