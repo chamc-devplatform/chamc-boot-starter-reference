@@ -3,7 +3,6 @@
 ### 基本配置
 
 #### 引入依赖
-
 ```
 <dependency>
     <groupId>com.chamc.boot</groupId>
@@ -13,7 +12,6 @@
 ```
 
 #### mq环境配置
-
 在`application.properties`中添加配置
 
 配置用户名，密码，地址请联系[舒心](mailto:shuxin@chamc.com.cn)
@@ -29,16 +27,13 @@ chamc.mq.rabbit.virtual-host=xxxxxx
 ```
 #### 客户端配置
 生产者与消费者名称配置，需要对系统中出现的消费者和生产者命名(在使用生产者和消费者功能时需要生产者与消费者的名称)
-
 ```
 #消费者名称
 chamc.mq.consumer-names=conumer-01,consumer-02
 #生产者名称
 chamc.mq.producer-names=producer-01,producer-02
 ```
-
 指定生产者发布的消息的主题（topic），消费者订阅的主题（topic），消费者可以指定消费者组（建议指定，若不指定消费者组，则发生错误时会丢弃消息），指定发布和接受消息的格式，默认为application/json
-
 ```
 #指定生产者发布消息的topic
 chamc.mq.producers.<producer-name>.destination=topic-01
@@ -58,7 +53,6 @@ chamc.mq.consumers.<consumer-name>.max-retry-attempts=1
 
 ### 发送消息
 声明生产者接口（名字自定义），在接口上增加注解@Producer，在接口内可以声明发送方法，参数为发送的消息，在方法上增加注解@ProducerParam，注解上指定生产者名称（与配置文件中的生产者名称对应）
-
 ```
 @Producer
 public interface ProducerInterface {
@@ -66,9 +60,7 @@ public interface ProducerInterface {
     public void send(User user);
 }
 ```
-
 在配置类中指明生产者接口，可以直接指定，当接口较多时也可以选择指定扫描指定包
-
 ```
 @SpringBootApplication
 @EnableMQProducers(value = ProducerInterface.class, basePackages = "com.chamc.boot.mqdemo.demo.service")
@@ -79,7 +71,6 @@ public class MqDemoApplication {
 }
 ```
 发送的时候使用@Autowired注入接口，即可调用声明的方法进行发送
-
 ```
 @RestController
 @RequestMapping("user")
@@ -97,13 +88,9 @@ public class ProducerController {
 
 ### 消费消息
 在消费消息的方法上增加注解@StreamListener，注解上指定消费者名称（与配置文件中的消费者名称对应）
-
 ```
 @StreamListener("consumer-01")
 public void handleMessage(User user) {
     // 对消息的处理
 }
 ```
-
-
-
