@@ -64,8 +64,6 @@
         * [重试机制](chamc-boot-starter-service/other-config-retryer.md)
         * [请求拦截](chamc-boot-starter-service/other-config-interceptor.md)
     * [Feign的使用](chamc-boot-starter-service/feign.md)
-* [测试](#)
-    * [测试1](#)
 * [swagger组件](#)
     * [基础使用](chamc-boot-starter-swagger/config.md)
     * [高级使用](chamc-boot-starter-swagger/config-custom.md)
