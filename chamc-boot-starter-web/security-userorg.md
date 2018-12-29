@@ -36,13 +36,14 @@
 
 人力数据库为sqlServer数据库，使用前需要在pom.xml中引入sqlServer：
 
+```
     <dependency>
     	<groupId>com.microsoft.sqlserver</groupId>
     	<artifactId>sqljdbc4</artifactId>
     	<version>4.0</version>
     	<scope>runtime</scope>
     </dependency>
-
+```   
 
 EntUserDbV1配置：目前只有两个EntUserDb数据库，一个是仿真环境的，一个是生产环境的；
 
