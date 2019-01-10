@@ -83,7 +83,7 @@ SSOToken解析登录的处理逻辑如下图所示：
 有了如下配置，就可以进行SSOToken解析登录。
 
 	#实际上该配置默认配置为true，即开启登录模块无需做任何配置就可以使用SSOToken解析功能模块，可以将如下配置设置为false，显示的关闭该功能。
-	security.sso.enable-token-filter=true
+	chamc.security.sso.enable-token-filter=true
 
 4.关于用户登录次数限制的配置
 
