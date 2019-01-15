@@ -72,7 +72,7 @@ finish，新建成功后，如图所示：
 	<dependency>
 		<groupId>com.chamc.boot</groupId>
 		<artifactId>chamc-boot-starter-web</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0.RELEASE</version>
 	</dependency>
 
 2） 在`<plugins>`中添加插件
@@ -329,7 +329,7 @@ repository构建时可以继承BaseRepository，BaseRepository中封装了一些
 		<dependency>
 			<groupId>com.chamc.boot</groupId>
 			<artifactId>chamc-boot-starter-swagger</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0.RELEASE</version>
 		</dependency>
 
 * 配置文件：在application.properties中添加以下配置；

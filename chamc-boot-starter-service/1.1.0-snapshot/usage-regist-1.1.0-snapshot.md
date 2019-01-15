@@ -8,7 +8,7 @@
 <dependency>
 	<groupId>com.chamc.boot</groupId>
 	<artifactId>chamc-boot-starter-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
