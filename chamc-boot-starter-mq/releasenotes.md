@@ -8,7 +8,7 @@
    </tr>
    <tr>
       <td>1.0.0.RELEASE</td>
-      <td>2019-01-14</td>
+      <td>2019-01-15</td>
       <td>正式发版</td>
    </tr>
 </table>
