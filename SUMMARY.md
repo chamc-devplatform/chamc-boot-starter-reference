@@ -125,7 +125,7 @@
     * [1.1.0-SNAPSHOT](#)
         * [基础使用](chamc-boot-starter-swagger/1.1.0-snapshot/config-1.1.0-snapshot.md)
         * [高级使用](chamc-boot-starter-swagger/1.1.0-snapshot/config-custom-1.1.0-snapshot.md)
-    * [RELEASE-NOTES](chamc-boot-starter-swagger/1.1.0-snapshot/releasenotes.md)
+    * [RELEASE-NOTES](chamc-boot-starter-swagger/releasenotes.md)
 * [mq组件](#)
     * [1.0.0.RELEASE](#)
         * [简介](chamc-boot-starter-mq/简介.md)
