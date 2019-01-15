@@ -2,7 +2,7 @@
 
 <table>
    <tr>
-      <td>swagger版本</td>
+      <td>版本</td>
       <td>发布时间</td>
       <td>更新内容描述</td>
    </tr>
