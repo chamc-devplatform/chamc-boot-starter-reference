@@ -17,7 +17,7 @@
 <dependency>
 	<groupId>com.chamc.boot</groupId>
 	<artifactId>chamc-boot-starter-web</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0.RELEASE</version>
 </dependency>
 ```
 swagger依赖
@@ -25,7 +25,7 @@ swagger依赖
 <dependency>
 	<groupId>com.chamc.boot</groupId>
 	<artifactId>chamc-boot-starter-swagger</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0.RELEASE</version>
 </dependency>
 ```
 Jpa查询插件配置
