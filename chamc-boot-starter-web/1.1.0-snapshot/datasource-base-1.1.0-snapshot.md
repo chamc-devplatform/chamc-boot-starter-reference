@@ -4,7 +4,7 @@
 
 ### 添加依赖
 
-在`pom.xml`中添加web组件依赖，详见[基础信息配置](./base-config.md)。
+在`pom.xml`中添加web组件依赖，详见[基础信息配置](./base-config-1.1.0-snapshot.md)。
 
 ### 添加配置文件配置
 
@@ -14,7 +14,7 @@
 
 	chamc.em.multi.enable=true
 
-2) 不使用jta事务（使用jta事务见下节[高级使用](./datasource-advance.md)）
+2) 不使用jta事务（使用jta事务见下节[高级使用](./datasource-advance-1.1.0-snapshot.md)）
 
 	spring.jta.enabled=false
 
@@ -151,7 +151,7 @@
 
 ### 如何进行事务控制
 
-接下来将介绍如何使用事务控制(此处介绍的是非jta事务，使用jta事务见[高级使用](./datasource-advance.md))以及使用事务控制的一些坑。
+接下来将介绍如何使用事务控制(此处介绍的是非jta事务，使用jta事务见[高级使用](./datasource-advance-1.1.0-snapshot.md))以及使用事务控制的一些坑。
 
 1) 默认数据源使用事务，只需在方法上加`@Transactional`注解
 
@@ -197,7 +197,7 @@
 		return fetchQuery.fetch();
 	}
 
-4) 当一个方法操作多个数据源并需要使用事务时，应使用jta事务，详见下一节[高级使用](./datasource-advance.md)，下面将举一反例：
+4) 当一个方法操作多个数据源并需要使用事务时，应使用jta事务，详见下一节[高级使用](./datasource-advance-1.1.0-snapshot.md)，下面将举一反例：
 
 	/**
 	 * 该方法操作了三个数据源，但由于没有使用jta事务，所以该方法不需要事务管理；<br/>
