@@ -98,7 +98,7 @@ Jpa查询插件配置
 	#或者
 	chamc.service.token=xxxxx
 	
-更多信息请参照[用户数据同步](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-web/an-quan-xiang-guan/security-userorg)的介绍
+更多信息请参照[用户数据同步](./security-userorg-1.1.0-snapshot.md)的介绍
 
 ### 不同环境配置文件 ###
 
@@ -121,7 +121,7 @@ Jpa查询插件配置
 	chamc.swagger.apis.user.group=User
 	chamc.swagger.apis.user.path=/user/**,teacher/**
 
-swagger相关配置详见[Swagger组件](https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-swagger)的介绍
+swagger相关配置详见[Swagger组件](../../chamc-boot-starter-swagger)的介绍
 
 
 ### 配置文件加密 ###
