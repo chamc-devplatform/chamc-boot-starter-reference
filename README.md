@@ -4,7 +4,7 @@
 
 ### 作者
 
-舒心、王菲、宗颍风、李钰彬、苗世鹏、唐红石、罗明强
+霍颖倩、舒心、王菲、宗颍风、李钰彬、苗世鹏、唐红石、罗明强
 
 ## 文档简介
 
@@ -18,7 +18,7 @@
 
 关于开发平台后端框架的任何问题，我们都乐于提供帮助！
 
-* 发送邮件给[罗明强](mailto:luomingqiang@chamc.com.cn)、[苗世鹏](mailto:miaoshipeng@chamc.com.cn)、[唐红石](mailto:tanghongshi@chamc.com.cn)、[王菲](mailto:wangfeic@chamc.com.cn)、[宗颍风](mailto:zongyingfeng@chamc.com.cn) 、 [李钰彬](mailto:liyubin@chamc.com.cn)或[舒心](mailto:shuxin@chamc.com.cn)；
+* 发送邮件给[罗明强](mailto:luomingqiang@chamc.com.cn)、[唐红石](mailto:tanghongshi@chamc.com.cn)、[王菲](mailto:wangfeic@chamc.com.cn)、[宗颍风](mailto:zongyingfeng@chamc.com.cn) 、 [李钰彬](mailto:liyubin@chamc.com.cn)、[舒心](mailto:shuxin@chamc.com.cn)或[霍颖倩](mailto:huoyingqian@chamc.com.cn)；
 
 ### 开始步骤
 
@@ -26,4 +26,4 @@
 
 ### 开发平台后端框架组件
 
-如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么这几章节将为你详细介绍开发平台后端框架的各个组件：[web组件](chamc-boot-starter-web/README.md)、[swagger组件](chamc-boot-starter-swagger/README.md)、[工作流组件](chamc-boot-starter-bpm/README.md)、[service组件](chamc-boot-starter-service/introduce.md)。
+如果你对开发平台后端框架已经有了初步的了解，想要进一步的了解与使用，那么这几章节将为你详细介绍开发平台后端框架的各个组件：[web组件](chamc-boot-starter-web/README.md)、[工作流组件](chamc-boot-starter-bpm/README.md)、[service组件](chamc-boot-starter-service/introduce.md)、[swagger组件](chamc-boot-starter-swagger/README.md)、[mq组件](chamc-boot-starter-mq/简介.md)。
