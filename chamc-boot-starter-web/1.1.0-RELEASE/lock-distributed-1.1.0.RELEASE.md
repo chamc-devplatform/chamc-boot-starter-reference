@@ -88,8 +88,35 @@
 		return "xxx@xxxxx.com.cn";
 	}
 
+###3.2 复杂处理(KeyGenerator)
+> 针对可能需要复杂处理生成key的需求，我们提供了KeyGenerator：
+> 
+> - 新建类，实现`com.chamc.boot.web.support.distributed.lock.KeyGenerator接口`
+> - 覆盖`generate`方法，方法参数说明如下：
+>     - 【target】@DistributedLock注解的方法所在的类实例
+>     - 【method】注解的方法,Method对象
+>     - 【params】方法的参数，顺序与原方法相同
+> - 使用分布式锁注解指定自定义的KeyGenerator，此时不指定注解中的key，仅指定keyGenerator如：`@DistributedLock(keyGenerator = "com.lock.demo.CustomKeyGenerator")`
 
-###3.2 自定义处理
+	public class CustomKeyGenerator implements KeyGenerator {
+	
+		@Override
+		public String generate(Object target, Method method, Object... params) {
+			// 由target参数获取方法所在的类实例
+			TestController controller = (TestController) target;
+			
+			// 由params参数获取方法原参数
+			PostLockParam param1 = (PostLockParam) params[0];
+			String param2 = (String) params[1];
+			Long param3 = (Long) params[2];
+			
+			//调用方法示例
+			String result = controller.getKey();
+			return result;
+		}
+	}
+
+###3.3 自定义处理
 
 后台框架目前在在获取/释放锁失败时进行抛错处理，如需进行自定义处理请参考此段说明。
 
