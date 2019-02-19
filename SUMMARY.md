@@ -29,8 +29,7 @@
 	        * [日志跟踪功能](chamc-boot-starter-web/base-log.md)
         * [安全相关](#)
 	        * [简介](chamc-boot-starter-web/security-readme.md)
-	        * [用户数据同步](chamc-boot-
-	        * starter-web/security-userorg.md)
+	        * [用户数据同步](chamc-boot-starter-web/security-userorg.md)
 	        * [认证](chamc-boot-starter-web/security-ad.md)
 	        * [权限控制](chamc-boot-starter-web/security-permission.md)
         * [缓存](#)
