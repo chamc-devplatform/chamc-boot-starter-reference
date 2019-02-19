@@ -61,7 +61,7 @@ chamc.web.sync.entuserdb.password=xxxx
 
 在项目的`application.propertis`中添加配置项，如下所示：
 
-注：集群模式下的配置请参考[定时任务](/timer-1.1.0-snapshot.md)
+注：集群模式下的配置请参考[定时任务](/timer-1.1.0.RELEASE.md)
 
     chamc.security.permission.enable=true   //启用安全
     chamc.web.sync.operatorId=1 # 同步操作人的用户id

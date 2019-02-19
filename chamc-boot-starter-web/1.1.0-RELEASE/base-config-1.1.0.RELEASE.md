@@ -17,7 +17,7 @@
 <dependency>
 	<groupId>com.chamc.boot</groupId>
 	<artifactId>chamc-boot-starter-web</artifactId>
-	<version>1.1.0-SNAPSHOT</version>
+	<version>1.1.0.RELEASE</version>
 </dependency>
 ```
 swagger依赖
@@ -98,7 +98,7 @@ Jpa查询插件配置
 	#或者
 	chamc.service.token=xxxxx
 	
-更多信息请参照[用户数据同步](./security-userorg-1.1.0-snapshot.md)的介绍
+更多信息请参照[用户数据同步](./security-userorg-1.1.0.RELEASE.md)的介绍
 
 ### 不同环境配置文件 ###
 

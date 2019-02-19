@@ -4,7 +4,7 @@
 
 ## 配置
 
-1) 同[基本使用](./datasource-base-1.1.0-snapshot.md)中的配置，需要开启jta事务
+1) 同[基本使用](./datasource-base-1.1.0.RELEASE.md)中的配置，需要开启jta事务
 
 	spring.jta.enabled=true
 
