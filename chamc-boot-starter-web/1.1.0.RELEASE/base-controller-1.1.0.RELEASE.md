@@ -315,3 +315,40 @@ Retention注解的保留位置:
 
 
 3） 在需要时，同标准验证一样，用自定义注解的地方加上 `@Uppercase` 注解，在调用参数的时候写上 `@Valid` 即可使用。
+
+## 自定义反序列化器 ##
+
+有时候，接口收到的json数据不能直接转化为需要的实体，我们需要自定义反序列化器完成json到实体的转化。web模块为字符串反序列化为实体提供了支持。
+
+### 示例 ###
+
+新建一个类并实现IJsonDeserializer<T>接口，重写其中的deserialize方法，该方法完成字符串到实体的转化。
+
+如下代码实现了将字符串转为大写，再转化为枚举类EnumType的功能。
+
+```
+public class EnumTypeDeserializer implements IJsonDeserializer<EnumType> {
+	
+	private static final long serialVersionUID = 7490487628517157182L;
+
+	@Override
+	public EnumType deserialize(String json) {
+		EnumType result = EnumType.valueOf(json.toUpperCase());
+		return result;
+	}
+
+}
+```
+再将新建的类注入到配置中即可:
+
+```
+@Configuration
+public class MyConfiguration {
+
+	@Bean
+	public IJsonDeserializer<EnumType> enumTypeDeserializer() {
+		return new EnumTypeDeserializer();
+
+	}
+}
+```
