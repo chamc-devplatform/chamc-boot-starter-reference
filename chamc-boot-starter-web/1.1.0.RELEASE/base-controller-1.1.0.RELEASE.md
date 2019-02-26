@@ -352,3 +352,4 @@ public class MyConfiguration {
 	}
 }
 ```
+在接口接收枚举类EnumType时，不论json数据中的枚举类型是大写或是小写，都可以转化为对应的大写的枚举值。
