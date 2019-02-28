@@ -11,4 +11,13 @@
       <td>2019-01-15</td>
       <td>正式发版</td>
    </tr>
+   <tr>
+      <td>1.1.0.RELEASE</td>
+      <td></td>
+      <td>
+         1.新增分布式锁；<br />
+         2.机构同步添加sourceKey和sourceSystem<br />
+         【注意】：使用同步机构或者同步功能时请务必执行jar包下1.1.0.RELEASE.sql文件
+      </td>
+   </tr>
 </table>
