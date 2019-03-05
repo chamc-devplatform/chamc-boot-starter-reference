@@ -15,6 +15,12 @@
 
 目前后端框架使用注解和切面实现分布式锁功能，使用时只需在方法上配置分布式锁注解即可。获取和释放分布式锁的方法通过接口暴露，可支持多种实现，**目前仅支持使用Redis实现**。
 
+使用时需要配置并启动redis，如不进行配置，默认使用本地的redis。配置redis的方式如下：
+```
+spring.redis.host=localhost
+spring.session.store-type=hash-map
+```
+
 【注解】
 
 使用自定义注解`@DistributedLock`进行配置。可在`Controller`方法上进行配置，具有此注解的方法会通过Redis分布式锁控制并发访问。默认为非阻塞模式，仅尝试获取一次，默认在方法返回后立即释放分布式锁。
