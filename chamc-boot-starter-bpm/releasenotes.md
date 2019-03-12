@@ -23,8 +23,9 @@
 		<td>1.1.0.RELEASE</td>
 		<td></td>
 		<td>
-			1.添加邮件节点<br />
-			2.添加委派任务<br />
+			1.添加邮件节点;<a href="./1.1.0.RELEASE/4.2information-disign-1.1.0.release#you-jian-jie-dian-pei-zhi">点击查看</a><br />
+			2.添加委派任务;<br />
+			3.添加抄送配置;<a href="./1.1.0.RELEASE/4.2information-disign-1.1.0.release#chao-song-pei-zhi">点击查看</a><br />
 		</td>
 	</tr>
 </table>
