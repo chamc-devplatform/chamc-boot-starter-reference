@@ -88,7 +88,7 @@
             * [流程管理控制台](chamc-boot-starter-bpm/1.1.0.RELEASE/4.1information-platform-1.1.0.RELEASE.md)
             * [流程设计器](chamc-boot-starter-bpm/1.1.0.RELEASE/4.2information-disign-1.1.0.RELEASE.md)
             * [流程图](chamc-boot-starter-bpm/1.1.0.RELEASE/4.3information-diagram-1.1.0.RELEASE.md)
-            * [委托功能](chamc-boot-starter-bpm/4.4information-handover-1.1.0.RELEASE.md)
+            * [委托功能](chamc-boot-starter-bpm/1.1.0.RELEASE/4.4information-handover-1.1.0.RELEASE.md)
         * [SDK说明](chamc-boot-starter-bpm/1.1.0.RELEASE/6.interface-1.1.0.RELEASE.md)
         * [Model模型](chamc-boot-starter-bpm/1.1.0.RELEASE/8.model-1.1.0.RELEASE.md)
     * [RELEASE-NOTES](chamc-boot-starter-bpm/releasenotes.md)
