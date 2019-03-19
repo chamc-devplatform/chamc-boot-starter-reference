@@ -21,7 +21,7 @@
 	</tr>
 	<tr>
 		<td>1.1.0.RELEASE</td>
-		<td></td>
+		<td>2019-03-21</td>
 		<td>
 			1.添加邮件节点;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.1.0.release/gong-neng-xiang-shu/4.2information-disign-1.1.0.release#you-jian-jie-dian-pei-zhi">点击查看</a><br />
 			2.添加委派任务;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.1.0.release/gong-neng-xiang-shu/4.4information-handover-1.1.0.release">点击查看</a><br />
