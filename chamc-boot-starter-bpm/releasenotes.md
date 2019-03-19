@@ -26,6 +26,8 @@
 			1.添加邮件节点;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.1.0.release/gong-neng-xiang-shu/4.2information-disign-1.1.0.release#you-jian-jie-dian-pei-zhi">点击查看</a><br />
 			2.添加委派任务;<br />
 			3.添加抄送配置;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.1.0.release/gong-neng-xiang-shu/4.2information-disign-1.1.0.release#chao-song-pei-zhi">点击查看</a><br />
+			4.添加查询租户下所有流程接口;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.1.0.release/6.interface-1.1.0.release#irepositoryservice">点击查看</a><br />
+			5.修复bug，sys_access_log表添加blob型字段字段params_detail_和result_detail,任务号：#22539<br />	
 		</td>
 	</tr>
 </table>
