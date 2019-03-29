@@ -14,6 +14,6 @@
    <tr>
       <td>1.0.1.RELEASE</td>
       <td>2019-03-29</td>
-      <td>修复eureka.client.service-url.defaultZone不支持配置域名的bug</td>
+      <td>修复了eureka.client.service-url.defaultZone配置域名导致无法正常进行服务注册的bug</td>
    </tr>
 </table>
