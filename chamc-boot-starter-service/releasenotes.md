@@ -11,4 +11,9 @@
       <td>2019-01-15</td>
       <td>正式发版</td>
    </tr>
+   <tr>
+      <td>1.0.1.RELEASE</td>
+      <td>2019-03-29</td>
+      <td>修复不支持域名的bug</td>
+   </tr>
 </table>
