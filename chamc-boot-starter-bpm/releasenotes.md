@@ -38,7 +38,7 @@
 		<td></td>
 		<td>
 			1.添加获取可回退节点接口；<br />
-			2.修改获取流程图方法：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/4.3information-diagram-1.2.0.release">点击查看</a>
+			2.修改获取流程图方法：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.3information-diagram-1.2.0.release">点击查看</a>
 		</td>
 	</tr>
 </table>
