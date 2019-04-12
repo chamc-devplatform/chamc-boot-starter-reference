@@ -108,8 +108,8 @@ chamc.web.sync.entuserdb.password=xxxx
         public void syncUserOrg() {
             service.syncUserOrg();
         }
-
-       /**
+	
+	/**
 	* 同步"职级、职务基本数据"
 	*/
         @GetMapping("/job/grade")
