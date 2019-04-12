@@ -70,6 +70,8 @@ SSOToken解析登录的处理逻辑如下图所示：
 	chamc.security.ad.url=XXXX
 	#本系统申请的在域登陆服务器中对应的应用名称，该app-name在域登陆的时候会作为参数传过去
 	chamc.security.ad.app-name=XXX
+	#本系统申请的在域登陆服务器中对应的公钥，该公钥用于token解析认证
+	chamc.security.ad.public-key=XXX
 
 2.AD登录其他配置
 
