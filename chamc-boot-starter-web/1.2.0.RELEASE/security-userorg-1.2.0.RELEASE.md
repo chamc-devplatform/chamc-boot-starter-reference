@@ -109,21 +109,21 @@ chamc.web.sync.entuserdb.password=xxxx
             service.syncUserOrg();
         }
 
-		/**
+	/**
          * 同步"职级、职务基本数据"
          */
-		@GetMapping("/job/grade")
-		public void syncJobGrade() {
-			service.syncJobGrade();
-		}
+	@GetMapping("/job/grade")
+	public void syncJobGrade() {
+	    service.syncJobGrade();
+	}
 
-		/**
+	/**
          * 同步"用户任职数据"
          */
-		@GetMapping("/user/tenure")
-		public void syncJobGrade() {
-			service.syncUserTenure();
-		}
+	@GetMapping("/user/tenure")
+	public void syncJobGrade() {
+	    service.syncUserTenure();
+	}
     
         /**
          * 同步"用户，机构（enteruserdb的角色），用户-机构关系，用户任职数据"
