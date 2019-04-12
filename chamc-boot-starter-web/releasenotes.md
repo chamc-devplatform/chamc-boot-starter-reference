@@ -31,4 +31,11 @@
       <td>2019-03-07</td>
       <td>修复了server.session.timeout配置无效的问题。</td>
    </tr>
+   <tr>
+      <td>1.2.0.RELEASE</td>
+      <td>2019-04-？</td>
+      <td>1.AD登陆增加挑战码认证;<a href = '#'>点击查看</a><br />
+          2.同步程序增加同步任职数据;<a href = './1.2.0.RELEASE/security-userorg-1.2.0.RELEASE.md'>点击查看</a><br />
+      </td>
+   </tr>
 </table>
