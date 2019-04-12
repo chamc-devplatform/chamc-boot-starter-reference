@@ -109,9 +109,9 @@ chamc.web.sync.entuserdb.password=xxxx
             service.syncUserOrg();
         }
 	
-	/**
-	* 同步"职级、职务基本数据"
-	*/
+        /**
+        * 同步"职级、职务基本数据"
+        */
         @GetMapping("/job/grade")
         public void syncJobGrade() {
             service.syncJobGrade();
