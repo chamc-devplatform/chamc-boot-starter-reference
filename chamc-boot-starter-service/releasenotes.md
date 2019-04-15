@@ -16,4 +16,9 @@
       <td>2019-03-29</td>
       <td>修复了eureka.client.service-url.defaultZone配置域名导致无法正常进行服务注册的bug</td>
    </tr>
+   <tr>
+      <td>1.0.2.RELEASE</td>
+      <td>2019-04-15</td>
+      <td>修复了当配置eureka.client.enabled=true时,token验证失败eureka.client.enabled仍为true的bug</td>
+   </tr>
 </table>
