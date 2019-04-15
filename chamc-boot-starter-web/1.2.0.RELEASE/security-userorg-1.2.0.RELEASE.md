@@ -2,27 +2,26 @@
 
 ## 前置条件
 
-新建以下7张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role。在jar包中获取建表脚本:chamc-boot-starter-web.jar -> src/main/resources/sql -> \`init\_sys_\[mysql\|oracle\].sql\`
+新建以下10张表：t\_sys\_org，t\_sys\_permission，t\_sys\_role，t\_sys\_role\_permission，t\_sys\_user，t\_sys\_user\_org，t\_sys\_user\_role，t\_sys\_job，t\_sys\_job\_grade，t\_sys\_tenure。在jar包中获取建表脚本:chamc-boot-starter-web.jar -> src/main/resources/sql -> \`init\_sys_\[mysql\|oracle\].sql\`
 
-
+如果已有1.1.0版本的7张表，需要增量新建任职数据表，执行\`1.2.0.RELEASE_\[mysql\|oracle\].sql\`即可。
 
 ## 同步程序设计说明
 
-*  目前web中用户数据同步有两种实现：一是从人力数据库直接查询（EntUserDbV1），二是从用户中心获取数据。
+*  目前web中用户数据同步有两种实现：一是从人力数据库（EntUserDbV1）直接查询，二是从用户中心获取数据。 用户任职信息数据只有通过用户中心才会进行同步。
 
 *  同步模块可通过配置chamc.web.sync.enable开启或关闭，如下“使用demo”中的配置项所示；
 *  同步任务既可以直接配置定时任务，也可以直接通过service服务调用
 *  同步程序使用多线程处理，相对来说效率较高，线程池可配置，如下“使用demo”中的配置项所示，多线程处理后会等待处理结果，然后再继续执行下一步逻辑；
 * 同步程序可以添加干预listener，只需要继承`SyncOperationListenerAdapter`或者实现`SyncOperationListener`即可；
-* 同步按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行
+* 同步基本信息时按照`机构 -> 用户 -> 用户机构`或者`用户 -> 机构 -> 用户机构`的顺序执行。 
+* 同步基本信息后才可进行任职数据同步，前提：能正常访问用户中心。
 
 ## 使用
 
 ### 用户中心配置 ###
 
-如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token，否则项目无法启动，提示异常：
-
-	Caused by: com.chamc.boot.web.support.BussinessException: 未配置用户中心token,请到服务管理系统申请token
+如果程序注册到了注册中心，则默认使用用户中心进行用户同步，需要配置用户中心token。 如果未配置用户中心token，启动项目时会警告。 在调用同步接口时会报错。
 
 通过服务管理系统申请token后，在配置文件中添加uc.token，或者也可以与其他服务使用同一个service.token：
 
@@ -32,7 +31,7 @@
 
 ### 人力数据库配置 ###
 
-只有当程序不注册到注册中心时，才会使用人力数据库数据进行同步。
+只有当程序不注册到注册中心时，才会使用人力数据库数据进行同步。 该方式不同步用户任职数据。
 
 人力数据库为sqlServer数据库，使用前需要在pom.xml中引入sqlServer：
 
@@ -66,10 +65,12 @@ chamc.web.sync.entuserdb.password=xxxx
     chamc.security.permission.enable=true   //启用安全
     chamc.web.sync.operatorId=1 # 同步操作人的用户id
     #chamc.quartz.store-type=jdbc   #集群模式下，需要配置
-    #是否启用定时同步，如下配置或chamc.web.sync.timer.enable=true
+    #是否启用定时同步，如下配置或chamc.web.permission.sync.timer.enable=true
     chamc.web.sync.timer.enable=true
     #cron为定时计划表达式，默认值为0 0 21 0 * *，即每天晚上九点运行
     chamc.web.sync.timer.cron=0 0 21 0 * *
+    #默认进行任职数据同步，如不需要任职信息同步，可手动设置为false
+    chamc.web.sync.job=true
     
 ### 运行同步程序
 
@@ -107,9 +108,25 @@ chamc.web.sync.entuserdb.password=xxxx
         public void syncUserOrg() {
             service.syncUserOrg();
         }
+	
+        /**
+        * 同步"职级、职务基本数据"
+        */
+        @GetMapping("/job/grade")
+        public void syncJobGrade() {
+            service.syncJobGrade();
+        }
+
+       /**
+        * 同步"用户任职数据"
+        */
+        @GetMapping("/user/tenure")
+        public void syncJobGrade() {
+            service.syncUserTenure();
+        }
     
         /**
-         * 同步"用户，机构（enteruserdb的角色），用户-机构关系"
+         * 同步"用户，机构（enteruserdb的角色），用户-机构关系，用户任职数据"
          */
         @GetMapping("sync")
         public void sync() {
