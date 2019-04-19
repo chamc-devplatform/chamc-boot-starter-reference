@@ -34,11 +34,26 @@
 		</td>
 	</tr>
 	<tr>
+		<td>1.1.1.RELEASE</td>
+		<td>2019-04-12</td>
+		<td>
+			1.修复缺陷。工作流使用queryNextTaskConfig接口查询时未使用先遣节点传入的流程变量，任务号：#23433<br />
+			2.修复缺陷。bactToReject 的流程节点，查不到已办，任务号：#23251<br />
+			3.修复缺陷。queryNextTaskInfo报错请传入分支变量，查询单一节点的处理人信息，任务号：#22980<br />
+			4.修复缺陷。工作流-组织数据同步失败时，无法选择租户，任务号：#23489<br />
+			5.修复缺陷。工作流多次流转后，流程图示出现较长的空白区域，任务号：#21722<br />
+			6.修复缺陷。配置催办后再清除，页面提示不正确，任务号：#21896<br />	
+		</td>
+	</tr>
+	<tr>
 		<td>1.2.0.RELEASE</td>
 		<td></td>
 		<td>
 			1.添加获取可回退节点接口；<br />
-			2.修改获取流程图方法：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.3information-diagram-1.2.0.release">点击查看</a>
+			2.修改获取流程图方法：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.3information-diagram-1.2.0.release">点击查看</a> <br />
+			3.添加解析首节点处理人接口；<br />
+			4.添加解析指定节点处理人接口；<br />
+			5.待办已办支持根据流程分类查询；
 		</td>
 	</tr>
 </table>
