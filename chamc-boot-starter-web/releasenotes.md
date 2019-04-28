@@ -33,7 +33,7 @@
    </tr>
    <tr>
       <td>1.2.0.RELEASE</td>
-      <td>2019-04-？</td>
+      <td>2019-04-28</td>
       <td>1.AD登陆增加挑战码认证;<a href = './1.2.0.RELEASE/security-ad-1.2.0.RELEASE.md'>点击查看</a><br />
 		  【注意】：使用AD登录必须配置公钥chamc.security.ad.public-key<br />
           2.同步程序增加同步任职数据;<a href = './1.2.0.RELEASE/security-userorg-1.2.0.RELEASE.md'>点击查看</a><br />
