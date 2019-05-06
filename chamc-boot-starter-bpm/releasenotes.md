@@ -53,7 +53,9 @@
 			2.修改获取流程图方法【同时原版流程图以及新版流程图均已添加候选用户的显示】：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.3information-diagram-1.2.0.release">点击查看</a> <br />
 			3.添加解析首节点处理人接口；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#2-cha-xun-jie-dian-chu-li-ren">点击查看</a><br />
 			4.添加解析指定节点处理人接口；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#2-cha-xun-jie-dian-chu-li-ren">点击查看</a><br />
-			5.待办已办支持根据流程分类查询；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#1-cha-xun-dai-ban">待办接口查看；</a>&nbsp;&nbsp;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#2-cha-xun-yi-ban">已办接口查看</a>
+			5.流程支持流程分类的管理：<a>点击查看</a><br />
+			6.添加获取租户下所有流程分类接口：<a>点击查看</a> <br />
+			7.待办已办支持根据流程分类查询；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#1-cha-xun-dai-ban">待办接口查看；</a>&nbsp;&nbsp;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#2-cha-xun-yi-ban">已办接口查看</a>
 		</td>
 	</tr>
 </table>
