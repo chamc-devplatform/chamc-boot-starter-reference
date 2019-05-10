@@ -57,11 +57,11 @@
 			6.添加获取租户下所有流程分类接口：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#irepositoryservice">点击查看</a> <br />
 			7.待办已办支持根据流程分类查询；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#1-cha-xun-dai-ban">待办接口查看；</a>&nbsp;&nbsp;<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#2-cha-xun-yi-ban">已办接口查看</a> <br />
             8.支持待办连岗审批；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.2information-disign-1.2.0.release#shi-fou-lian-gang-shen-pi">连岗审批配置</a><br />
-			9.支持角色会签<br />
-			10.变量支持object类型<br />
-			11.查询节点配置信息添加催办配置字段<br />
-			12.会签节点支持回退，以及支持从会签节点取回待办<br />
-			13.按钮增加是否可用标识<br />
+			9.支持角色会签：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/">点击查看</a><br />
+			10.变量支持object类型：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/">点击查看</a><br />
+			11.查询节点配置信息添加催办配置字段：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/">点击查看</a><br />
+			12.会签节点支持回退，以及支持从会签节点取回待办：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/">点击查看</a><br />
+			13.按钮增加是否可用标识：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/">点击查看</a><br />
 		</td>
 	</tr>
 </table>
