@@ -47,7 +47,7 @@
 	</tr>
 	<tr>
 		<td>1.2.0.RELEASE</td>
-		<td></td>
+		<td>2019-05-10</td>
 		<td>
 			1.添加获取可回退节点接口；<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/6.interface-1.2.0.release#6-cha-xun-ke-hui-tui-jie-dian">点击查看</a><br />
 			2.修改获取流程图方法【同时原版流程图以及新版流程图均已添加候选用户的显示】：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.3information-diagram-1.2.0.release">点击查看</a> <br />
