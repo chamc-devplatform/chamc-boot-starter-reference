@@ -130,6 +130,8 @@
             * [1.2.0.RELEASE新增功能](chamc-boot-starter-bpm/1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md)
         * [SDK说明](chamc-boot-starter-bpm/1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md)
         * [Model模型](chamc-boot-starter-bpm/1.2.0.RELEASE/8.model-1.2.0.RELEASE.md) 
+    * [1.2.1.RELEASE](#)
+        * [流程图](chamc-boot-starter-bpm/1.2.1.RELEASE/4.3information-diagram-1.2.1.RELEASE.md)
     * [RELEASE-NOTES](chamc-boot-starter-bpm/releasenotes.md)
 * [service组件](#)
     * [1.0.0.RELEASE](#)
