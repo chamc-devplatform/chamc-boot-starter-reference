@@ -64,4 +64,11 @@
 			13.按钮增加是否可用标识：<a href="https://chamc-devplatform.gitbook.io/chamc-boot-starter-reference/chamc-boot-starter-bpm/1.2.0.release/gong-neng-xiang-shu/4.5.1.2.0.release-new-1.2.0.release#an-niu-zeng-jia-shi-fou-ke-yong-biao-shi">点击查看</a><br />
 		</td>
 	</tr>
+       <tr>
+		<td>1.2.1.RELEASE</td>
+		<td>2019-06-18</td>
+		<td>
+			1.修复缺陷。项目有根路径导致流程图无法查看的缺陷，任务号：#26295<br />
+		</td>
+	</tr>
 </table>
