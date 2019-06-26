@@ -2,6 +2,13 @@
 
 假设已将应用provider注册，现在应用consumer需要调用provider中的服务。那么，在consumer中进行如下操作即可。
 
+如果只想调用服务，自己并不作为提供者提供服务的话
+请在配置中增加
+```
+eureka.client.register-with-eureka=false
+```
+即可
+
 ## 步骤一
 
 按照上节配置对consumer进行配置。
