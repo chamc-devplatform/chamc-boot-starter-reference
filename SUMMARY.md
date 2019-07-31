@@ -143,7 +143,6 @@
             * [流程设计器](chamc-boot-starter-bpm/1.3.0.RELEASE/4.2information-disign-1.3.0.RELEASE.md)
             * [流程图](chamc-boot-starter-bpm/1.3.0.RELEASE/4.3information-diagram-1.3.0.RELEASE.md)
             * [委托功能](chamc-boot-starter-bpm/1.3.0.RELEASE/4.4information-handover-1.3.0.RELEASE.md)
-            * [1.2.0.RELEASE新增功能](chamc-boot-starter-bpm/1.3.0.RELEASE/4.5.1.2.0.RELEASE-new-1.3.0.RELEASE.md)
         * [SDK说明](chamc-boot-starter-bpm/1.3.0.RELEASE/6.interface-1.3.0.RELEASE.md)
         * [Model模型](chamc-boot-starter-bpm/1.3.0.RELEASE/8.model-1.3.0.RELEASE.md) 
     * [RELEASE-NOTES](chamc-boot-starter-bpm/releasenotes.md)
