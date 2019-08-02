@@ -74,8 +74,6 @@
 	<tr>
 		<td>1.3.0.RELEASE</td>
 		<td></td>
-		<td>
-			
-		</td>
+		<td></td>
 	</tr>
 </table>
