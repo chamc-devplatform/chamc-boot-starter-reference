@@ -57,11 +57,11 @@
 			6.添加获取租户下所有流程分类接口：<a href="./1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md#irepositoryservice">点击查看</a> <br />
 			7.待办已办支持根据流程分类查询；<a href="./1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md#1查询待办">待办接口查看；</a>&nbsp;&nbsp;<a href="./1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md#2查询已办">已办接口查看</a> <br />
             8.支持待办连岗审批；<a href="./1.2.0.RELEASE/4.2information-disign-1.2.0.RELEASE.md#是否连岗审批">连岗审批配置</a><br />
-			9.支持角色会签：<a href="./1.2.0.RELEASE/4.2information-disign-1.2.0.RELEASE.md#角色会签">点击查看</a><br />
-			10.变量支持object类型：<a href="./1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md#变量说明">点击查看</a><br />
+			9.支持角色会签：<a href="./1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md#支持角色会签">点击查看</a><br />
+			10.变量支持object类型：<a href="./1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md#变量支持object类型">点击查看</a><br />
 			11.查询节点配置信息添加催办配置字段：<a href="./1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md#查询节点配置信息添加催办配置字段">点击查看</a><br />
 			12.会签节点支持回退，以及支持从会签节点取回待办：<a href="./1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md#会签节点支持回退以及支持从会签节点取回待办">点击查看</a><br />
-			13.按钮增加是否可用标识：<a href="./1.2.0.RELEASE/6.interface-1.2.0.RELEASE.md#按钮说明">点击查看</a><br />
+			13.按钮增加是否可用标识：<a href="./1.2.0.RELEASE/4.5.1.2.0.RELEASE-new-1.2.0.RELEASE.md#按钮增加是否可用标识">点击查看</a><br />
 		</td>
 	</tr>
        <tr>
